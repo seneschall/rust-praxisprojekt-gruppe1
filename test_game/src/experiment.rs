@@ -7,5 +7,5 @@ pub fn print_number(x: i32) {
 }
 
 pub fn add_two(x: i32) -> i32 {
-    x + 2;
+    x + 2
 }
