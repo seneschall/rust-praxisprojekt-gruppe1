@@ -1,3 +1,5 @@
+mod experiment;
+
 fn main() {
     let name = "Simon";
     println!("Hello, {name}!");
@@ -5,4 +7,5 @@ fn main() {
 
     println!("test");
     println!("Yeeehaw!");
+    experiment::print_greeting();
 }
