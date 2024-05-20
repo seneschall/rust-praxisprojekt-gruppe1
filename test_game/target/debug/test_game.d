@@ -1,1 +1,0 @@
-/home/christoph/Dokumente/GitHub/rust-praxisprojekt-gruppe1/test_game/target/debug/test_game: /home/christoph/Dokumente/GitHub/rust-praxisprojekt-gruppe1/test_game/src/experiment.rs /home/christoph/Dokumente/GitHub/rust-praxisprojekt-gruppe1/test_game/src/main.rs
