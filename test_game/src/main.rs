@@ -2,7 +2,7 @@ use qwt;
 mod experiment;
 
 fn main() {
-    let name = "Vera";
+    let name = "Fridolin";
     println!("Hello, {name}!");
     println!("Hello, world!");
 
