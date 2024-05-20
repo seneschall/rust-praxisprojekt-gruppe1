@@ -1,11 +1,11 @@
 mod experiment;
 
 fn main() {
-    let name = "Simon";
+    let name = "Vera";
     println!("Hello, {name}!");
     println!("Hello, world!");
 
-    println!("test");
     println!("Yeeehaw!");
+    println!("Start");
     experiment::print_greeting();
 }
