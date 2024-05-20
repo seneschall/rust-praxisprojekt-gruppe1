@@ -1,11 +1,12 @@
+use qwt;
 mod experiment;
 
 fn main() {
-    let name = "Vera";
+    let name = "Simon";
     println!("Hello, {name}!");
     println!("Hello, world!");
 
+    println!("test");
     println!("Yeeehaw!");
-    println!("Start");
     experiment::print_greeting();
 }
