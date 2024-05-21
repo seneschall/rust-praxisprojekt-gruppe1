@@ -9,3 +9,7 @@ pub fn print_number(x: i32) {
 pub fn add_two(x: i32) -> i32 {
     x + 2
 }
+pub fn add_three(x: i32) -> i32 {
+    x + 3
+}
+
