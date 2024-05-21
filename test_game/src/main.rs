@@ -7,8 +7,7 @@ fn main() {
     println!("Hello, {name}!");
     println!("Hello, world!");
 
-    println!("test");
-    println!("Yeeehaw!");
+    println!("Test!");
     experiment::print_greeting();
     let file_path = "words.txt";
     let contents = fs::read_to_string(file_path)
