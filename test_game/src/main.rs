@@ -6,6 +6,7 @@ fn main() {
     let name = "Fridolin";
     println!("Hello, {name}!");
     println!("Hello, world!");
+    println!("test");
 
     println!("test");
     println!("Yeeehaw!");
