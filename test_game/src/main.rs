@@ -5,6 +5,7 @@ mod experiment;
 fn main() {
     let name = "Fridolin";
     println!("Hello, {name}!");
+    println!("mymergeconflict");
 
     experiment::print_greeting();
     let file_path = "words.txt";
