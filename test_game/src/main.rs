@@ -6,9 +6,10 @@ fn main() {
     let name = "Fridolin";
     println!("Hello, {name}!");
     println!("Hello, world!");
-    println!("test");
+    println!("mymergeconflict");
 
-    println!("Test!");
+    println!("test");
+    println!("Yeeehaw!");
     experiment::print_greeting();
     let file_path = "words.txt";
     let contents = fs::read_to_string(file_path)
