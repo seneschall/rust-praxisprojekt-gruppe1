@@ -1,4 +1,8 @@
 use std::collections::HashMap;
+use std::fmt::Debug;
+use std::fs;
+use std::hash::Hash;
+use std::str::FromStr;
 use vers_vecs::{BitVec, RsVec};
 
 #[cfg(test)]
@@ -207,4 +211,70 @@ impl<T: Clone> Graph<T> for PseudoWTDigraph<T> {
     fn get_label(&self, v: Vertex) -> Option<T> {
         self.node_labels.get(&v).cloned()
     }
+}
+
+// Veras Funktionen:
+
+fn import_graph_properties<T: FromStr + Debug>(filename: &str) -> (T, T)
+where
+    <T as FromStr>::Err: Debug,
+{
+    let content = fs::read_to_string(filename).expect("Unable to open file");
+    let mut lines = content.lines();
+
+    let v_count = lines
+        .next()
+        .expect("Missing first line")
+        .trim()
+        .parse::<T>()
+        .expect("First line (number of vertices) is not a valid input");
+
+    let e_count = lines
+        .next()
+        .expect("Missing second line")
+        .trim()
+        .parse::<T>()
+        .expect("Second line (number of edges) is not a valid input");
+
+    (v_count, e_count)
+}
+
+fn import_adjacency_list<T: Eq + Hash + Clone + Debug + FromStr>(
+    filename: &str,
+) -> HashMap<T, Vec<T>>
+where
+    <T as FromStr>::Err: Debug,
+{
+    let content = fs::read_to_string(filename).expect("Unable to open file");
+
+    let mut adjacency_list: HashMap<T, Vec<T>> = HashMap::new();
+    let mut lines = content.lines().skip(2);
+
+    for line in lines {
+        let line = line.trim();
+        let mut numbers = line.split_whitespace().filter_map(|s| s.parse::<T>().ok());
+
+        if let (Some(vertex), Some(adjacent)) = (numbers.next(), numbers.next()) {
+            adjacency_list
+                .entry(vertex.clone())
+                .or_insert(Vec::new())
+                .push(adjacent.clone());
+            adjacency_list.entry(adjacent).or_insert(Vec::new());
+        } else {
+            eprintln!("Invalid line: {}", line);
+        }
+    }
+
+    adjacency_list
+}
+
+fn create_sequence<T: Clone>(map: &HashMap<T, Vec<T>>) -> Vec<T> {
+    let mut sequence = Vec::new();
+
+    for items in map.values() {
+        for item in items {
+            sequence.push(item.clone());
+        }
+    }
+    sequence
 }
