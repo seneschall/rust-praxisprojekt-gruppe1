@@ -1,3 +1,4 @@
+use num::{Integer, Unsigned};
 use std::collections::HashMap;
 use std::fmt::Debug;
 use std::fs;
@@ -34,10 +35,10 @@ pub trait WTGraph {
     fn commit_changes();
 }
 
-pub trait Graph<T> {
+pub trait Graph<L> {
     fn add_edge(&mut self, v: Vertex, w: Vertex);
 
-    fn add_node_label(&mut self, v: Vertex, label: T);
+    fn add_node_label(&mut self, v: Vertex, label: L);
 
     fn v_count(&self) -> u32;
 
@@ -45,7 +46,7 @@ pub trait Graph<T> {
 
     fn outgoing_edges(&self, vertex: Vertex) -> Vec<Vertex>;
 
-    fn get_label(&self, v: Vertex) -> Option<T>;
+    fn get_label(&self, v: Vertex) -> Option<L>;
 
     // fn delete_vertex(&mut self v: Vertex);
 
@@ -56,7 +57,7 @@ pub trait Graph<T> {
 
 type Vertex = u32;
 
-pub struct Digraph<T> {
+pub struct Digraph<T, L> {
     v_count: u32,                 // number of vertices
     e_count: u32,                 // number of edges
     adj: Vec<Vec<Vertex>>,        // adjacency list of indices
@@ -193,9 +194,10 @@ impl<T: Clone> Graph<T> for PseudoWTDigraph<T> {
 
     fn outgoing_edges(&self, vertex: Vertex) -> Vec<Vertex> {
         let mut v_adj: Vec<Vertex> = Vec::new();
+        let v = vertex as usize;
 
-        let start = self.starting_indices.select1(vertex as usize) + 1; // statt der 1 müsste hier glaub ich rank1(vertex) stehen; ausprobieren
-        let end = self.starting_indices.select1(vertex as usize + 1); // if this value is bigger than sequence.len(), vers_vecs will return len + 1
+        let start = self.starting_indices.select1(v) + v; // statt der 1 müsste hier glaub ich rank1(vertex) stehen; ausprobieren
+        let end = self.starting_indices.select1(v + 1) + v + 1; // if this value is bigger than sequence.len(), vers_vecs will return len + 1
 
         if start > self.sequence.len() || start == end {
             return Vec::new();
