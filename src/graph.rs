@@ -5,6 +5,7 @@ use std::fs;
 use std::hash::Hash;
 use std::str::FromStr;
 use vers_vecs::{BitVec, RsVec};
+use num::Unsigned;
 
 #[cfg(test)]
 mod test {
@@ -217,7 +218,7 @@ impl<T: Clone> Graph<T> for PseudoWTDigraph<T> {
 
 // Veras Funktionen:
 
-fn import_graph_properties<T: FromStr + Debug>(filename: &str) -> (T, T)
+fn import_graph_properties<T: FromStr + Debug + Unsigned>(filename: &str) -> (T, T)
 where
     <T as FromStr>::Err: Debug,
 {
@@ -241,9 +242,7 @@ where
     (v_count, e_count)
 }
 
-fn import_adjacency_list<T: Eq + Hash + Clone + Debug + FromStr>(
-    filename: &str,
-) -> HashMap<T, Vec<T>>
+fn import_adjacency_list<T: Eq + Hash + Clone + Debug + FromStr + Unsigned>(filename: &str,) -> HashMap<T, Vec<T>>
 where
     <T as FromStr>::Err: Debug,
 {
@@ -270,7 +269,7 @@ where
     adjacency_list
 }
 
-fn create_sequence<T: Clone>(map: &HashMap<T, Vec<T>>) -> Vec<T> {
+fn create_sequence<T: Clone + Unsigned>(map: &HashMap<T, Vec<T>>) -> Vec<T> {
     let mut sequence = Vec::new();
 
     for items in map.values() {
