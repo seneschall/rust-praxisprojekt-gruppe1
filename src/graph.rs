@@ -1,11 +1,6 @@
-use num::Unsigned;
 use num::{ToPrimitive, Unsigned};
 use qwt::QWT256;
-use std::collections::HashMap;
-use std::fmt::Debug;
-use std::fs;
-use std::hash::Hash;
-use std::str::FromStr;
+use std::{collections::HashMap, fmt::Debug, fs, hash::Hash, str::FromStr};
 use vers_vecs::{BitVec, RsVec};
 
 #[cfg(test)]
@@ -257,7 +252,7 @@ impl<T: Clone> Graph<T> for PseudoWTDigraph<T> {
 
 // Veras Funktionen:
 
-fn import_graph_properties<T: FromStr + Debug + Unsigned>(filename: &str) -> (T, T)
+pub fn import_graph_properties<T: FromStr + Debug + Unsigned>(filename: &str) -> (T, T)
 where
     <T as FromStr>::Err: Debug,
 {
@@ -281,7 +276,7 @@ where
     (v_count, e_count)
 }
 
-fn import_adjacency_list<T: Eq + Hash + Clone + Debug + FromStr + Unsigned>(
+pub fn import_adjacency_list<T: Eq + Hash + Clone + Debug + FromStr + Unsigned>(
     filename: &str,
 ) -> HashMap<T, Vec<T>>
 where
@@ -310,7 +305,7 @@ where
     adjacency_list
 }
 
-fn create_sequence<T: Clone + Unsigned>(map: &HashMap<T, Vec<T>>) -> Vec<T> {
+pub fn create_sequence<T: Clone + Unsigned>(map: &HashMap<T, Vec<T>>) -> Vec<T> {
     let mut sequence = Vec::new();
 
     for items in map.values() {
