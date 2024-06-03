@@ -1,5 +1,5 @@
-use num::{FromPrimitive, Integer, Num, ToPrimitive, Unsigned};
-use qwt::QWT256;
+use crate::traits::*;
+use num::{FromPrimitive, Integer, ToPrimitive, Unsigned};
 use std::{
     collections::HashMap,
     fmt::{Debug, Display},
@@ -7,7 +7,8 @@ use std::{
     hash::Hash,
     str::FromStr,
 };
-use vers_vecs::{BitVec, RsVec};
+
+mod wt_graph;
 
 #[cfg(test)]
 mod test {
@@ -34,61 +35,11 @@ mod test {
     }
 }
 
-// Defining traits
-
-pub trait WTGraph<T>
-where
-    T: Unsigned + ToPrimitive,
-{
-    fn commit_changes();
-
-    // fn delete_vertex(&mut self v: T);
-
-    // fn delete_edge(&mut self, v: T, w: T);
-
-    // fn edit_label(&mut self, v: T);
-}
-
-pub trait Graph<T, L>
-where
-    T: Unsigned + ToPrimitive,
-{
-    fn add_edge(&mut self, v: T, w: T);
-
-    fn add_node_label(&mut self, v: T, label: L);
-
-    fn v_count(&self) -> T;
-
-    fn e_count(&self) -> T;
-
-    fn get_label(&self, v: T) -> Option<&L>;
-}
-
-pub trait Directed<T>
-where
-    T: Unsigned + ToPrimitive,
-{
-    fn outgoing_edges(&self, vertex: T) -> Vec<T>; // should probably be changed to return an iterator instead
-    fn incoming_edges(&self, vertex: T) -> Vec<T>; // likewise here
-}
-
-pub trait Undirected<T>
-where
-    T: Unsigned + ToPrimitive,
-{
-    fn edges(&self, vertex: T) -> Vec<T>;
-}
-
-pub trait Weighted<T>
-where
-    T: Unsigned + ToPrimitive,
-{
-    fn weight_of_edge(&self, from: T, to: T) -> f64;
-}
-
 // Defining data structures
 
 pub struct Digraph<T, L>
+// pub(crate) allows us to read adj in wt_graph without making it public for users of the library
+// i.e. it makes it crate private
 where
     T: Unsigned + ToPrimitive,
 {
@@ -129,20 +80,51 @@ where
         self.adj[v.to_usize().unwrap()].push(w);
     }
 
-    fn v_count(&self) -> T {
-        self.v_count
+    fn add_node_label(&mut self, v: T, label: L) {
+        self.node_labels.insert(v, label);
+    }
+
+    fn delete_edge(&mut self, v: T, w: T) {
+        let i_of_w: usize;
+        match self.adj.get(v.to_usize().unwrap()) {
+            Some(vs) => {
+                let i_of_w_opt = vs.iter().position(|&x| x == w);
+
+                match i_of_w_opt {
+                    Some(i) => {
+                        i_of_w = i;
+                    } // swap_remove more efficient than remove because the order is not important
+                    None => {
+                        panic!("There was no edge from {v} to {w}.");
+                    }
+                }
+            }
+            None => {
+                panic!("Vertex {v} doesn't exist."); // Should be replaced by Result type
+            }
+        }
+
+        self.adj[v.to_usize().unwrap()].swap_remove(i_of_w);
+    }
+
+    fn delete_vertex(&mut self, v: T) {
+        todo!()
     }
 
     fn e_count(&self) -> T {
         self.e_count
     }
 
-    fn add_node_label(&mut self, v: T, label: L) {
-        self.node_labels.insert(v, label);
+    fn edit_label(&mut self, v: T) {
+        todo!()
     }
 
     fn get_label(&self, v: T) -> Option<&L> {
         self.node_labels.get(&v)
+    }
+
+    fn v_count(&self) -> T {
+        self.v_count
     }
 }
 
@@ -152,134 +134,6 @@ where
 {
     fn outgoing_edges(&self, vertex: T) -> Vec<T> {
         self.adj[vertex.to_usize().unwrap()].clone()
-    }
-
-    fn incoming_edges(&self, vertex: T) -> Vec<T> {
-        todo!()
-    }
-}
-
-pub struct PseudoWTDigraph<T, L>
-where
-    T: Unsigned + ToPrimitive,
-{
-    // Die Idee ist, schon mal in einer "Trockenübung" zu schauen,
-    // ob die Implementierung mit Wavelet-Tree so funktionieren könnte, wie wir uns das vorstellen
-    v_count: T,                            // number of vertices
-    e_count: T,                            // number of edges
-    sequence: Vec<T>,                      // sequence representation of adjacency list
-    starting_indices: RsVec,               // starting indices of each
-    uncommitted_edits: HashMap<T, Vec<T>>, // changes not yet committed to sequence
-    has_uncommitted_edits: bool,
-    node_labels: HashMap<T, L>, // name given to node format: index: value
-}
-
-impl<T, L> PseudoWTDigraph<T, L>
-where
-    T: Unsigned + ToPrimitive + FromPrimitive + Copy,
-{
-    pub fn from_digraph(dg: Digraph<T, L>) -> Self {
-        let mut bv = BitVec::new();
-        let mut e_count: T = T::zero();
-        let v_count = dg.adj.len();
-        let mut sequence: Vec<T> = Vec::new();
-
-        for (v, v_adj) in dg.adj.iter().enumerate() {
-            // iterate over all vertices (v) in adj
-            bv.append(true);
-            for val in v_adj.iter() {
-                // iterate over the values in the adjacency list of v
-                sequence.push(*val);
-                bv.append(false); // append 0 to bv for each element in adjacency list of v
-                e_count = e_count + T::one();
-            }
-        }
-        let starting_indices = RsVec::from_bit_vec(bv);
-
-        // At this point wavelet tree would be created from sequence
-
-        return PseudoWTDigraph {
-            v_count: T::from_usize(v_count).unwrap(),
-            e_count,
-            sequence, // here sequence would be replaced by wavelet tree
-            starting_indices,
-            uncommitted_edits: HashMap::new(),
-            has_uncommitted_edits: false,
-            node_labels: HashMap::new(),
-        };
-    }
-
-    pub fn from(sequence: Vec<T>, starting_indices: RsVec) -> Self {
-        let length = starting_indices.len();
-
-        let v_count = starting_indices.rank1(length - 1);
-        let v_count = T::from_usize(v_count).unwrap();
-
-        let e_count = starting_indices.rank0(length - 1);
-        let e_count = T::from_usize(e_count).unwrap();
-
-        return PseudoWTDigraph {
-            v_count,
-            e_count,
-            sequence,
-            starting_indices,
-            uncommitted_edits: HashMap::new(),
-            has_uncommitted_edits: false,
-            node_labels: HashMap::new(),
-        };
-    }
-}
-
-impl<T, L> Graph<T, L> for PseudoWTDigraph<T, L>
-where
-    T: Unsigned + ToPrimitive + Integer + Hash + Copy,
-    L: Clone,
-{
-    fn add_edge(&mut self, v: T, w: T) {
-        todo!()
-    }
-
-    fn add_node_label(&mut self, v: T, label: L) {
-        if v > self.v_count - T::one() {
-            panic!("Vertex doesn't exist.");
-        }
-
-        self.node_labels.insert(v, label);
-    }
-
-    fn v_count(&self) -> T {
-        self.v_count
-    }
-
-    fn e_count(&self) -> T {
-        self.e_count
-    }
-
-    fn get_label(&self, v: T) -> Option<&L> {
-        self.node_labels.get(&v)
-    }
-}
-
-impl<T, L> Directed<T> for PseudoWTDigraph<T, L>
-where
-    T: Unsigned + ToPrimitive + Copy,
-{
-    fn outgoing_edges(&self, vertex: T) -> Vec<T> {
-        let mut v_adj: Vec<T> = Vec::new();
-        let v = vertex.to_usize().unwrap(); // this won't work if v is of type u128
-
-        let start = self.starting_indices.select1(v) + v; // this won't work if v is of type u128
-        let end = self.starting_indices.select1(v + 1) + v + 1; // neither will this
-
-        if start > self.sequence.len() || start == end {
-            return Vec::new();
-        }
-
-        for i in start..end {
-            v_adj.push(self.sequence[i]); // this won't work for qwt of course; we'll have to use get() there
-        }
-
-        return v_adj;
     }
 
     fn incoming_edges(&self, vertex: T) -> Vec<T> {
