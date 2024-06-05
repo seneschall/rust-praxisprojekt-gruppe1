@@ -7,6 +7,7 @@ use std::{
     hash::Hash,
     str::FromStr,
 };
+use vers_vecs::{BitVec};
 
 mod wt_graph;
 
@@ -167,27 +168,29 @@ where
     (v_count, e_count)
 }
 
-pub fn import_adjacency_list<T: Eq + Hash + Clone + Debug + FromStr + Unsigned>(
-    filename: &str,
-) -> HashMap<T, Vec<T>>
+// create the adjecency list from a graph in the input file 
+pub fn import_adjacency_list<T: Clone + Debug + FromStr + Unsigned + ToPrimitive>
+(filename: &str,) -> Vec<Vec<T>>
 where
     <T as FromStr>::Err: Debug,
 {
     let content = fs::read_to_string(filename).expect("Unable to open file");
 
-    let mut adjacency_list: HashMap<T, Vec<T>> = HashMap::new();
-    let mut lines = content.lines().skip(2);
+    let mut lines = content.lines();
+    let size: usize = lines.next()
+        .expect("Missing first line")
+        .trim()
+        .parse()
+        .expect("First line (number of vertices) is not a valid input");
+
+    let mut adjacency_list: Vec<Vec<T>> = vec![vec![]; size]; // create Vec<Vec<T>> with the size equal to the amount of verticies
 
     for line in lines {
         let line = line.trim();
         let mut numbers = line.split_whitespace().filter_map(|s| s.parse::<T>().ok());
 
         if let (Some(vertex), Some(adjacent)) = (numbers.next(), numbers.next()) {
-            adjacency_list
-                .entry(vertex.clone())
-                .or_insert(Vec::new())
-                .push(adjacent.clone());
-            adjacency_list.entry(adjacent).or_insert(Vec::new());
+            adjacency_list[vertex.to_usize().unwrap()].push(adjacent);
         } else {
             eprintln!("Invalid line: {}", line);
         }
@@ -196,13 +199,18 @@ where
     adjacency_list
 }
 
-pub fn create_sequence<T: Clone + Unsigned>(map: &HashMap<T, Vec<T>>) -> Vec<T> {
+// use output from import_adjacency_list to create a sequence for qwt and a bitmap
+// ex. let (sequence, bitmap) = create_sequence_and_bitmap(&adjacency_list);
+pub fn create_sequence_and_bitmap<T: Clone + Unsigned>(map: &Vec<Vec<T>>) -> (Vec<T>, BitVec) {
     let mut sequence = Vec::new();
+    let mut bitmap = BitVec::new();
 
-    for items in map.values() {
+    for items in map {
+        bitmap.append(true);
         for item in items {
+            bitmap.append(false);
             sequence.push(item.clone());
         }
     }
-    sequence
+    (sequence, bitmap)
 }
