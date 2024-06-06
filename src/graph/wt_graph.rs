@@ -137,8 +137,8 @@ where
         let mut v_adj: Vec<T> = Vec::new();
         let v = vertex.to_usize().unwrap(); // this won't work if v is of type u128
 
-        let start = self.starting_indices.select1(v) + v; // this won't work if v is of type u128
-        let end = self.starting_indices.select1(v + 1) + v + 1; // neither will this
+        let start = self.starting_indices.select1(v) - v; // this won't work if v is of type u128
+        let end = self.starting_indices.select1(v + 1) - (v + 1); // neither will this
 
         if start > self.wt_adj.len() || start == end {
             return Vec::new();
