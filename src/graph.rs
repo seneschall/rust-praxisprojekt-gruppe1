@@ -7,7 +7,7 @@ use std::{
     hash::Hash,
     str::FromStr,
 };
-use vers_vecs::{BitVec};
+use vers_vecs::BitVec;
 
 mod wt_graph;
 
@@ -54,7 +54,7 @@ impl<T, L> Digraph<T, L>
 where
     T: Unsigned + ToPrimitive + Copy + Integer,
 {
-    fn new(v_count: T) -> Self {
+    pub fn new(v_count: T) -> Self {
         Digraph {
             v_count,
             e_count: T::zero(),
@@ -168,16 +168,18 @@ where
     (v_count, e_count)
 }
 
-// create the adjecency list from a graph in the input file 
-pub fn import_adjacency_list<T: Clone + Debug + FromStr + Unsigned + ToPrimitive>
-(filename: &str,) -> Vec<Vec<T>>
+// create the adjecency list from a graph in the input file
+pub fn import_adjacency_list<T: Clone + Debug + FromStr + Unsigned + ToPrimitive>(
+    filename: &str,
+) -> Vec<Vec<T>>
 where
     <T as FromStr>::Err: Debug,
 {
     let content = fs::read_to_string(filename).expect("Unable to open file");
 
     let mut lines = content.lines();
-    let size: usize = lines.next()
+    let size: usize = lines
+        .next()
         .expect("Missing first line")
         .trim()
         .parse()
