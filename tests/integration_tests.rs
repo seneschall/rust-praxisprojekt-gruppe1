@@ -1,7 +1,6 @@
 #[cfg(test)]
 mod test {
-    use vers_vecs::RsVec;
-    use wt_graphs::{graph::{create_sequence_and_bitmap, import_adjacency_list, wt_graph::WTDigraph, Digraph}, traits::{Directed, Graph}};
+    use wt_graphs::{graph::{create_sequence_and_bitmap, import_adjacency_list, import_graph_properties, wt_graph::WTDigraph, Digraph}, traits::{Directed, Graph}};
 
 
     #[test]
@@ -24,12 +23,26 @@ mod test {
         //assert_eq!(graph.e_count(), 0);
     }
     #[test]
-    fn test_wtdigraph_from_file(){
+    fn test_wtdigraph_from(){
         let filename = "tests/tinyDG.txt";
-        let (sequence, starting_indices) = create_sequence_and_bitmap(&import_adjacency_list(filename));
-        let wtdigraph: WTDigraph<u32,u32> = WTDigraph::from(sequence, starting_indices);
+        let (sequence, starting_indices) = create_sequence_and_bitmap(&import_adjacency_list(filename)); //creating sequence and bitmap
+        let wtdigraph: WTDigraph<u32,u32> = WTDigraph::from(sequence, starting_indices); // create WTDigraph using from(sequence, starting_indices)
         assert_eq!(wtdigraph.outgoing_edges(2), vec![3u32,0u32]);
         assert_eq!(wtdigraph.outgoing_edges(1), Vec::new());
         assert_eq!(wtdigraph.e_count(), 22);
+        assert_eq!(wtdigraph.v_count(), 13);
+    }
+    #[test]
+    fn test_wtdigraph_from_digraph(){
+        let filename = "tests/tinyDG.txt";
+        let (_e_count,v_count) = import_graph_properties(filename); //read v_count from file, e_count is not used
+        let adj: Vec<Vec<u32>> = import_adjacency_list(filename); 
+        let digraph : Digraph<u32,u32> = Digraph::new2(v_count,adj ); // temporary new2 to create Digraph with adj list
+        let wtdigraph = WTDigraph::from_digraph(digraph); // creating WTDigraph using from_digraph
+        
+        assert_eq!(wtdigraph.outgoing_edges(2), vec![3u32,0u32]);
+        assert_eq!(wtdigraph.outgoing_edges(1), Vec::new());
+        assert_eq!(wtdigraph.e_count(), 22);
+        assert_eq!(wtdigraph.v_count(), 13);
     }
 }

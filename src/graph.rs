@@ -62,7 +62,14 @@ where
             node_labels: HashMap::new(),
         }
     }
-
+    pub fn new2(v_count: T, adj : Vec<Vec<T>>) -> Self{ // temporary, constructor with adj list 
+        Digraph{
+            v_count,
+            e_count: T::zero(),
+            adj,
+            node_labels: HashMap::new(),
+        }
+    }
     fn vertex_exists(&self, v: T) -> bool {
         v < self.v_count
     }
