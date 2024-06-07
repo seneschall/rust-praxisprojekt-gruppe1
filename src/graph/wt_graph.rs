@@ -57,10 +57,10 @@ where
     pub fn from(sequence: Vec<T>, starting_indices: RsVec) -> Self {
         let length = starting_indices.len();
 
-        let v_count = starting_indices.rank1(length - 1);
+        let v_count = starting_indices.rank1(length);
         let v_count = T::from_usize(v_count).unwrap();
 
-        let e_count = starting_indices.rank0(length - 1);
+        let e_count = starting_indices.rank0(length);
         let e_count = T::from_usize(e_count).unwrap();
 
         let wt_adj: QWT256<T> = QWT256::from(sequence);
