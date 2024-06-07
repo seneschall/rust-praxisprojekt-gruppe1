@@ -9,7 +9,7 @@ use std::{
 };
 use vers_vecs::BitVec;
 
-mod wt_graph;
+pub mod wt_graph;
 
 #[cfg(test)]
 mod test {

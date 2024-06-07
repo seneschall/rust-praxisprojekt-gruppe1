@@ -1,2 +1,2 @@
-mod graph;
-mod traits;
+pub mod graph;
+pub mod traits;
