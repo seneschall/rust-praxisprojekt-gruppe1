@@ -27,7 +27,6 @@ mod test {
     fn test_wtdigraph_from_file(){
         let filename = "tests/tinyDG.txt";
         let (sequence, starting_indices) = create_sequence_and_bitmap(&import_adjacency_list(filename));
-        let starting_indices: RsVec = RsVec::from_bit_vec(starting_indices);
         let wtdigraph: WTDigraph<u32,u32> = WTDigraph::from(sequence, starting_indices);
         assert_eq!(wtdigraph.outgoing_edges(2), vec![3u32,0u32]);
         assert_eq!(wtdigraph.outgoing_edges(1), Vec::new());

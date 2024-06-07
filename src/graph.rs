@@ -7,7 +7,7 @@ use std::{
     hash::Hash,
     str::FromStr,
 };
-use vers_vecs::BitVec;
+use vers_vecs::{BitVec, RsVec};
 
 pub mod wt_graph;
 
@@ -203,7 +203,7 @@ where
 
 // use output from import_adjacency_list to create a sequence for qwt and a bitmap
 // ex. let (sequence, bitmap) = create_sequence_and_bitmap(&adjacency_list);
-pub fn create_sequence_and_bitmap<T: Clone + Unsigned>(map: &Vec<Vec<T>>) -> (Vec<T>, BitVec) {
+pub fn create_sequence_and_bitmap<T: Clone + Unsigned>(map: &Vec<Vec<T>>) -> (Vec<T>, RsVec) {
     let mut sequence = Vec::new();
     let mut bitmap = BitVec::new();
 
@@ -214,5 +214,6 @@ pub fn create_sequence_and_bitmap<T: Clone + Unsigned>(map: &Vec<Vec<T>>) -> (Ve
             sequence.push(item.clone());
         }
     }
+    let bitmap: RsVec = RsVec::from_bit_vec(bitmap); // quickfix
     (sequence, bitmap)
 }
