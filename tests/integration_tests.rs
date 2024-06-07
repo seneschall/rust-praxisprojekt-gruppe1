@@ -4,23 +4,22 @@ mod test {
 
 
     #[test]
-    fn test_wtdigraph() {
-        //let mut graph: WTDigraph<u32, u32> = WTDigraph::from_digraph(Digraph::new(10)); // creates new graph
-        //graph.add_edge(3, 2);
-        //graph.add_edge(5, 0);
-        let mut graph: Digraph<u32, u32> = Digraph::new(10); // creates new graph
-        graph.add_edge(3, 2);
-        graph.add_edge(5, 0);
-        let digraph: WTDigraph<u32, u32> = WTDigraph::from_digraph(graph);
-        assert_eq!(digraph.outgoing_edges(3), vec![2u32]);
-        assert_eq!(digraph.outgoing_edges(5), vec![0u32]);
-        //assert_eq!(graph.e_count(), 2);
-        //assert_eq!(graph.v_count(), 10);
-        //graph.delete_edge(3,2);  // delete not yet implemented
-        //graph.delete_edge(5,0);
-        //assert_ne!(graph.outgoing_edges(3), vec![2u32]);
-        //assert_ne!(graph.outgoing_edges(5), vec![0u32]);
-        //assert_eq!(graph.e_count(), 0);
+    fn test_graph() {
+        let filename = "tests/tinyDG.txt";
+        let (e_count,v_count) = import_graph_properties(filename);
+        let adj: Vec<Vec<u32>> = import_adjacency_list(filename); 
+        let mut digraph : Digraph<u32,u32> = Digraph::new2(v_count, e_count,adj ); // temporary new2 to create Digraph with adj list
+        assert_eq!(digraph.e_count(), 13);
+        assert_eq!(digraph.v_count(), 22);
+        assert_eq!(digraph.outgoing_edges(2), vec![3u32, 0u32]);
+        assert_eq!(digraph.outgoing_edges(1), Vec::new());
+        digraph.add_edge(1, 0);
+        assert_eq!(digraph.e_count(), 14);
+        assert_eq!(digraph.outgoing_edges(1), vec![0u32]);
+        digraph.delete_edge(1,0);
+        assert_eq!(digraph.e_count(),13);
+        assert_eq!(digraph.outgoing_edges(1), Vec::new());
+
     }
     #[test]
     fn test_wtdigraph_from(){
@@ -35,9 +34,9 @@ mod test {
     #[test]
     fn test_wtdigraph_from_digraph(){
         let filename = "tests/tinyDG.txt";
-        let (_e_count,v_count) = import_graph_properties(filename); //read v_count from file, e_count is not used
+        let (e_count,v_count) = import_graph_properties(filename);
         let adj: Vec<Vec<u32>> = import_adjacency_list(filename); 
-        let digraph : Digraph<u32,u32> = Digraph::new2(v_count,adj ); // temporary new2 to create Digraph with adj list
+        let digraph : Digraph<u32,u32> = Digraph::new2(v_count, e_count,adj ); // temporary new2 to create Digraph with adj list
         let wtdigraph = WTDigraph::from_digraph(digraph); // creating WTDigraph using from_digraph
         
         assert_eq!(wtdigraph.outgoing_edges(2), vec![3u32,0u32]);

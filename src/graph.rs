@@ -1,11 +1,7 @@
 use crate::traits::*;
 use num::{FromPrimitive, Integer, ToPrimitive, Unsigned};
 use std::{
-    collections::HashMap,
-    fmt::{Debug, Display},
-    fs,
-    hash::Hash,
-    str::FromStr,
+    collections::HashMap, fmt::{Debug, Display}, fs, hash::Hash, ops::Sub, str::FromStr
 };
 use vers_vecs::{BitVec, RsVec};
 
@@ -62,10 +58,10 @@ where
             node_labels: HashMap::new(),
         }
     }
-    pub fn new2(v_count: T, adj : Vec<Vec<T>>) -> Self{ // temporary, constructor with adj list 
+    pub fn new2(v_count: T, e_count : T, adj : Vec<Vec<T>>) -> Self{ // temporary, constructor with adj list 
         Digraph{
             v_count,
-            e_count: T::zero(),
+            e_count,
             adj,
             node_labels: HashMap::new(),
         }
@@ -113,6 +109,7 @@ where
         }
 
         self.adj[v.to_usize().unwrap()].swap_remove(i_of_w);
+        self.e_count = self.e_count() - T::one();
     }
 
     fn delete_vertex(&mut self, v: T) {
