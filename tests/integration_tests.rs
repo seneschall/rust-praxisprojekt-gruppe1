@@ -43,8 +43,9 @@ mod test {
     }
     #[test]
     fn test_compare_outgoing_edges_wtdigraph_with_digraph(){
-        let digraph = setup_digraph("tests/tinyDG.txt");
-        let wtdigraph = setup_wtdigraph("tests/tinyDG.txt");
+        let filename = "tests/mediumDG.txt";
+        let digraph = setup_digraph(filename);
+        let wtdigraph = setup_wtdigraph(filename);
         for i in 0..digraph.v_count(){
             assert_eq!(digraph.outgoing_edges(i), wtdigraph.outgoing_edges(i));
         }
