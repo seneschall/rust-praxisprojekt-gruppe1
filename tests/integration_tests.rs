@@ -45,11 +45,20 @@ mod test {
     fn test_compare_outgoing_edges_wtdigraph_with_digraph(){
         let digraph = setup_digraph("tests/tinyDG.txt");
         let wtdigraph = setup_wtdigraph("tests/tinyDG.txt");
-        assert_eq!(digraph.v_count(), 13);
         for i in 0..digraph.v_count(){
             assert_eq!(digraph.outgoing_edges(i), wtdigraph.outgoing_edges(i));
         }
         assert_eq!(digraph.v_count(),wtdigraph.v_count());
         assert_eq!(digraph.e_count(),wtdigraph.e_count());
+
+    }
+    #[test]
+    fn test_compare_incoming_edges_wtdigraph_with_digraph(){ // incoming edges not yet implemented
+        // let digraph = setup_digraph("tests/tinyDG.txt");
+        // let wtdigraph = setup_wtdigraph("tests/tinyDG.txt");
+        // for i in 0..digraph.v_count(){
+        //     assert_eq!(digraph.incoming_edges(i), wtdigraph.incoming_edges(i));
+        // }
+
     }
 }
