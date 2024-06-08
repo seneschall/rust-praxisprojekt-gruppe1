@@ -97,10 +97,10 @@ where
 
         match self.uncommitted_edits.get_mut(&v) {
             Some(adj) => {
-                adj.push(w);
+                adj.push(Edit::Add(w));
             }
             None => {
-                self.uncommitted_edits.insert(v, vec![w]);
+                self.uncommitted_edits.insert(v, vec![Edit::Add(w)]);
             }
         }
     }
