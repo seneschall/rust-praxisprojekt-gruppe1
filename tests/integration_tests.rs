@@ -34,6 +34,7 @@ mod test {
     #[test]
     fn test_wtdigraph_from_digraph(){
         let digraph = setup_digraph("tests/tinyDG.txt");
+        
         let wtdigraph = WTDigraph::from_digraph(digraph); // creating WTDigraph using from_digraph
         
         assert_eq!(wtdigraph.outgoing_edges(2), vec![3u32,0u32]);

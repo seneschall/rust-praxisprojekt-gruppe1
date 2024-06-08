@@ -1,7 +1,7 @@
 use crate::traits::*;
 use num::{FromPrimitive, Integer, ToPrimitive, Unsigned};
 use std::{
-    collections::HashMap, fmt::{Debug, Display}, fs, hash::Hash, ops::Sub, str::FromStr
+    collections::HashMap, fmt::{Debug, Display}, fs, hash::Hash, str::FromStr
 };
 use vers_vecs::{BitVec, RsVec};
 
@@ -207,7 +207,7 @@ where
 
 // use output from import_adjacency_list to create a sequence for qwt and a bitmap
 // ex. let (sequence, bitmap) = create_sequence_and_bitmap(&adjacency_list);
-pub fn create_sequence_and_bitmap<T: Clone + Unsigned>(map: &Vec<Vec<T>>) -> (Vec<T>, RsVec) {
+pub fn create_sequence_and_bitmap<T: Clone + Unsigned>(map: &Vec<Vec<T>>) -> (Vec<T>, BitVec) {
     let mut sequence = Vec::new();
     let mut bitmap = BitVec::new();
 
@@ -218,6 +218,5 @@ pub fn create_sequence_and_bitmap<T: Clone + Unsigned>(map: &Vec<Vec<T>>) -> (Ve
             sequence.push(item.clone());
         }
     }
-    let bitmap: RsVec = RsVec::from_bit_vec(bitmap); // quickfix
     (sequence, bitmap)
 }
