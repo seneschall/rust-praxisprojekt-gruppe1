@@ -5,15 +5,25 @@ use qwt::{AccessUnsigned, QWT256};
 use std::{collections::HashMap, hash::Hash};
 use vers_vecs::{BitVec, RsVec};
 
+pub enum Edit<T>
+where
+    T: Unsigned + ToPrimitive,
+{
+    Add(T),
+    Delete(T),
+    AddSelf,
+    DeleteSelf,
+}
+
 pub struct WTDigraph<T, L>
 where
     T: Unsigned + ToPrimitive,
 {
-    v_count: T,                            // number of vertices
-    e_count: T,                            // number of edges
-    wt_adj: QWT256<T>,                     // the wavelet tree adjacency list
-    starting_indices: RsVec,               // starting indices of each
-    uncommitted_edits: HashMap<T, Vec<T>>, // changes not yet committed to sequence
+    v_count: T,                                  // number of vertices
+    e_count: T,                                  // number of edges
+    wt_adj: QWT256<T>,                           // the wavelet tree adjacency list
+    starting_indices: RsVec,                     // starting indices of each
+    uncommitted_edits: HashMap<T, Vec<Edit<T>>>, // changes not yet committed to sequence
     has_uncommitted_edits: bool,
     node_labels: HashMap<T, L>, // name given to node format: index: value
 }
@@ -95,7 +105,7 @@ where
         }
     }
 
-    fn add_node_label(&mut self, v: T, label: L) {
+    fn add_vertex_label(&mut self, v: T, label: L) {
         if v > self.v_count - T::one() {
             panic!("Vertex doesn't exist.");
         }
@@ -125,6 +135,10 @@ where
 
     fn v_count(&self) -> T {
         self.v_count
+    }
+
+    fn add_vertex(&mut self, v: T) {
+        todo!()
     }
 }
 

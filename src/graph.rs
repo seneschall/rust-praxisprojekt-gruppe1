@@ -1,7 +1,11 @@
 use crate::traits::*;
 use num::{FromPrimitive, Integer, ToPrimitive, Unsigned};
 use std::{
-    collections::HashMap, fmt::{Debug, Display}, fs, hash::Hash, str::FromStr
+    collections::HashMap,
+    fmt::{Debug, Display},
+    fs,
+    hash::Hash,
+    str::FromStr,
 };
 use vers_vecs::{BitVec, RsVec};
 
@@ -24,9 +28,9 @@ mod test {
     }
 
     #[test]
-    fn test_node_labels() {
+    fn test_vertex_labels() {
         let mut graph: Digraph<u32, String> = Digraph::new(V_COUNT);
-        graph.add_node_label(0, String::from("test"));
+        graph.add_vertex_label(0, String::from("test"));
         assert_eq!(graph.get_label(0), Some(&String::from("test")));
         assert_eq!(graph.get_label(1), None);
     }
@@ -58,8 +62,9 @@ where
             node_labels: HashMap::new(),
         }
     }
-    pub fn new2(v_count: T, e_count : T, adj : Vec<Vec<T>>) -> Self{ // temporary, constructor with adj list 
-        Digraph{
+    pub fn from_adj(v_count: T, e_count: T, adj: Vec<Vec<T>>) -> Self {
+        // temporary, constructor with adj list
+        Digraph {
             v_count,
             e_count,
             adj,
@@ -84,7 +89,7 @@ where
         self.adj[v.to_usize().unwrap()].push(w);
     }
 
-    fn add_node_label(&mut self, v: T, label: L) {
+    fn add_vertex_label(&mut self, v: T, label: L) {
         self.node_labels.insert(v, label);
     }
 
@@ -130,6 +135,10 @@ where
 
     fn v_count(&self) -> T {
         self.v_count
+    }
+
+    fn add_vertex(&mut self, v: T) {
+        todo!()
     }
 }
 
