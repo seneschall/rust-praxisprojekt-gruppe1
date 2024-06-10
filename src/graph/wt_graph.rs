@@ -103,10 +103,12 @@ where
                 self.uncommitted_edits.insert(v, vec![Edit::Add(w)]);
             }
         }
+
+        self.has_uncommitted_edits = true;
     }
 
     fn add_vertex_label(&mut self, v: T, label: L) {
-        if v > self.v_count - T::one() {
+        if v > self.v_count - T::one() || self.vertex_deleted(v) {
             panic!("Vertex doesn't exist.");
         }
 
@@ -118,15 +120,26 @@ where
     }
 
     fn delete_vertex(&mut self, v: T) {
-        todo!()
+        if v > self.v_count - T::one() {
+            panic!("Vertex doesn't exist.");
+        }
+
+        match self.uncommitted_edits.get_mut(&v) {
+            Some(adj) => {
+                adj.push(Edit::Add(w));
+            }
+            None => {
+                self.uncommitted_edits.insert(v, vec![Edit::Add(w)]);
+            }
+        }
     }
 
     fn e_count(&self) -> T {
         self.e_count
     }
 
-    fn edit_label(&mut self, v: T) {
-        todo!()
+    fn edit_label(&mut self, v: T, change: L) {
+        self.node_labels.insert(v, change);
     }
 
     fn get_label(&self, v: T) -> Option<&L> {
@@ -138,7 +151,55 @@ where
     }
 
     fn add_vertex(&mut self, v: T) {
-        todo!()
+        // we'll have to decide whether we want to allow the user to manually insert vertices by index or where it gets the index self.v_count
+        // upon insertion
+        // also, should self.v_count get updated during this operation, since it wasn't committed?
+
+        if v <= self.v_count - T::one() {
+            // if the index of the vertex the user wants to add is smaller than the length of v_count, v exists in wt_adj
+            // we now have to check, whether it was already added and or deleted
+
+            let mut v_deleted: bool = self.vertex_deleted(v);
+
+            if self.uncommitted_edits.get(&v).is_some() && !v_deleted {
+                // if there is an entry for v in uncommitted_edits and v was not deleted, then:
+                panic!("Vertex already exists.");
+            }
+            if v_deleted {
+                // if v was deleted, that means an entry for v exists in self.uncommitted_edits
+                // therefore, we'll have to push `AddSelf` to the end of the uncommitted edits of v.
+                // When committing the edits, we'll only commit the changes after the final AddSelf in the changes list of v
+
+                let mut edits_for_v: Vec<Edit<T>> = self.uncommitted_edits.get_mut(&v).unwrap();
+                edits_for_v.push(Edit::AddSelf);
+            }
+        } else {
+            self.uncommitted_edits.insert(v, vec![Edit::AddSelf]);
+        }
+    }
+
+    fn vertex_deleted(&self, v: T) -> bool {
+        let mut last: Edit<T>;
+
+        match self.uncommitted_edits.get_mut(&v) {
+            Some(adj) => {
+                last = adj.last();
+            }
+            None => {
+                return false;
+            }
+        }
+
+        match last {
+            Edit::DeleteSelf => {
+                return true;
+            }
+            _ => {
+                return false;
+            }
+        }
+
+        self.has_uncommitted_edits = true;
     }
 }
 

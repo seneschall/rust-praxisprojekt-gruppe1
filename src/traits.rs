@@ -21,9 +21,11 @@ where
 
     fn delete_vertex(&mut self, v: T); // should eventually be changed to return a Result type
 
+    fn vertex_deleted(&self, v: T) -> bool; // true if last item in uncommitted edits for v is Edit::DeleteSelf
+
     fn e_count(&self) -> T;
 
-    fn edit_label(&mut self, v: T);
+    fn edit_label(&mut self, v: T, change: L);
 
     fn get_label(&self, v: T) -> Option<&L>;
 
