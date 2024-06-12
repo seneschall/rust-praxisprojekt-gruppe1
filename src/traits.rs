@@ -1,10 +1,34 @@
+use std::collections::HashMap;
+
 use num::{ToPrimitive, Unsigned};
 
 pub trait WTGraph<T>
 where
     T: Unsigned + ToPrimitive,
 {
-    fn commit_changes();
+    fn updated_edges(&self, v: T) -> Option<Vec<T>>;
+}
+
+pub trait WT<T>
+where
+    T: Unsigned + ToPrimitive,
+{
+    fn commit_edits(&self);
+
+    fn get_uncommitted_edits(&self) -> Option<HashMap<T, L>>;
+
+    fn discard_edits(&self);
+
+    fn shrink(&mut self) -> HashMap<T, T>; // removes all unconnected vertices from bitmap; only allowed, if has_uncommitted_edits == false; returns a Hashmap with old indices as keys and new indices as values
+}
+
+pub trait WTDigraph<T>
+where
+    T: Unsigned + ToPrimitive,
+{
+    fn updated_outgoing_edges(&self, v: T) -> Option<Vec<T>>;
+
+    fn updated_incoming_edges(&self, v: T) -> Option<Vec<T>>;
 }
 
 pub trait Graph<T, L>
@@ -13,23 +37,25 @@ where
 {
     fn add_edge(&mut self, v: T, w: T);
 
-    fn add_vertex(&mut self, v: T);
+    fn add_vertex(&mut self, v: T); // adds vertex at given index; use at users own risk; if vertex exists (i.e. vertex is less than wt_adj.len()), it just adds it, if it does, it must not have incoming or outgoing edges
 
     fn add_vertex_label(&mut self, v: T, label: L);
 
-    fn delete_edge(&mut self, v: T, w: T); // should eventually be changed to return a Result type
+    fn append_vertex(&mut self, v: T) -> T; // adds vertex at position wt_adj.len() or at index of lowest deleted vertex (if that change hasn't been committed)
+
+    fn delete_edge(&mut self, v: T, w: T);
 
     fn delete_vertex(&mut self, v: T); // should eventually be changed to return a Result type
 
-    fn vertex_deleted(&self, v: T) -> bool; // true if last item in uncommitted edits for v is Edit::DeleteSelf
+    fn e_count(&self) -> T; // should eventually be changed to return a Result type
 
-    fn e_count(&self) -> T;
-
-    fn edit_label(&mut self, v: T, change: L);
+    fn edit_label(&mut self, v: T, change: L); // true if last item in uncommitted edits for v is Edit::DeleteSelf
 
     fn get_label(&self, v: T) -> Option<&L>;
 
     fn v_count(&self) -> T;
+
+    fn vertex_deleted(&self, v: T) -> bool;
 }
 
 pub trait Directed<T>

@@ -16,6 +16,7 @@ where
 }
 
 pub struct WTDigraph<T, L>
+// change T to usize
 where
     T: Unsigned + ToPrimitive,
 {
@@ -107,12 +108,42 @@ where
         self.has_uncommitted_edits = true;
     }
 
+    fn add_vertex(&mut self, v: T) {
+        // Method needs to be changed to reflect current strategy
+
+        if v <= self.v_count - T::one() {
+            // if the index of the vertex the user wants to add is smaller than the length of v_count, v exists in wt_adj
+            // we now have to check, whether it was already added and or deleted
+
+            let mut v_deleted: bool = self.vertex_deleted(v);
+
+            if self.uncommitted_edits.get(&v).is_some() && !v_deleted {
+                // if there is an entry for v in uncommitted_edits and v was not deleted, then:
+                panic!("Vertex already exists.");
+            }
+            if v_deleted {
+                // if v was deleted, that means an entry for v exists in self.uncommitted_edits
+                // therefore, we'll have to push `AddSelf` to the end of the uncommitted edits of v.
+                // When committing the edits, we'll only commit the changes after the final AddSelf in the changes list of v
+
+                let mut edits_for_v: Vec<Edit<T>> = self.uncommitted_edits.get_mut(&v).unwrap();
+                edits_for_v.push(Edit::AddSelf);
+            }
+        } else {
+            self.uncommitted_edits.insert(v, vec![Edit::AddSelf]);
+        }
+    }
+
     fn add_vertex_label(&mut self, v: T, label: L) {
         if v > self.v_count - T::one() || self.vertex_deleted(v) {
             panic!("Vertex doesn't exist.");
         }
 
         self.node_labels.insert(v, label);
+    }
+
+    fn append_vertex(&mut self, v: T) -> T {
+        todo!()
     }
 
     fn delete_edge(&mut self, v: T, w: T) {
@@ -148,34 +179,6 @@ where
 
     fn v_count(&self) -> T {
         self.v_count
-    }
-
-    fn add_vertex(&mut self, v: T) {
-        // we'll have to decide whether we want to allow the user to manually insert vertices by index or where it gets the index self.v_count
-        // upon insertion
-        // also, should self.v_count get updated during this operation, since it wasn't committed?
-
-        if v <= self.v_count - T::one() {
-            // if the index of the vertex the user wants to add is smaller than the length of v_count, v exists in wt_adj
-            // we now have to check, whether it was already added and or deleted
-
-            let mut v_deleted: bool = self.vertex_deleted(v);
-
-            if self.uncommitted_edits.get(&v).is_some() && !v_deleted {
-                // if there is an entry for v in uncommitted_edits and v was not deleted, then:
-                panic!("Vertex already exists.");
-            }
-            if v_deleted {
-                // if v was deleted, that means an entry for v exists in self.uncommitted_edits
-                // therefore, we'll have to push `AddSelf` to the end of the uncommitted edits of v.
-                // When committing the edits, we'll only commit the changes after the final AddSelf in the changes list of v
-
-                let mut edits_for_v: Vec<Edit<T>> = self.uncommitted_edits.get_mut(&v).unwrap();
-                edits_for_v.push(Edit::AddSelf);
-            }
-        } else {
-            self.uncommitted_edits.insert(v, vec![Edit::AddSelf]);
-        }
     }
 
     fn vertex_deleted(&self, v: T) -> bool {

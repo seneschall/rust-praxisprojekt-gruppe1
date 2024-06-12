@@ -9,7 +9,10 @@ use std::{
 };
 use vers_vecs::{BitVec, RsVec};
 
-pub mod wt_graph;
+pub mod directed;
+pub mod undirected;
+pub mod wt_directed;
+pub mod wt_undirected;
 
 #[cfg(test)]
 mod test {
@@ -39,14 +42,12 @@ mod test {
 // Defining data structures
 
 pub struct Digraph<T, L>
-// pub(crate) allows us to read adj in wt_graph without making it public for users of the library
-// i.e. it makes it crate private
 where
     T: Unsigned + ToPrimitive,
 {
     v_count: T,                 // number of vertices
     e_count: T,                 // number of edges
-    adj: Vec<Vec<T>>,           // adjacency list of indices
+    adj: Vec<Vec<T>>,           // adjacency list of indices; should we set this to pub(crate)?
     node_labels: HashMap<T, L>, // name given to node format: index: value
 }
 
@@ -62,7 +63,7 @@ where
             node_labels: HashMap::new(),
         }
     }
-    pub fn from_adj(v_count: T, e_count: T, adj: Vec<Vec<T>>) -> Self {
+    pub fn from_adjacency_list(v_count: T, e_count: T, adj: Vec<Vec<T>>) -> Self {
         // temporary, constructor with adj list
         Digraph {
             v_count,
@@ -89,8 +90,16 @@ where
         self.adj[v.to_usize().unwrap()].push(w);
     }
 
+    fn add_vertex(&mut self, v: T) {
+        todo!()
+    }
+
     fn add_vertex_label(&mut self, v: T, label: L) {
         self.node_labels.insert(v, label);
+    }
+
+    fn append_vertex(&mut self, v: T) -> T {
+        todo!()
     }
 
     fn delete_edge(&mut self, v: T, w: T) {
@@ -125,7 +134,7 @@ where
         self.e_count
     }
 
-    fn edit_label(&mut self, v: T) {
+    fn edit_label(&mut self, v: T, change: L) {
         todo!()
     }
 
@@ -137,7 +146,7 @@ where
         self.v_count
     }
 
-    fn add_vertex(&mut self, v: T) {
+    fn vertex_deleted(&self, v: T) -> bool {
         todo!()
     }
 }
