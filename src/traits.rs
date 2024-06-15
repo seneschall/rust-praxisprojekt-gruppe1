@@ -1,3 +1,4 @@
+// todo: change T to usize
 use std::collections::HashMap;
 
 use num::{ToPrimitive, Unsigned};
@@ -81,19 +82,22 @@ where
     fn weight_of_edge(&self, from: T, to: T) -> f64;
 }
 
+pub enum ShortestPathAlgorithm {
+    Dijkstra,
+    BFS,
+    BellmanFord,
+    AStar,
+}
+
 pub trait GraphSearch<T>
 where
     T: Unsigned + ToPrimitive,
 {
-    fn shortest_path_bfs(&self, from: T, to: T) -> Vec<T>; // returns the shortest path from `from` to `to` using breadth first search
+    fn shortest_path(&self, from: T, to: T, mode: ShortestPathAlgorithm) -> Vec<T>; // returns the shortest path from `from` to `to` using breadth first search
 
-    fn shortest_path_dfs(&self, from: T, to: T) -> Vec<T>; // returns the shortest path from `from` to `to` using depth first search
+    fn shortest_paths(&self, mode: ShortestPathAlgorithm) -> Vec<Vec<T>>; // shortest paths from all vertices to all other vertices
 
-    fn shortest_paths(&self) -> Vec<Vec<T>>; // shortest paths from all vertices to all other vertices
+    fn connected_components(&self) -> Vec<Vec<T>>; // returns all groups of vertices that are connected; makes no sense for directed graphs; default: bfs
 
-    fn connected_components(&self) -> Vec<Vec<T>>; // returns all groups of vertices that are connected
-
-    fn connected(&self, a: T, b: T) -> bool; // is a connected to b?
-
-    fn spanning_tree(&self) -> Vec<Vec<usize>>;
+    fn connected(&self, a: T, b: T) -> bool; // is a connected to b? default: bfs
 }

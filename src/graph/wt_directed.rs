@@ -1,3 +1,4 @@
+// todo: change T to usize
 use crate::graph::Digraph;
 use crate::traits::*;
 use num::{cast::AsPrimitive, FromPrimitive, PrimInt, ToPrimitive, Unsigned};
