@@ -5,40 +5,29 @@ use qwt::{AccessUnsigned, QWT256};
 use std::{collections::HashMap, hash::Hash};
 use vers_vecs::{BitVec, RsVec};
 
-pub enum Edit<T>
-where
-    T: Unsigned + ToPrimitive,
-{
-    Add(T),
-    Delete(T),
+pub enum Edit {
+    Add(usize),
+    Delete(usize),
     AddSelf,
     DeleteSelf,
 }
 
-pub struct WTDigraph<T, L>
-// change T to usize
-where
-    T: Unsigned + ToPrimitive,
-{
-    v_count: T,                                  // number of vertices
-    e_count: T,                                  // number of edges
-    wt_adj: QWT256<T>,                           // the wavelet tree adjacency list
-    starting_indices: RsVec,                     // starting indices of each
-    uncommitted_edits: HashMap<T, Vec<Edit<T>>>, // changes not yet committed to sequence
+pub struct WTDigraph<L> {
+    v_count: usize,                               // number of vertices
+    e_count: usize,                               // number of edges
+    wt_adj: QWT256<usize>,                        // the wavelet tree adjacency list
+    starting_indices: RsVec,                      // starting indices of each
+    uncommitted_edits: HashMap<usize, Vec<Edit>>, // changes not yet committed to sequence
     has_uncommitted_edits: bool,
-    node_labels: HashMap<T, L>, // name given to node format: index: value
+    node_labels: HashMap<usize, L>, // name given to node format: index: value
 }
 
-impl<T, L> WTDigraph<T, L>
-where
-    T: Unsigned + ToPrimitive + FromPrimitive + Copy + PrimInt + AsPrimitive<u8>,
-    u8: AsPrimitive<T>,
-{
-    pub fn from_digraph(dg: Digraph<T, L>) -> Self {
+impl<L> WTDigraph<L> {
+    pub fn from_digraph(dg: Digraph<L>) -> Self {
         let mut bv = BitVec::new();
-        let mut e_count: T = T::zero();
+        let mut e_count: usize = 0;
         let v_count = dg.adj.len();
-        let mut sequence: Vec<T> = Vec::new();
+        let mut sequence: Vec<usize> = Vec::new();
 
         for (v, v_adj) in dg.adj.iter().enumerate() {
             // iterate over all vertices (v) in adj
@@ -47,15 +36,15 @@ where
                 // iterate over the values in the adjacency list of v
                 sequence.push(*val);
                 bv.append(false); // append 0 to bv for each element in adjacency list of v
-                e_count = e_count + T::one();
+                e_count += 1;
             }
         }
         let starting_indices = RsVec::from_bit_vec(bv);
 
-        let wt_adj: QWT256<T> = QWT256::from(sequence);
+        let wt_adj: QWT256<usize> = QWT256::from(sequence);
 
         return WTDigraph {
-            v_count: T::from_usize(v_count).unwrap(),
+            v_count,
             e_count,
             wt_adj, // here sequence would be replaced by wavelet tree
             starting_indices,
@@ -65,14 +54,12 @@ where
         };
     }
 
-    pub fn from(sequence: Vec<T>, starting_indices: RsVec) -> Self {
+    pub fn from(sequence: Vec<usize>, starting_indices: RsVec) -> Self {
         let length = starting_indices.len();
 
         let v_count = starting_indices.rank1(length);
-        let v_count = T::from_usize(v_count).unwrap();
 
         let e_count = starting_indices.rank0(length);
-        let e_count = T::from_usize(e_count).unwrap();
 
         let wt_adj: QWT256<T> = QWT256::from(sequence);
 

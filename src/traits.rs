@@ -94,4 +94,6 @@ where
     fn connected_components(&self) -> Vec<Vec<T>>; // returns all groups of vertices that are connected
 
     fn connected(&self, a: T, b: T) -> bool; // is a connected to b?
+
+    fn spanning_tree(&self) -> Vec<Vec<usize>>;
 }
