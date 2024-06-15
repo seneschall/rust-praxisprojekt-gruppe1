@@ -1,37 +1,8 @@
-// todo: change T to usize
 use std::collections::HashMap;
-
 use num::{ToPrimitive, Unsigned};
 
-pub trait WTGraph<T>
-where
-    T: Unsigned + ToPrimitive,
-{
-    fn updated_edges(&self, v: T) -> Option<Vec<T>>;
-}
 
-pub trait WT<T>
-where
-    T: Unsigned + ToPrimitive,
-{
-    fn commit_edits(&self);
-
-    fn get_uncommitted_edits(&self) -> Option<HashMap<T, L>>;
-
-    fn discard_edits(&self);
-
-    fn shrink(&mut self) -> HashMap<T, T>; // removes all unconnected vertices from bitmap; only allowed, if has_uncommitted_edits == false; returns a Hashmap with old indices as keys and new indices as values
-}
-
-pub trait WTDigraph<T>
-where
-    T: Unsigned + ToPrimitive,
-{
-    fn updated_outgoing_edges(&self, v: T) -> Option<Vec<T>>;
-
-    fn updated_incoming_edges(&self, v: T) -> Option<Vec<T>>;
-}
-
+// this trait applies to all graph structures
 pub trait Graph<T, L>
 where
     T: Unsigned + ToPrimitive,
@@ -59,6 +30,17 @@ where
     fn vertex_deleted(&self, v: T) -> bool;
 }
 
+
+// this trait applies to undirected graph structures
+pub trait Undirected<T>
+where
+    T: Unsigned + ToPrimitive,
+{
+    fn edges(&self, vertex: T) -> Vec<T>;
+}
+
+
+// this trait applies to directed graph structures
 pub trait Directed<T>
 where
     T: Unsigned + ToPrimitive,
@@ -68,13 +50,8 @@ where
     fn incoming_edges(&self, vertex: T) -> Vec<T>; // likewise here
 }
 
-pub trait Undirected<T>
-where
-    T: Unsigned + ToPrimitive,
-{
-    fn edges(&self, vertex: T) -> Vec<T>;
-}
 
+// this trait applies to weighted graph structures
 pub trait Weighted<T>
 where
     T: Unsigned + ToPrimitive,
@@ -82,6 +59,48 @@ where
     fn weight_of_edge(&self, from: T, to: T) -> f64;
 }
 
+
+
+//  this trait applies to all WT graph structures
+pub trait WT<T>
+where
+    T: Unsigned + ToPrimitive,
+{
+    fn commit_edits(&self);
+
+    fn get_uncommitted_edits(&self) -> Option<HashMap<T, L>>;
+
+    fn discard_edits(&self);
+
+    fn shrink(&mut self) -> HashMap<T, T>; // removes all unconnected vertices from bitmap; only allowed, if has_uncommitted_edits == false; returns a Hashmap with old indices as keys and new indices as values
+}
+
+
+// this trait applies to undirected WT graph structures
+pub trait WTGraph<T>
+where
+    T: Unsigned + ToPrimitive,
+{
+    fn updated_edges(&self, v: T) -> Option<Vec<T>>;
+}
+
+
+// this trait applies to directed WT structures
+pub trait WTDigraph<T>
+where
+    T: Unsigned + ToPrimitive,
+{
+    fn updated_outgoing_edges(&self, v: T) -> Option<Vec<T>>;
+
+    fn updated_incoming_edges(&self, v: T) -> Option<Vec<T>>;
+}
+
+
+// are we missing WTWeighted?
+
+
+
+// additional graph functionality
 pub enum ShortestPathAlgorithm {
     Dijkstra,
     BFS,

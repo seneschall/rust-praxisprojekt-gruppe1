@@ -14,6 +14,7 @@ pub mod undirected;
 pub mod wt_directed;
 pub mod wt_undirected;
 
+// UNIT-TESTS Graph-Einlesen aus Datei
 #[cfg(test)]
 mod test {
     use super::*;
@@ -39,136 +40,8 @@ mod test {
     }
 }
 
-// Defining data structures
-
-pub struct Digraph<T, L>
-where
-    T: Unsigned + ToPrimitive,
-{
-    v_count: T,                 // number of vertices
-    e_count: T,                 // number of edges
-    adj: Vec<Vec<T>>,           // adjacency list of indices; should we set this to pub(crate)?
-    node_labels: HashMap<T, L>, // name given to node format: index: value
-}
-
-impl<T, L> Digraph<T, L>
-where
-    T: Unsigned + ToPrimitive + Copy + Integer,
-{
-    pub fn new(v_count: T) -> Self {
-        Digraph {
-            v_count,
-            e_count: T::zero(),
-            adj: vec![vec![]; v_count.to_usize().unwrap()],
-            node_labels: HashMap::new(),
-        }
-    }
-    pub fn from_adjacency_list(v_count: T, e_count: T, adj: Vec<Vec<T>>) -> Self {
-        // temporary, constructor with adj list
-        Digraph {
-            v_count,
-            e_count,
-            adj,
-            node_labels: HashMap::new(),
-        }
-    }
-    fn vertex_exists(&self, v: T) -> bool {
-        v < self.v_count
-    }
-}
-
-impl<T, L> Graph<T, L> for Digraph<T, L>
-where
-    T: Unsigned + ToPrimitive + Integer + Display + Copy + Hash,
-    L: Clone,
-{
-    fn add_edge(&mut self, v: T, w: T) {
-        if !(self.vertex_exists(v) || self.vertex_exists(w)) {
-            panic!("One of vertices {}, {} doesn't exist", v, w)
-        };
-        self.e_count = self.e_count() + T::one();
-        self.adj[v.to_usize().unwrap()].push(w);
-    }
-
-    fn add_vertex(&mut self, v: T) {
-        todo!()
-    }
-
-    fn add_vertex_label(&mut self, v: T, label: L) {
-        self.node_labels.insert(v, label);
-    }
-
-    fn append_vertex(&mut self, v: T) -> T {
-        todo!()
-    }
-
-    fn delete_edge(&mut self, v: T, w: T) {
-        let i_of_w: usize;
-        match self.adj.get(v.to_usize().unwrap()) {
-            Some(vs) => {
-                let i_of_w_opt = vs.iter().position(|&x| x == w);
-
-                match i_of_w_opt {
-                    Some(i) => {
-                        i_of_w = i;
-                    } // swap_remove more efficient than remove because the order is not important
-                    None => {
-                        panic!("There was no edge from {v} to {w}.");
-                    }
-                }
-            }
-            None => {
-                panic!("Vertex {v} doesn't exist."); // Should be replaced by Result type
-            }
-        }
-
-        self.adj[v.to_usize().unwrap()].swap_remove(i_of_w);
-        self.e_count = self.e_count() - T::one();
-    }
-
-    fn delete_vertex(&mut self, v: T) {
-        todo!()
-    }
-
-    fn e_count(&self) -> T {
-        self.e_count
-    }
-
-    fn edit_label(&mut self, v: T, change: L) {
-        todo!()
-    }
-
-    fn get_label(&self, v: T) -> Option<&L> {
-        self.node_labels.get(&v)
-    }
-
-    fn v_count(&self) -> T {
-        self.v_count
-    }
-
-    fn vertex_deleted(&self, v: T) -> bool {
-        todo!()
-    }
-}
-
-impl<T, L> Directed<T> for Digraph<T, L>
-where
-    T: Unsigned + ToPrimitive + Clone,
-{
-    fn outgoing_edges(&self, vertex: T) -> Vec<T> {
-        self.adj[vertex.to_usize().unwrap()].clone()
-    }
-
-    fn incoming_edges(&self, vertex: T) -> Vec<T> {
-        todo!()
-    }
-}
-
-// Veras Funktionen:
-
-pub fn import_graph_properties<T: FromStr + Debug + Unsigned>(filename: &str) -> (T, T)
-where
-    <T as FromStr>::Err: Debug,
+// Funktionen zum Einlesen vom Graphen aus einer Input-Datei
+pub fn import_graph_properties(filename: &str) -> (usize, usize)
 {
     let content = fs::read_to_string(filename).expect("Unable to open file");
     let mut lines = content.lines();
@@ -177,25 +50,23 @@ where
         .next()
         .expect("Missing first line")
         .trim()
-        .parse::<T>()
+        .parse::<usize>()
         .expect("First line (number of vertices) is not a valid input");
 
     let e_count = lines
         .next()
         .expect("Missing second line")
         .trim()
-        .parse::<T>()
+        .parse::<usize>()
         .expect("Second line (number of edges) is not a valid input");
 
     (v_count, e_count)
 }
 
 // create the adjecency list from a graph in the input file
-pub fn import_adjacency_list<T: Clone + Debug + FromStr + Unsigned + ToPrimitive>(
+pub fn import_adjacency_list<usize>(
     filename: &str,
-) -> Vec<Vec<T>>
-where
-    <T as FromStr>::Err: Debug,
+) -> Vec<Vec<usize>>,
 {
     let content = fs::read_to_string(filename).expect("Unable to open file");
 
@@ -225,7 +96,7 @@ where
 
 // use output from import_adjacency_list to create a sequence for qwt and a bitmap
 // ex. let (sequence, bitmap) = create_sequence_and_bitmap(&adjacency_list);
-pub fn create_sequence_and_bitmap<T: Clone + Unsigned>(map: &Vec<Vec<T>>) -> (Vec<T>, BitVec) {
+pub fn create_sequence_and_bitmap(map: &Vec<Vec<usize>>) -> (Vec<usize>, BitVec) {
     let mut sequence = Vec::new();
     let mut bitmap = BitVec::new();
 
