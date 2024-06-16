@@ -1,8 +1,8 @@
-se crate::graph::Digraph;
+use crate::graph::directed::Digraph;
 use crate::traits::*;
 use num::{cast::AsPrimitive, FromPrimitive, PrimInt, ToPrimitive, Unsigned};
-use qwt::{AccessUnsigned, QWT256};
-use std::{collections::HashMap, hash::Hash};
+use qwt::{AccessUnsigned, RankUnsigned, SelectUnsigned, QWT256};
+use std::{collections::{HashMap, VecDeque}, hash::Hash};
 use vers_vecs::{BitVec, RsVec};
 
 pub enum Edit {
@@ -16,7 +16,7 @@ pub enum Edit {
 #[cfg(test)]
 mod test {
     use super::*;
-    const V_COUNT: u32 = 10;
+    const V_COUNT: usize = 10;
 }
 
 // WT-Digraph - definition and methods
@@ -34,10 +34,10 @@ impl<L> WTDigraph<L> {
     pub fn from_digraph(dg: Digraph<L>) -> Self {
         let mut bv = BitVec::new();
         let mut e_count: usize = 0;
-        let v_count = dg.adj.len();
+        let v_count = dg.adj.len(); // need to use getter
         let mut sequence: Vec<usize> = Vec::new();
 
-        for (v, v_adj) in dg.adj.iter().enumerate() {
+        for (v, v_adj) in dg.adj.iter().enumerate() { // dg.adj.iter ?
             // iterate over all vertices (v) in adj
             bv.append(true);
             for val in v_adj.iter() {
@@ -69,7 +69,7 @@ impl<L> WTDigraph<L> {
 
         let e_count = starting_indices.rank0(length);
 
-        let wt_adj: QWT256<T> = QWT256::from(sequence);
+        let wt_adj: QWT256<usize> = QWT256::from(sequence);
 
         return WTDigraph {
             v_count,
@@ -120,8 +120,8 @@ where
                 // therefore, we'll have to push `AddSelf` to the end of the uncommitted edits of v.
                 // When committing the edits, we'll only commit the changes after the final AddSelf in the changes list of v
 
-                let mut edits_for_v: Vec<Edit<usize>> = self.uncommitted_edits.get_mut(&v).unwrap();
-                edits_for_v.push(Edit::AddSelf);
+                // let mut edits_for_v: Vec<Edit> = self.uncommitted_edits.get(&v).unwrap();  // broken
+                // edits_for_v.push(Edit::AddSelf);
             }
         } else {
             self.uncommitted_edits.insert(v, vec![Edit::AddSelf]);
@@ -135,10 +135,10 @@ where
 
         self.node_labels.insert(v, label);
     }
-
-    fn append_vertex(&mut self) -> usize {
-        todo!() // ...
+    fn append_vertex(&mut self, v: usize) -> usize {
+        todo!()
     }
+
 
     fn delete_edge(&mut self, v: usize, w: usize) {
         todo!() // ...
@@ -151,10 +151,10 @@ where
 
         match self.uncommitted_edits.get_mut(&v) {
             Some(adj) => {
-                adj.push(Edit::Add(w));
+                adj.push(Edit::Add(v));
             }
             None => {
-                self.uncommitted_edits.insert(v, vec![Edit::Add(w)]);
+                self.uncommitted_edits.insert(v, vec![Edit::Add(v)]);
             }
         }
     }
@@ -176,28 +176,30 @@ where
     }
 
     fn vertex_deleted(&self, v: usize) -> bool {
-        let mut last: Edit;
+        todo!()
+        // let mut last: Edit;
 
-        match self.uncommitted_edits.get_mut(&v) {
-            Some(adj) => {
-                last = adj.last();
-            }
-            None => {
-                return false;
-            }
-        }
+        // match self.uncommitted_edits.get_mut(&v) {
+        //     Some(adj) => {
+        //         last = adj.last(); 
+        //     }
+        //     None => {
+        //         return false;
+        //     }
+        // }
 
-        match last {
-            Edit::DeleteSelf => {
-                return true;
-            }
-            _ => {
-                return false;
-            }
-        }
+        // match last {
+        //     Edit::DeleteSelf => {
+        //         return true;
+        //     }
+        //     _ => {
+        //         return false;
+        //     }
+        // }
 
-        self.has_uncommitted_edits = true;
+        // self.has_uncommitted_edits = true;
     }
+    
 }
 
 impl<L> Directed for WTDigraph<L>
@@ -221,8 +223,55 @@ impl<L> Directed for WTDigraph<L>
     }
 
     fn incoming_edges(&self, vertex: usize) -> Vec<usize> {
-        todo!() // ...
+        let mut v_inc: Vec<usize> = Vec::new();
+        let number: usize = (self.wt_adj.rank(vertex, self.wt_adj.len())).unwrap() + 1;
+
+        for i in 1..number {
+            let indeximwt = self.wt_adj.select(vertex, i).unwrap();
+            let posinbitmap = self.starting_indices.select0(indeximwt);
+            let einsenzaehlen = self.starting_indices.rank1(posinbitmap) - 1;
+            v_inc.push(einsenzaehlen.as_());
+            //v_inc.push((self.starting_indices.rank1(self.starting_indices.select0(self.wt_adj.select(vertex,i).unwrap()))-1).as_())
+        }
+        v_inc
     }
 }
-
+impl<L> GraphSearch for WTDigraph<L>
+{
+    fn connected(&self, from: usize, to: usize) -> bool {
+        // is a connected to b?
+        let mut list_of_outgoing_edges: VecDeque<usize> = VecDeque::new();
+        let mut visited: Vec<usize> = Vec::new();
+        list_of_outgoing_edges.append(&mut self.outgoing_edges(from).into());
+        visited.push(from);
+        while !list_of_outgoing_edges.is_empty() {
+            let v = list_of_outgoing_edges.pop_front().unwrap();
+            visited.push(v);
+            if v == to {
+                return true;
+            }
+            for item in self.outgoing_edges(v) {
+                if !visited.contains(&item) {
+                    // if vertex was not yet visited, add it to the queue
+                    if !list_of_outgoing_edges.contains(&item) {
+                        list_of_outgoing_edges.push_back(item);
+                    }
+                }
+            }
+        }
+        false
+    }
+    
+    fn shortest_path(&self, from: usize, to: usize, mode: ShortestPathAlgorithm) -> Vec<usize> {
+        todo!()
+    }
+    
+    fn shortest_paths(&self, mode: ShortestPathAlgorithm) -> Vec<Vec<usize>> {
+        todo!()
+    }
+    
+    fn connected_components(&self) -> Vec<Vec<usize>> {
+        todo!()
+    }
+}
 // WT-Weighted Digraph - definition and methods
