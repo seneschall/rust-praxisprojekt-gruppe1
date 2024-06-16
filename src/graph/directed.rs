@@ -22,15 +22,15 @@ mod test {
         }
         for i in 0..digraph.v_count()-1{
             digraph.add_edge(i, i+1);
-        }
+        } // adds edges from 0 -> 1 , 1 -> 2, 2 -> 3 ...
         for i in 0..digraph.v_count()-1{
             assert_eq!(digraph.incoming_edges(i+1), vec![i]);
         }
+        assert_eq!(digraph.incoming_edges(4), vec![3usize]);
         digraph.delete_edge(3, 4);
         assert_eq!(digraph.incoming_edges(4), vec![]);
         digraph.delete_vertex(6);
         assert_eq!(digraph.incoming_edges(7), vec![]);
-
     }
     #[test]
     fn create_new_digraph() {
@@ -194,11 +194,10 @@ where
     fn delete_vertex(&mut self, vertex: usize) {
         self.v_count -= 1;
         self.e_count -= self.adj[vertex].len();
-        // need to implement incoming_edges first
-        // for item in self.incoming_edges(v){
-        //     self.delete_edge(item, v);
-        //     self.e_count -= 1;
-        // }
+        for item in self.incoming_edges(vertex){
+            self.delete_edge(item, vertex);
+            self.e_count -= 1;
+        }
         self.adj.remove(vertex);
     }
 
