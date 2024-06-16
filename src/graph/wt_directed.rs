@@ -13,14 +13,13 @@ pub enum Edit {
 }
 
 // UNIT-TESTS for WT-Digraph and WT-Weighted Digraph
-
 #[cfg(test)]
 mod test {
     use super::*;
     const V_COUNT: u32 = 10;
 }
 
-// WT-Digraph definition and methods
+// WT-Digraph - definition and methods
 pub struct WTDigraph<L> {
     v_count: usize,                               // number of vertices
     e_count: usize,                               // number of edges
@@ -172,7 +171,7 @@ where
         self.node_labels.get(&v)
     }
 
-    fn v_count(&self) -> T {
+    fn v_count(&self) -> usize {
         self.v_count
     }
 
@@ -225,3 +224,5 @@ impl<L> Directed for WTDigraph<L>
         todo!() // ...
     }
 }
+
+// WT-Weighted Digraph - definition and methods

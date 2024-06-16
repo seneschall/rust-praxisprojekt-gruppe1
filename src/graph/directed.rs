@@ -5,6 +5,79 @@
 mod test {
     use super::*;
     const V_COUNT: u32 = 10;
+    #[test]
+    fn create_new_digraph() {
+        let mut graph: Graph<u32, u32> = Graph::new(V_COUNT);
+        graph.add_edge(3, 2);
+        graph.add_edge(5, 0);
+        assert_eq!(graph.edges(3), vec![2u32]);
+        assert_eq!(graph.edges(5), vec![0u32]);
+        assert_eq!(graph.e_count(), 2);
+        // code for digraph_weighted
+    }
+    #[test]
+    fn create_digraph_from_adj() {
+        // code for digraph
+    }
+    #[test]
+    fn create_weighted_digraph_from_adj() {
+        // code for digraph_weighted
+    }
+    #[test]
+    fn add_edge_to_digraphs() {
+        // code for digraph
+        // code for digraph_weighted
+    }
+    #[test]
+    fn add_vertex_to_digraphs() {
+        // code for digraph
+        // code for digraph_weighted
+    }
+    #[test]
+    fn append_vertex_to_digraphs() {
+        // code for digraph
+        // code for digraph_weighted
+    }
+    #[test]
+    fn remove_edge_from_digraphs() {
+        // code for digraph
+        // code for digraph_weighted
+    }
+    #[test]
+    fn remove_vertex_from_digraphs() {
+        // code for digraph
+        // code for digraph_weighted        
+    }
+    #[test]
+    fn add_label_to_digraphs() {
+        let mut graph: Digraph<u32, String> = Digraph::new(V_COUNT);
+        graph.add_vertex_label(0, String::from("test"));
+        assert_eq!(graph.get_label(0), Some(&String::from("test")));
+        assert_eq!(graph.get_label(1), None);
+        // code for digraph_weighted  
+    }
+    #[test]
+    fn edit_label_on_digraphs() {
+        // code for digraph
+        // code for digraph_weighted
+    } 
+    #[test]
+    fn outgoing_incoming_edges_on_digraphs() {
+        // code for digraph
+        // code for digraph_weighted
+    }
+    #[test]
+    fn print_weight_of_digraph_edge() {
+        // code for digraph_weighted
+    }
+    #[test]
+    fn add_edit_weight_of_digraph_edge() {
+        // code for digraph_weighted
+    }
+    #[test]
+    fn delete_weight_of_digraph_edge() {
+        // code for digraph_weighted
+    }
 }
 
 // Digraph - definition and methods
@@ -123,4 +196,32 @@ impl<L> Directed for Digraph<L>
     fn incoming_edges(&self, vertex: usize) -> Vec<usize> {
         todo!() // ...
     }
+}
+
+
+// Weighted Digraph definition & methods
+
+pub struct Digraph_Weighted<L> 
+{
+
+}
+
+impl<L> Digraph_Weighted<T,L> 
+{
+
+}
+
+impl<L> Graph<L> for Digraph_Weighted<L> 
+{
+
+}
+
+impl<L> Directed for Digraph_Weighted<L> 
+{
+    
+}
+
+impl<L> Weighted for Digraph_Weighted<L> 
+{
+    
 }
