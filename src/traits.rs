@@ -5,27 +5,27 @@ use num::{ToPrimitive, Unsigned};
 // this trait applies to all graph structures
 pub trait Graph<L>
 {
-    fn add_edge(&mut self, v: usize, w: usize);
+    fn add_edge(&mut self, from: usize, to: usize);
 
-    fn add_vertex(&mut self, v: usize); // adds vertex at given index; use at users own risk; if vertex exists (i.e. vertex is less than wt_adj.len()), it just adds it, if it does, it must not have incoming or outgoing edges
+    fn add_vertex(&mut self, vertex: usize); // adds vertex at given index; use at users own risk; if vertex exists (i.e. vertex is less than wt_adj.len()), it just adds it, if it does, it must not have incoming or outgoing edges
 
-    fn add_vertex_label(&mut self, v: usize, label: L);
+    fn add_vertex_label(&mut self, vertex: usize, label: L);
 
-    fn append_vertex(&mut self, v: usize) -> usize; // adds vertex at position wt_adj.len() or at index of lowest deleted vertex (if that change hasn't been committed)
+    fn append_vertex(&mut self, vertex: usize) -> usize; // adds vertex at position wt_adj.len() or at index of lowest deleted vertex (if that change hasn't been committed)
 
-    fn delete_edge(&mut self, v: usize, w: usize);
+    fn delete_edge(&mut self, from: usize, to: usize);
 
-    fn delete_vertex(&mut self, v: usize); // should eventually be changed to return a Result type
+    fn delete_vertex(&mut self, vertex: usize); // should eventually be changed to return a Result type
 
     fn e_count(&self) -> usize; // should eventually be changed to return a Result type
 
-    fn edit_label(&mut self, v: usize, label: L); // true if last item in uncommitted edits for v is Edit::DeleteSelf
+    fn edit_label(&mut self, vertex: usize, label: L); // true if last item in uncommitted edits for v is Edit::DeleteSelf
 
-    fn get_label(&self, v: usize) -> Option<&L>;
+    fn get_label(&self, vertex: usize) -> Option<&L>;
 
     fn v_count(&self) -> usize;
 
-    fn vertex_deleted(&self, v: usize) -> bool;
+    fn vertex_deleted(&self, vertex: usize) -> bool;
 }
 
 
@@ -69,16 +69,16 @@ pub trait WT<L>
 // this trait applies to undirected WT graph structures
 pub trait WTGraph
 {
-    fn updated_edges(&self, v: usize) -> Option<Vec<usize>>;
+    fn updated_edges(&self, vertex: usize) -> Option<Vec<usize>>;
 }
 
 
 // this trait applies to directed WT structures
 pub trait WTDigraph
 {
-    fn updated_outgoing_edges(&self, v: usize) -> Option<Vec<usize>>;
+    fn updated_outgoing_edges(&self, vertex: usize) -> Option<Vec<usize>>;
 
-    fn updated_incoming_edges(&self, v: usize) -> Option<Vec<usize>>;
+    fn updated_incoming_edges(&self, vertex: usize) -> Option<Vec<usize>>;
 }
 
 
