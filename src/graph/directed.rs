@@ -108,8 +108,8 @@ impl<L> Digraph<L>
             node_labels: HashMap::new(),
         }
     }
-    fn vertex_exists(&self, v: usize) -> bool {
-        v < self.v_count
+    fn vertex_exists(&self, vertex: usize) -> bool {
+        vertex < self.v_count
     }
 }
 
@@ -117,87 +117,87 @@ impl<L> Graph<L> for Digraph<L>
 where
     L: Clone,
 {
-    fn add_edge(&mut self, v: usize, w: usize) {
-        if !(self.vertex_exists(v) || self.vertex_exists(w)) {
-            panic!("One of vertices {}, {} doesn't exist", v, w)
+    fn add_edge(&mut self, from: usize, to: usize) {
+        if !(self.vertex_exists(from) || self.vertex_exists(to)) {
+            panic!("One of vertices {}, {} doesn't exist", from, to)
         }
         self.e_count += 1;
-        self.adj[v].push(w);
+        self.adj[from].push(to);
     }
 
-    fn add_vertex(&mut self, v: usize) {
-        if v >= self.v_count(){
+    fn add_vertex(&mut self, vertex: usize) {
+        if vertex >= self.v_count(){
             let dummy = self.v_count();
-            for i in 0..v-self.v_count(){
+            for i in 0..vertex-self.v_count(){
                 self.adj.insert(dummy+i, vec![]);
                 self.v_count +=1;
             }
         } else {
-            self.adj.insert(v,vec![]);
+            self.adj.insert(vertex,vec![]);
             self.v_count +=1;
         }
     }
 
-    fn add_vertex_label(&mut self, v: usize, label: L) {
-        self.node_labels.insert(v, label); 
+    fn add_vertex_label(&mut self, vertex: usize, label: L) {
+        self.node_labels.insert(vertex, label); 
     }
 
-    fn append_vertex(&mut self, v: usize) -> usize {
+    fn append_vertex(&mut self, vertex: usize) -> usize {
         todo!()
     }
 
-    fn delete_edge(&mut self, v: usize, w: usize) {
+    fn delete_edge(&mut self, from: usize, to: usize) {
         let i_of_w: usize; // -- note from celine: could we use index_of_w for clarity?
-        match self.adj.get(v) {
+        match self.adj.get(from) {
             Some(vs) => {  
-                let i_of_w_opt = vs.iter().position(|&x| x == w); // -- note from celine: can you explain this?
+                let i_of_w_opt = vs.iter().position(|&x| x == to); // -- note from celine: can you explain this?
                 // is this a nested match?
                 match i_of_w_opt {
                     Some(i) => {
                         i_of_w = i;
                     } // swap_remove more efficient than remove because the order is not important
                     None => {
-                        panic!("There was no edge from {v} to {w}.");
+                        panic!("There was no edge from {from} to {to}.");
                     }
                 }
             }
             None => {
-                panic!("Vertex {v} doesn't exist."); // Should be replaced by Result type
+                panic!("Vertex {from} doesn't exist."); // Should be replaced by Result type
             }
         }
 
-        self.adj[v].swap_remove(i_of_w);
+        self.adj[from].swap_remove(i_of_w);
         self.e_count -= 1;
     }
 
-    fn delete_vertex(&mut self, v: usize) {
+    fn delete_vertex(&mut self, vertex: usize) {
         self.v_count -= 1;
-        self.e_count -= self.adj[v].len();
+        self.e_count -= self.adj[vertex].len();
         // need to implement incoming_edges first
         // for item in self.incoming_edges(v){
         //     self.delete_edge(item, v);
         //     self.e_count -= 1;
         // }
-        self.adj.remove(v);
+        self.adj.remove(vertex);
     }
 
     fn e_count(&self) -> usize {
         self.e_count
     }
 
-    fn edit_label(&mut self, v: usize, label: L) {
+    fn edit_label(&mut self, vertex: usize, label: L) {
         todo!() // ...
     }
 
-    fn get_label(&self, v: usize) -> Option<&L> {
-        self.node_labels.get(&v) // note from celine: can you explain this?
+    fn get_label(&self, vertex: usize) -> Option<&L> {
+        self.node_labels.get(&vertex) // note from celine: can you explain this?
     }
 
     fn v_count(&self) -> usize {
         self.v_count
     }
 
-    fn vertex_deleted(&self, v: usize) -> bool {
+    fn vertex_deleted(&self, vertex: usize) -> bool {
         todo!() // ...
     }
     
@@ -230,19 +230,19 @@ impl<L> Digraph_Weighted<L>
 
 impl<L> Graph<L> for Digraph_Weighted<L> 
 {
-    fn add_edge(&mut self, v: usize, w: usize) {
+    fn add_edge(&mut self, from: usize, to: usize) {
         todo!()
     }
 
-    fn add_vertex(&mut self, v: usize) {
+    fn add_vertex(&mut self, vertex: usize) {
         todo!()
     }
 
-    fn add_vertex_label(&mut self, v: usize, label: L) {
+    fn add_vertex_label(&mut self, vertex: usize, label: L) {
         todo!()
     }
 
-    fn append_vertex(&mut self, v: usize) -> usize {
+    fn append_vertex(&mut self, vertex: usize) -> usize {
         todo!()
     }
 
@@ -250,7 +250,7 @@ impl<L> Graph<L> for Digraph_Weighted<L>
         todo!()
     }
 
-    fn delete_vertex(&mut self, v: usize) {
+    fn delete_vertex(&mut self, vertex: usize) {
         todo!()
     }
 
@@ -258,11 +258,11 @@ impl<L> Graph<L> for Digraph_Weighted<L>
         todo!()
     }
 
-    fn edit_label(&mut self, v: usize, label: L) {
+    fn edit_label(&mut self, vertex: usize, label: L) {
         todo!()
     }
 
-    fn get_label(&self, v: usize) -> Option<&L> {
+    fn get_label(&self, vertex: usize) -> Option<&L> {
         todo!()
     }
 
@@ -270,7 +270,7 @@ impl<L> Graph<L> for Digraph_Weighted<L>
         todo!()
     }
 
-    fn vertex_deleted(&self, v: usize) -> bool {
+    fn vertex_deleted(&self, vertex: usize) -> bool {
         todo!()
     }
 }
