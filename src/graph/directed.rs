@@ -9,8 +9,29 @@ use super::{Directed, Weighted};
 mod test {
 
 
+    use crate::graph::{import_adjacency_list, import_graph_properties};
+
     use super::*;
     const V_COUNT: usize = 10;
+
+    #[test]
+    fn test_digraph_incoming_edges(){
+        let mut digraph : Digraph<usize> = Digraph::new(10);
+        for i in 0..digraph.v_count(){
+            assert_eq!(digraph.incoming_edges(i), Vec::new());
+        }
+        for i in 0..digraph.v_count()-1{
+            digraph.add_edge(i, i+1);
+        }
+        for i in 0..digraph.v_count()-1{
+            assert_eq!(digraph.incoming_edges(i+1), vec![i]);
+        }
+        digraph.delete_edge(3, 4);
+        assert_eq!(digraph.incoming_edges(4), vec![]);
+        digraph.delete_vertex(6);
+        assert_eq!(digraph.incoming_edges(7), vec![]);
+
+    }
     #[test]
     fn create_new_digraph() {
         // code for digraph_weighted
@@ -211,7 +232,14 @@ impl<L> Directed for Digraph<L>
     }
 
     fn incoming_edges(&self, vertex: usize) -> Vec<usize> {
-        todo!() // ...
+        let mut incoming_edges :Vec<usize> = Vec::new();
+        for i in 0..self.v_count{
+            if self.adj[i].contains(&vertex)
+            {
+                incoming_edges.push(i);
+            }
+        }
+        incoming_edges
     }
 }
 
