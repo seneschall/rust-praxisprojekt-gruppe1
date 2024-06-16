@@ -1,10 +1,8 @@
-use std::collections::HashMap;
 use num::{ToPrimitive, Unsigned};
-
+use std::collections::HashMap;
 
 // this trait applies to all graph structures
-pub trait Graph<L>
-{
+pub trait Graph<L> {
     fn add_edge(&mut self, from: usize, to: usize);
 
     fn add_vertex(&mut self, vertex: usize); // adds vertex at given index; use at users own risk; if vertex exists (i.e. vertex is less than wt_adj.len()), it just adds it, if it does, it must not have incoming or outgoing edges
@@ -28,34 +26,25 @@ pub trait Graph<L>
     fn vertex_deleted(&self, vertex: usize) -> bool;
 }
 
-
 // this trait applies to undirected graph structures
-pub trait Undirected
-{
+pub trait Undirected {
     fn edges(&self, vertex: usize) -> Vec<usize>;
 }
 
-
 // this trait applies to directed graph structures
-pub trait Directed
-{
+pub trait Directed {
     fn outgoing_edges(&self, vertex: usize) -> Vec<usize>; // should probably be changed to return an iterator instead
 
     fn incoming_edges(&self, vertex: usize) -> Vec<usize>; // likewise here
 }
 
-
 // this trait applies to weighted graph structures
-pub trait Weighted
-{
+pub trait Weighted {
     fn weight_of_edge(&self, from: usize, to: usize) -> f64;
 }
 
-
-
 //  this trait applies to all WT graph structures
-pub trait WT<L>
-{
+pub trait WT<L> {
     fn commit_edits(&self);
 
     fn get_uncommitted_edits(&self) -> Option<HashMap<usize, L>>;
@@ -65,26 +54,19 @@ pub trait WT<L>
     fn shrink(&mut self) -> HashMap<usize, usize>; // removes all unconnected vertices from bitmap; only allowed, if has_uncommitted_edits == false; returns a Hashmap with old indices as keys and new indices as values
 }
 
-
 // this trait applies to undirected WT graph structures
-pub trait WTGraph
-{
+pub trait WTGraph {
     fn updated_edges(&self, vertex: usize) -> Option<Vec<usize>>;
 }
 
-
 // this trait applies to directed WT structures
-pub trait WTDigraph
-{
+pub trait WTDigraph {
     fn updated_outgoing_edges(&self, vertex: usize) -> Option<Vec<usize>>;
 
     fn updated_incoming_edges(&self, vertex: usize) -> Option<Vec<usize>>;
 }
 
-
 // are we missing WTWeighted?
-
-
 
 // additional graph functionality
 pub enum ShortestPathAlgorithm {
@@ -94,8 +76,7 @@ pub enum ShortestPathAlgorithm {
     AStar,
 }
 
-pub trait GraphSearch
-{
+pub trait GraphSearch {
     fn shortest_path(&self, from: usize, to: usize, mode: ShortestPathAlgorithm) -> Vec<usize>; // returns the shortest path from `from` to `to` using breadth first search
 
     fn shortest_paths(&self, mode: ShortestPathAlgorithm) -> Vec<Vec<usize>>; // shortest paths from all vertices to all other vertices

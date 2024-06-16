@@ -2,9 +2,13 @@ use crate::graph::directed::Digraph;
 use crate::traits::*;
 use num::{cast::AsPrimitive, FromPrimitive, PrimInt, ToPrimitive, Unsigned};
 use qwt::{AccessUnsigned, RankUnsigned, SelectUnsigned, QWT256};
-use std::{collections::{HashMap, VecDeque}, hash::Hash};
+use std::{
+    collections::{HashMap, VecDeque},
+    hash::Hash,
+};
 use vers_vecs::{BitVec, RsVec};
 
+#[derive(Clone)]
 pub enum Edit {
     Add(usize),
     Delete(usize),
@@ -139,7 +143,6 @@ where
         todo!()
     }
 
-
     fn delete_edge(&mut self, from: usize, to: usize) {
         todo!() // ...
     }
@@ -154,7 +157,8 @@ where
                 adj.push(Edit::Add(vertex));
             }
             None => {
-                self.uncommitted_edits.insert(vertex, vec![Edit::Add(vertex)]);
+                self.uncommitted_edits
+                    .insert(vertex, vec![Edit::Add(vertex)]);
             }
         }
     }
@@ -176,34 +180,42 @@ where
     }
 
     fn vertex_deleted(&self, vertex: usize) -> bool {
-        todo!()
-        // let mut last: Edit;
+        let last_opt: Option<&Edit>;
 
-        // match self.uncommitted_edits.get_mut(&vertex) {
-        //     Some(adj) => {
-        //         last = adj.last(); 
-        //     }
-        //     None => {
-        //         return false;
-        //     }
-        // }
+        match self.uncommitted_edits.get(&vertex) {
+            Some(adj) => {
+                last_opt = adj.last();
+            }
+            None => {
+                return false;
+            }
+        }
 
-        // match last {
-        //     Edit::DeleteSelf => {
-        //         return true;
-        //     }
-        //     _ => {
-        //         return false;
-        //     }
-        // }
+        let last: &Edit;
 
-        // self.has_uncommitted_edits = true;
+        match last_opt {
+            Some(edit) => {
+                last = edit;
+            }
+            None => {
+                // last_opt will be None if adj of vertex is an empty list
+                // in that case the vertex wasn't deleted
+                return false;
+            }
+        }
+
+        match last {
+            Edit::DeleteSelf => {
+                return true;
+            }
+            _ => {
+                return false;
+            }
+        }
     }
-    
 }
 
-impl<L> Directed for WTDigraph<L>
-{
+impl<L> Directed for WTDigraph<L> {
     fn outgoing_edges(&self, vertex: usize) -> Vec<usize> {
         let mut v_adj: Vec<usize> = Vec::new();
         let v = vertex; // this won't work if v is of type u128
@@ -236,8 +248,7 @@ impl<L> Directed for WTDigraph<L>
         v_inc
     }
 }
-impl<L> GraphSearch for WTDigraph<L>
-{
+impl<L> GraphSearch for WTDigraph<L> {
     fn connected(&self, from: usize, to: usize) -> bool {
         // is a connected to b?
         let mut list_of_outgoing_edges: VecDeque<usize> = VecDeque::new();
@@ -261,15 +272,15 @@ impl<L> GraphSearch for WTDigraph<L>
         }
         false
     }
-    
+
     fn shortest_path(&self, from: usize, to: usize, mode: ShortestPathAlgorithm) -> Vec<usize> {
         todo!()
     }
-    
+
     fn shortest_paths(&self, mode: ShortestPathAlgorithm) -> Vec<Vec<usize>> {
         todo!()
     }
-    
+
     fn connected_components(&self) -> Vec<Vec<usize>> {
         todo!()
     }
