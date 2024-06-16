@@ -34,10 +34,10 @@ impl<L> WTDigraph<L> {
     pub fn from_digraph(dg: Digraph<L>) -> Self {
         let mut bv = BitVec::new();
         let mut e_count: usize = 0;
-        let v_count = dg.adj.len(); // need to use getter
+        let v_count = dg.adj.len();
         let mut sequence: Vec<usize> = Vec::new();
 
-        for (v, v_adj) in dg.adj.iter().enumerate() { // dg.adj.iter ?
+        for (v, v_adj) in dg.adj.iter().enumerate() {
             // iterate over all vertices (v) in adj
             bv.append(true);
             for val in v_adj.iter() {
@@ -87,31 +87,31 @@ impl<L> Graph<L> for WTDigraph<L>
 where
     L: Clone,
 {
-    fn add_edge(&mut self, v: usize, w: usize) {
+    fn add_edge(&mut self, from: usize, to: usize) {
         // only adds to uncommitted edits
 
-        match self.uncommitted_edits.get_mut(&v) {
+        match self.uncommitted_edits.get_mut(&from) {
             Some(adj) => {
-                adj.push(Edit::Add(w));
+                adj.push(Edit::Add(to));
             }
             None => {
-                self.uncommitted_edits.insert(v, vec![Edit::Add(w)]);
+                self.uncommitted_edits.insert(from, vec![Edit::Add(to)]);
             }
         }
 
         self.has_uncommitted_edits = true;
     }
 
-    fn add_vertex(&mut self, v: usize) {
+    fn add_vertex(&mut self, vertex: usize) {
         // Method needs to be changed to reflect current strategy
 
-        if v <= self.v_count - 1 {
+        if vertex <= self.v_count - 1 {
             // if the index of the vertex the user wants to add is smaller than the length of v_count, v exists in wt_adj
             // we now have to check, whether it was already added and or deleted
 
-            let mut v_deleted: bool = self.vertex_deleted(v);
+            let mut v_deleted: bool = self.vertex_deleted(vertex);
 
-            if self.uncommitted_edits.get(&v).is_some() && !v_deleted {
+            if self.uncommitted_edits.get(&vertex).is_some() && !v_deleted {
                 // if there is an entry for v in uncommitted_edits and v was not deleted, then:
                 panic!("Vertex already exists.");
             }
@@ -120,41 +120,41 @@ where
                 // therefore, we'll have to push `AddSelf` to the end of the uncommitted edits of v.
                 // When committing the edits, we'll only commit the changes after the final AddSelf in the changes list of v
 
-                // let mut edits_for_v: Vec<Edit> = self.uncommitted_edits.get(&v).unwrap();  // broken
+                // let mut edits_for_v: Vec<Edit> = self.uncommitted_edits.get(&vertex).unwrap();  // broken
                 // edits_for_v.push(Edit::AddSelf);
             }
         } else {
-            self.uncommitted_edits.insert(v, vec![Edit::AddSelf]);
+            self.uncommitted_edits.insert(vertex, vec![Edit::AddSelf]);
         }
     }
 
-    fn add_vertex_label(&mut self, v: usize, label: L) {
-        if v > self.v_count - 1 || self.vertex_deleted(v) {
+    fn add_vertex_label(&mut self, vertex: usize, label: L) {
+        if vertex > self.v_count - 1 || self.vertex_deleted(vertex) {
             panic!("Vertex doesn't exist.");
         }
 
-        self.node_labels.insert(v, label);
+        self.node_labels.insert(vertex, label);
     }
-    fn append_vertex(&mut self, v: usize) -> usize {
+    fn append_vertex(&mut self, vertex: usize) -> usize {
         todo!()
     }
 
 
-    fn delete_edge(&mut self, v: usize, w: usize) {
+    fn delete_edge(&mut self, from: usize, to: usize) {
         todo!() // ...
     }
 
-    fn delete_vertex(&mut self, v: usize) {
-        if v > self.v_count - 1 {
+    fn delete_vertex(&mut self, vertex: usize) {
+        if vertex > self.v_count - 1 {
             panic!("Vertex doesn't exist.");
         }
 
-        match self.uncommitted_edits.get_mut(&v) {
+        match self.uncommitted_edits.get_mut(&vertex) {
             Some(adj) => {
-                adj.push(Edit::Add(v));
+                adj.push(Edit::Add(vertex));
             }
             None => {
-                self.uncommitted_edits.insert(v, vec![Edit::Add(v)]);
+                self.uncommitted_edits.insert(vertex, vec![Edit::Add(vertex)]);
             }
         }
     }
@@ -163,23 +163,23 @@ where
         self.e_count
     }
 
-    fn edit_label(&mut self, v: usize, change: L) {
-        self.node_labels.insert(v, change);
+    fn edit_label(&mut self, vertex: usize, change: L) {
+        self.node_labels.insert(vertex, change);
     }
 
-    fn get_label(&self, v: usize) -> Option<&L> {
-        self.node_labels.get(&v)
+    fn get_label(&self, vertex: usize) -> Option<&L> {
+        self.node_labels.get(&vertex)
     }
 
     fn v_count(&self) -> usize {
         self.v_count
     }
 
-    fn vertex_deleted(&self, v: usize) -> bool {
+    fn vertex_deleted(&self, vertex: usize) -> bool {
         todo!()
         // let mut last: Edit;
 
-        // match self.uncommitted_edits.get_mut(&v) {
+        // match self.uncommitted_edits.get_mut(&vertex) {
         //     Some(adj) => {
         //         last = adj.last(); 
         //     }
