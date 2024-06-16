@@ -89,27 +89,27 @@ impl<L> Graphundir<L>  // same as digraph?!
 
 impl<L> Graph<L> for Graphundir<L>
 {
-    fn add_edge(&mut self, v: usize, w: usize) {
+    fn add_edge(&mut self, from: usize, to: usize) {
         todo!()
     }
 
-    fn add_vertex(&mut self, v: usize) {
+    fn add_vertex(&mut self, vertex: usize) {
         todo!()
     }
 
-    fn add_vertex_label(&mut self, v: usize, label: L) {
+    fn add_vertex_label(&mut self, vertex: usize, label: L) {
         todo!()
     }
 
-    fn append_vertex(&mut self, v: usize) -> usize {
+    fn append_vertex(&mut self, vertex: usize) -> usize {
         todo!()
     }
 
-    fn delete_edge(&mut self, v: usize, w: usize) {
+    fn delete_edge(&mut self, from: usize, to: usize) {
         todo!()
     }
 
-    fn delete_vertex(&mut self, v: usize) {
+    fn delete_vertex(&mut self, vertex: usize) {
         todo!()
     }
 
@@ -117,11 +117,11 @@ impl<L> Graph<L> for Graphundir<L>
         todo!()
     }
 
-    fn edit_label(&mut self, v: usize, change: L) {
+    fn edit_label(&mut self, vertex: usize, change: L) {
         todo!()
     }
 
-    fn get_label(&self, v: usize) -> Option<&L> {
+    fn get_label(&self, vertex: usize) -> Option<&L> {
         todo!()
     }
 
@@ -129,7 +129,7 @@ impl<L> Graph<L> for Graphundir<L>
         todo!()
     }
 
-    fn vertex_deleted(&self, v: usize) -> bool {
+    fn vertex_deleted(&self, vertex: usize) -> bool {
         todo!()
     }
 }
@@ -156,27 +156,27 @@ impl<L> Graph_Weighted<L>
 
 impl<L> Graph<L> for Graph_Weighted<L>
 {
-    fn add_edge(&mut self, v: usize, w: usize) {
+    fn add_edge(&mut self, from: usize, to: usize) {
         todo!()
     }
 
-    fn add_vertex(&mut self, v: usize) {
+    fn add_vertex(&mut self, vertex: usize) {
         todo!()
     }
 
-    fn add_vertex_label(&mut self, v: usize, label: L) {
+    fn add_vertex_label(&mut self, vertex: usize, label: L) {
         todo!()
     }
 
-    fn append_vertex(&mut self, v: usize) -> usize {
+    fn append_vertex(&mut self, vertex: usize) -> usize {
         todo!()
     }
 
-    fn delete_edge(&mut self, v: usize, w: usize) {
+    fn delete_edge(&mut self, from: usize, to: usize) {
         todo!()
     }
 
-    fn delete_vertex(&mut self, v: usize) {
+    fn delete_vertex(&mut self, vertex: usize) {
         todo!()
     }
 
@@ -184,11 +184,11 @@ impl<L> Graph<L> for Graph_Weighted<L>
         todo!()
     }
 
-    fn edit_label(&mut self, v: usize, change: L) {
+    fn edit_label(&mut self, vertex: usize, change: L) {
         todo!()
     }
 
-    fn get_label(&self, v: usize) -> Option<&L> {
+    fn get_label(&self, vertex: usize) -> Option<&L> {
         todo!()
     }
 
@@ -196,7 +196,7 @@ impl<L> Graph<L> for Graph_Weighted<L>
         todo!()
     }
 
-    fn vertex_deleted(&self, v: usize) -> bool {
+    fn vertex_deleted(&self, vertex: usize) -> bool {
         todo!()
     }
 }
