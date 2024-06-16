@@ -1,19 +1,16 @@
+use crate::traits::Graph;
+use std::collections::HashMap;
+
 // USE ?
+use super::{Undirected, Weighted};
 
 // UNIT-TESTS for Graph and Weighted Graph
 #[cfg(test)]
 mod test {
-    use super::*;
+    
     const V_COUNT: u32 = 10;
     #[test]
     fn create_new_graph() {
-        let mut graph: Graph<u32, u32> = Graph::new(V_COUNT);
-        graph.add_edge(3, 2);
-        graph.add_edge(5, 0);
-        assert_eq!(graph.edges(3), vec![2u32]);
-        assert_eq!(graph.edges(5), vec![0u32]);
-        assert_eq!(graph.e_count(), 2);
-        // code for graph_weighted
     }
     #[test]
     fn create_graph_from_adj() {
@@ -50,11 +47,6 @@ mod test {
     }
     #[test]
     fn add_label_to_graphs() {
-        let mut graph: Graph<u32, String> = Graph::new(V_COUNT);
-        graph.add_vertex_label(0, String::from("test"));
-        assert_eq!(graph.get_label(0), Some(&String::from("test")));
-        assert_eq!(graph.get_label(1), None);
-        // code for graph_weighted
     }
     #[test]
     fn edit_label_on_graphs() {
@@ -80,26 +72,73 @@ mod test {
     }
 }
 
-// Graph - definition and methods
+//Graph - definition and methods
 
-pub struct Graph<L> // same as digraph?!
+pub struct Graphundir<L>// same as digraph?!
 {
-
+    v_count: usize,                     // number of vertices
+    e_count: usize,                     // number of edges
+    adj: Vec<Vec<usize>>,               // adjacency list of indices -- note from group: should we set this to pub(crate)?
+    node_labels: HashMap<usize, L>,            // format: index of node - value of node's label
 }
 
-impl<L> Graph<L>  // same as digraph?!
+impl<L> Graphundir<L>  // same as digraph?!
 {
     
 }
 
-impl<L> Graph<L> for Graph<L>
+impl<L> Graph<L> for Graphundir<L>
 {
+    fn add_edge(&mut self, v: usize, w: usize) {
+        todo!()
+    }
 
+    fn add_vertex(&mut self, v: usize) {
+        todo!()
+    }
+
+    fn add_vertex_label(&mut self, v: usize, label: L) {
+        todo!()
+    }
+
+    fn append_vertex(&mut self, v: usize) -> usize {
+        todo!()
+    }
+
+    fn delete_edge(&mut self, v: usize, w: usize) {
+        todo!()
+    }
+
+    fn delete_vertex(&mut self, v: usize) {
+        todo!()
+    }
+
+    fn e_count(&self) -> usize {
+        todo!()
+    }
+
+    fn edit_label(&mut self, v: usize, change: L) {
+        todo!()
+    }
+
+    fn get_label(&self, v: usize) -> Option<&L> {
+        todo!()
+    }
+
+    fn v_count(&self) -> usize {
+        todo!()
+    }
+
+    fn vertex_deleted(&self, v: usize) -> bool {
+        todo!()
+    }
 }
 
-impl<L> Undirected for Graph<L>
+impl<L> Undirected for Graphundir<L>
 {
-  
+    fn edges(&self, vertex: usize) -> Vec<usize> {
+        todo!()
+    }
 }
 
 
@@ -107,7 +146,7 @@ impl<L> Undirected for Graph<L>
 
 pub struct Graph_Weighted<L> 
 {
- 
+    test : L,
 }
 
 impl<L> Graph_Weighted<L> 
@@ -117,12 +156,61 @@ impl<L> Graph_Weighted<L>
 
 impl<L> Graph<L> for Graph_Weighted<L>
 {
+    fn add_edge(&mut self, v: usize, w: usize) {
+        todo!()
+    }
 
+    fn add_vertex(&mut self, v: usize) {
+        todo!()
+    }
+
+    fn add_vertex_label(&mut self, v: usize, label: L) {
+        todo!()
+    }
+
+    fn append_vertex(&mut self, v: usize) -> usize {
+        todo!()
+    }
+
+    fn delete_edge(&mut self, v: usize, w: usize) {
+        todo!()
+    }
+
+    fn delete_vertex(&mut self, v: usize) {
+        todo!()
+    }
+
+    fn e_count(&self) -> usize {
+        todo!()
+    }
+
+    fn edit_label(&mut self, v: usize, change: L) {
+        todo!()
+    }
+
+    fn get_label(&self, v: usize) -> Option<&L> {
+        todo!()
+    }
+
+    fn v_count(&self) -> usize {
+        todo!()
+    }
+
+    fn vertex_deleted(&self, v: usize) -> bool {
+        todo!()
+    }
 }
 
 impl<L> Undirected for Graph_Weighted<L>
 {
-  
+    fn edges(&self, vertex: usize) -> Vec<usize> {
+        todo!()
+    }
 }
 
 impl<L> Weighted for Graph_Weighted<L>
+{
+    fn weight_of_edge(&self, from: usize, to: usize) -> f64 {
+        todo!()
+    }
+}
