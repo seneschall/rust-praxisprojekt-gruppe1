@@ -139,6 +139,9 @@ mod test {
         assert_eq!(digraph.v_count(), 0);
         assert_eq!(digraph.e_count(), 0);
     }
+
+
+    //impl<L> Directed for Digraph<L>
     #[test]
     fn test_digraph_incoming_edges() {
         let mut digraph: Digraph<usize> = Digraph::new(10);
@@ -150,75 +153,38 @@ mod test {
         } // adds edges from 0 -> 1 , 1 -> 2, 2 -> 3 ...
         for i in 0..digraph.v_count() - 1 {
             assert_eq!(digraph.incoming_edges(i + 1), vec![i]);
+            assert_eq!(digraph.adj[i], vec![i+1]);
         }
-        assert_eq!(digraph.incoming_edges(4), vec![3usize]);
-        digraph.delete_edge(3, 4);
-        assert_eq!(digraph.incoming_edges(4), vec![]);
-        digraph.delete_vertex(6);
-        assert_eq!(digraph.incoming_edges(7), vec![]);
+        for i in 0..digraph.v_count() -1{
+            digraph.delete_edge(i, i+1);
+        }
+        for i in 0..digraph.v_count()-1{
+            assert_eq!(digraph.incoming_edges(i+1), Vec::new());
+        }
     }
     #[test]
-    fn create_new_digraph() {
-        // code for digraph_weighted
+    fn test_digraph_outgoing_edges(){
+        let mut digraph: Digraph<usize> = Digraph::new(10);
+        for i in 0..digraph.v_count() {
+            assert_eq!(digraph.outgoing_edges(i), Vec::new());
+        }
+        for i in 0..digraph.v_count() - 1 {
+            digraph.add_edge(i, i + 1);
+        } // adds edges from 0 -> 1 , 1 -> 2, 2 -> 3 ...
+        for i in 0..digraph.v_count()-1 {
+            assert_eq!(digraph.outgoing_edges(i), vec![i+1]);
+            assert_eq!(digraph.adj[i], vec![i+1]);
+        }
+        for i in 0..digraph.v_count() -1 {
+            digraph.delete_edge(i,i+1);
+        }
+        for i in 0..digraph.v_count()-1{
+            assert_eq!(digraph.outgoing_edges(i), Vec::new());
+        }
+        assert_eq!(digraph.adj, vec![vec![]; 10]);
     }
-    #[test]
-    fn create_digraph_from_adj() {
-        // code for digraph
-    }
-    #[test]
-    fn create_weighted_digraph_from_adj() {
-        // code for digraph_weighted
-    }
-    #[test]
-    fn add_edge_to_digraphs() {
-        // code for digraph
-        // code for digraph_weighted
-    }
-    #[test]
-    fn add_vertex_to_digraphs() {
-        // code for digraph
-        // code for digraph_weighted
-    }
-    #[test]
-    fn remove_edge_from_digraphs() {
-        // code for digraph
-        // code for digraph_weighted
-    }
-    #[test]
-    fn remove_vertex_from_digraphs() {
-        // code for digraph
-        // code for digraph_weighted
-    }
-    #[test]
-    fn add_label_to_digraphs() {
-        // let mut graph: Digraph<String> = Digraph::new(V_COUNT);
-        // graph.add_vertex_label(0, String::from("test"));
-        // assert_eq!(graph.get_label(0), Some(&String::from("test")));
-        // assert_eq!(graph.get_label(1), None);
-        // code for digraph_weighted
-    }
-    #[test]
-    fn edit_label_on_digraphs() {
-        // code for digraph
-        // code for digraph_weighted
-    }
-    #[test]
-    fn outgoing_incoming_edges_on_digraphs() {
-        // code for digraph
-        // code for digraph_weighted
-    }
-    #[test]
-    fn print_weight_of_digraph_edge() {
-        // code for digraph_weighted
-    }
-    #[test]
-    fn add_edit_weight_of_digraph_edge() {
-        // code for digraph_weighted
-    }
-    #[test]
-    fn delete_weight_of_digraph_edge() {
-        // code for digraph_weighted
-    }
+
+
 }
 
 // Digraph - definition and methods
