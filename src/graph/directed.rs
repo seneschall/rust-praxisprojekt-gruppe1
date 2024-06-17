@@ -51,6 +51,7 @@ mod test {
         assert_eq!(digraph.adj, test_adj);
         assert_eq!(digraph.e_count(), 2);
         digraph.add_edge(5, 10); // panic here
+        digraph.add_edge(10,5);  // panic here
         assert_eq!(digraph.adj, test_adj);
     }
     #[test]
