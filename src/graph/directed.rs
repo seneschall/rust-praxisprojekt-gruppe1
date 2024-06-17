@@ -39,7 +39,7 @@ mod test {
         assert_eq!(digraph.vertex_exists(10), false); // vertex 10 doesn't exist
     }
 
-    #[should_panic(expected = "One of vertices 5, 10 doesn't exist")]
+    #[should_panic(expected = "One of vertices 5, 10 doesn't exist")] // maybe missing counterpart expected = ..10, 5..
     #[test] // impl<L> Graph<L> for Digraph<L>
     fn test_digraph_add_edge() {
         let mut digraph: Digraph<usize> = Digraph::new(10);
