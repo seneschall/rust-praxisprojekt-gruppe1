@@ -39,6 +39,7 @@ mod test {
         assert_eq!(digraph.vertex_exists(10), false); // vertex 10 doesn't exist
     }
 
+    #[should_panic(expected = "One of vertices 5, 10 doesn't exist")]
     #[test] // impl<L> Graph<L> for Digraph<L>
     fn test_digraph_add_edge() {
         let mut digraph: Digraph<usize> = Digraph::new(10);
@@ -49,9 +50,8 @@ mod test {
         test_adj[9] = vec![5];
         assert_eq!(digraph.adj, test_adj);
         assert_eq!(digraph.e_count(), 2);
-        test_adj[5] = vec![10];
-        digraph.add_edge(5, 10);
-        assert_ne!(digraph.adj, test_adj);
+        digraph.add_edge(5, 10); // panic here
+        assert_eq!(digraph.adj, test_adj);
     }
     #[test]
     fn test_digraph_add_vertex(){
@@ -123,10 +123,11 @@ mod test {
             // new graph without any vertices, all should be empty
             assert_eq!(digraph.vertex_deleted(i), true)
         }
-        for i in 0..digraph.v_count() {
+        for i in 0..digraph.v_count()-1 {
             // add edge to all vertices 0 -> 1, 1-> 2, 2-> 3 ...
             digraph.add_edge(i, i + 1);
         }
+        digraph.add_edge(digraph.v_count()-1, 0);
         for i in 0..digraph.v_count() {
             assert_eq!(digraph.vertex_deleted(i), false);
         }
@@ -254,7 +255,7 @@ where
     L: Clone,
 {
     fn add_edge(&mut self, from: usize, to: usize) {
-        if !(self.vertex_exists(from) || self.vertex_exists(to)) {
+        if !(self.vertex_exists(from) && self.vertex_exists(to)) {
             panic!("One of vertices {}, {} doesn't exist", from, to)
         }
         self.e_count += 1;
