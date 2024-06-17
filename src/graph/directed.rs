@@ -178,8 +178,8 @@ mod test {
         for i in 0..digraph.v_count() -1 {
             digraph.delete_edge(i,i+1);
         }
-        for i in 0..digraph.v_count()-1{
-            assert_eq!(digraph.outgoing_edges(i), Vec::new());
+        for i in 0..digraph.v_count() -1{
+            assert_eq!(digraph.outgoing_edges(i), vec![]);
         }
         assert_eq!(digraph.adj, vec![vec![]; 10]);
     }
