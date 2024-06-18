@@ -117,30 +117,6 @@ mod test {
             assert_eq!(digraph.get_label(i), Some(&(i + 100)));
         }
     }
-    #[test]
-    fn test_digraph_vertex_deleted() {
-        let mut digraph: Digraph<usize> = Digraph::new(10);
-        for i in 0..digraph.v_count() {
-            // new graph without any vertices, all should be empty
-            assert_eq!(digraph.vertex_deleted(i), true)
-        }
-        for i in 0..digraph.v_count()-1 {
-            // add edge to all vertices 0 -> 1, 1-> 2, 2-> 3 ...
-            digraph.add_edge(i, i + 1);
-        }
-        digraph.add_edge(digraph.v_count()-1, 0);
-        for i in 0..digraph.v_count() {
-            assert_eq!(digraph.vertex_deleted(i), false);
-        }
-        assert_eq!(digraph.e_count(), 10);
-        for i in 0..digraph.v_count() {
-            digraph.delete_vertex(0); // deletes all vertices
-        }
-        assert_eq!(digraph.v_count(), 0);
-        assert_eq!(digraph.e_count(), 0);
-    }
-
-
     //impl<L> Directed for Digraph<L>
     #[test]
     fn test_digraph_incoming_edges() {
@@ -307,20 +283,7 @@ where
     }
 
     fn vertex_deleted(&self, vertex: usize) -> bool {
-        // doesn't work here like in wt_digraph
-        // returning true if vertex has no incoming or outgoing edges
-        // question how should this work?
-        // delete vertex removes the entry at the given index
-        // all vertices to the right are shifted one index to the left
-        // => can't check if vertex is deleted
-        // you can only check if vertex has no incoming or outgoing edges
-        // user might be confused with v_count if delete vertex isn't deleting
-        if self.outgoing_edges(vertex).is_empty() {
-            if self.incoming_edges(vertex).is_empty() {
-                return true;
-            }
-        }
-        false
+        todo!()
     }
 }
 
