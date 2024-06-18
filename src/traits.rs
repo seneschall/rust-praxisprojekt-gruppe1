@@ -7,7 +7,7 @@ pub trait Graph<L> {
 
     fn add_ledge(&mut self, from: L, to: L); // get indices of `from` and `to` and call add_edge on those
 
-    fn add_vertex(&mut self, vertex: usize); // adds vertex at given index; use at users own risk; if vertex exists (i.e. vertex is less than wt_adj.len()), it just adds it, if it does, it must not have incoming or outgoing edges
+    fn add_vertex(&mut self, vertex: usize); // adds vertex at given index; use at users own risk; if vertex doesn't exist (i.e. vertex is less than wt_adj.len()), it just adds it, if it does, it must not have incoming or outgoing edges
 
     fn add_lvertex(&mut self, label: L); // shortcut for `append_vertex` and `add_vertex_label`
 
@@ -87,15 +87,15 @@ pub trait WT<L> {
 }
 
 // this trait applies to undirected WT graph structures
-pub trait WTGraph {
-    fn updated_edges(&self, vertex: usize) -> Option<Vec<usize>>;
+pub trait WTUndirected {
+    fn updated_edges(&self, vertex: usize) -> Vec<usize>;
 }
 
 // this trait applies to directed WT structures
-pub trait WTDigraph {
-    fn updated_outgoing_edges(&self, vertex: usize) -> Option<Vec<usize>>;
+pub trait WTDirected {
+    fn updated_outgoing_edges(&self, vertex: usize) -> Vec<usize>; // if there are no outgoing edges, this returns an empty list
 
-    fn updated_incoming_edges(&self, vertex: usize) -> Option<Vec<usize>>;
+    fn updated_incoming_edges(&self, vertex: usize) -> Vec<usize>; // if there are no outgoing edges, this returns an empty list
 }
 
 // are we missing WTWeighted?

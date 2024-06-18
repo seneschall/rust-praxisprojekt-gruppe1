@@ -107,29 +107,45 @@ where
     }
 
     fn add_vertex(&mut self, vertex: usize) {
-        // Method needs to be changed to reflect current strategy
+        // adds vertex at given index; use at users own risk; if vertex doesn't exist (i.e. vertex is less than wt_adj.len()), it just adds it,
+        // if it does, it must not have incoming or outgoing edges
 
-        if vertex <= self.v_count - 1 {
-            // if the index of the vertex the user wants to add is smaller than the length of v_count, v exists in wt_adj
-            // we now have to check, whether it was already added and or deleted
+        // ! Method needs to be changed to reflect current strategy
+        // That doesn't make any sense! I'll just change it to "it just adds it". If the vertex contains data, it gets wiped
+        // We did say to use this at one's own risk, after all!
 
-            let mut v_deleted: bool = self.vertex_deleted(vertex);
+        // if vertex <= self.v_count - 1 {
+        //     // if the index of the vertex the user wants to add is smaller than the length of v_count, v exists in wt_adj
+        //     // we now have to check, whether it was already added and or deleted
 
-            if self.uncommitted_edits.get(&vertex).is_some() && !v_deleted {
-                // if there is an entry for v in uncommitted_edits and v was not deleted, then:
-                panic!("Vertex already exists.");
+        //     let mut v_deleted: bool = self.vertex_deleted(vertex);
+
+        //     if self.uncommitted_edits.get(&vertex).is_some() && !v_deleted {
+        //         // if there is an entry for v in uncommitted_edits and v was not deleted, then:
+        //         panic!("Vertex already exists.");
+        //     }
+        //     if v_deleted {
+        //         // if v was deleted, that means an entry for v exists in self.uncommitted_edits
+        //         // therefore, we'll have to push `AddSelf` to the end of the uncommitted edits of v.
+        //         // When committing the edits, we'll only commit the changes after the final AddSelf in the changes list of v
+
+        //         // let mut edits_for_v: Vec<Edit> = self.uncommitted_edits.get(&vertex).unwrap();  // broken
+        //         // edits_for_v.push(Edit::AddSelf);
+        //     }
+        // } else {
+        //     self.uncommitted_edits.insert(vertex, vec![Edit::AddSelf]);
+        // }
+        self.uncommitted_edits.insert(vertex, vec![Edit::AddSelf]); // wipes the outgoing edges of the vertex; the only valid
+
+        if vertex < self.v_count {
+            for from in self.updated_incoming_edges(vertex) {
+                // deletes all incoming edges of vertex
+                // this would only makes sense if the vertex potentially has some
+                self.delete_edge(from, vertex);
             }
-            if v_deleted {
-                // if v was deleted, that means an entry for v exists in self.uncommitted_edits
-                // therefore, we'll have to push `AddSelf` to the end of the uncommitted edits of v.
-                // When committing the edits, we'll only commit the changes after the final AddSelf in the changes list of v
-
-                // let mut edits_for_v: Vec<Edit> = self.uncommitted_edits.get(&vertex).unwrap();  // broken
-                // edits_for_v.push(Edit::AddSelf);
-            }
-        } else {
-            self.uncommitted_edits.insert(vertex, vec![Edit::AddSelf]);
+            return;
         }
+        self.v_count += vertex - self.v_count + 1; // if the index of the newly add vertex is greater than than self.v_count we need to add all virtual vertices up to the index of `vertex`
     }
 
     fn add_vertex_label(&mut self, vertex: usize, label: L) {
@@ -141,19 +157,6 @@ where
     }
     fn append_vertex(&mut self, vertex: usize) -> usize {
         todo!()
-    }
-
-    fn delete_edge(&mut self, from: usize, to: usize) {
-        match self.uncommitted_edits.get_mut(&from) {
-            Some(adj) => {
-                adj.push(Edit::Add(to));
-            }
-            None => {
-                self.uncommitted_edits.insert(from, vec![Edit::Delete(to)]);
-            }
-        }
-
-        self.has_uncommitted_edits = true;
     }
 
     fn delete_vertex(&mut self, vertex: usize) {
@@ -186,6 +189,29 @@ where
 
     fn v_count(&self) -> usize {
         self.v_count
+    }
+}
+
+impl<L> WTDelete<L> for WTDigraph<L> {
+    fn delete_edge(&mut self, from: usize, to: usize) {
+        match self.uncommitted_edits.get_mut(&from) {
+            Some(adj) => {
+                adj.push(Edit::Add(to));
+            }
+            None => {
+                self.uncommitted_edits.insert(from, vec![Edit::Delete(to)]);
+            }
+        }
+
+        self.has_uncommitted_edits = true;
+    }
+
+    fn delete_ledge(&mut self, from: L, to: L) {
+        todo!()
+    }
+
+    fn delete_vertex(&mut self, vertex: usize) {
+        todo!()
     }
 
     fn vertex_deleted(&self, vertex: usize) -> bool {
@@ -224,7 +250,7 @@ where
     }
 }
 
-impl<L> Directed for WTDigraph<L> {
+impl<L> Directed<L> for WTDigraph<L> {
     fn outgoing_edges(&self, vertex: usize) -> Vec<usize> {
         let mut v_adj: Vec<usize> = Vec::new();
         let v = vertex; // this won't work if v is of type u128
@@ -244,6 +270,7 @@ impl<L> Directed for WTDigraph<L> {
     }
 
     fn incoming_edges(&self, vertex: usize) -> Vec<usize> {
+        // returns a list of vertices that have outgoing edges to `vertex`
         let mut v_inc: Vec<usize> = Vec::new();
         let number: usize = (self.wt_adj.rank(vertex, self.wt_adj.len())).unwrap() + 1;
 
@@ -251,10 +278,18 @@ impl<L> Directed for WTDigraph<L> {
             let indeximwt = self.wt_adj.select(vertex, i).unwrap();
             let posinbitmap = self.starting_indices.select0(indeximwt);
             let einsenzaehlen = self.starting_indices.rank1(posinbitmap) - 1;
-            v_inc.push(einsenzaehlen.as_());
+            v_inc.push(einsenzaehlen);
             //v_inc.push((self.starting_indices.rank1(self.starting_indices.select0(self.wt_adj.select(vertex,i).unwrap()))-1).as_())
         }
         v_inc
+    }
+
+    fn delete_outgoing_edges(&self, vertex: usize) {
+        todo!()
+    }
+
+    fn delete_incoming_edges(&self, vertex: usize) {
+        todo!()
     }
 }
 impl<L> GraphSearch for WTDigraph<L> {
@@ -295,3 +330,13 @@ impl<L> GraphSearch for WTDigraph<L> {
     }
 }
 // WT-Weighted Digraph - definition and methods
+
+impl<L> WTDirected for WTDigraph<L> {
+    fn updated_outgoing_edges(&self, vertex: usize) -> Vec<usize> {
+        todo!()
+    }
+
+    fn updated_incoming_edges(&self, vertex: usize) -> Vec<usize> {
+        todo!()
+    }
+}
