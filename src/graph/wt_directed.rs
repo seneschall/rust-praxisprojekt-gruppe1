@@ -144,7 +144,16 @@ where
     }
 
     fn delete_edge(&mut self, from: usize, to: usize) {
-        todo!() // ...
+        match self.uncommitted_edits.get_mut(&from) {
+            Some(adj) => {
+                adj.push(Edit::Add(to));
+            }
+            None => {
+                self.uncommitted_edits.insert(from, vec![Edit::Delete(to)]);
+            }
+        }
+
+        self.has_uncommitted_edits = true;
     }
 
     fn delete_vertex(&mut self, vertex: usize) {
