@@ -67,9 +67,9 @@ pub trait Directed<L> {
 
     // fn incoming_ledges(&self, label: L) -> Vec<L>; // likewise here
 
-    fn delete_outgoing_edges(&self, vertex: usize); // deletes all outgoing edges of vertex; should return a Result
+    fn delete_outgoing_edges(&mut self, vertex: usize); // deletes all outgoing edges of vertex; should return a Result
 
-    fn delete_incoming_edges(&self, vertex: usize); // deletes all incoming edges of vertex; should return a Result
+    fn delete_incoming_edges(&mut self, vertex: usize); // deletes all incoming edges of vertex; should return a Result
 }
 
 // this trait applies to weighted graph structures

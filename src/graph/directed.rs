@@ -311,11 +311,11 @@ impl<L> Directed<L> for Digraph<L>
         incoming_edges
     }
 
-    fn delete_outgoing_edges(&self, vertex: usize) {
+    fn delete_outgoing_edges(&mut self, vertex: usize) {
         todo!()
     }
 
-    fn delete_incoming_edges(&self, vertex: usize) {
+    fn delete_incoming_edges(&mut self, vertex: usize) {
         todo!()
     }
 }
@@ -380,11 +380,11 @@ impl<L, W> Graph<L> for WeightedDigraph<L, W> {
 }
 
 impl<L, W> Directed<L> for WeightedDigraph<L, W> {
-    fn delete_incoming_edges(&self, vertex: usize) {
+    fn delete_incoming_edges(&mut self, vertex: usize) {
         todo!()
     }
 
-    fn delete_outgoing_edges(&self, vertex: usize) {
+    fn delete_outgoing_edges(&mut self, vertex: usize) {
         todo!()
     }
 
