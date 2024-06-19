@@ -2,7 +2,10 @@ use crate::graph::directed::Digraph;
 use crate::traits::*;
 use num::{cast::AsPrimitive, FromPrimitive, PrimInt, ToPrimitive, Unsigned};
 use qwt::{AccessUnsigned, RankUnsigned, SelectUnsigned, QWT256};
-use std::{collections::{HashMap, VecDeque}, hash::Hash};
+use std::{
+    collections::{HashMap, VecDeque},
+    hash::Hash,
+};
 use vers_vecs::{BitVec, RsVec};
 
 pub enum Edit {
@@ -128,17 +131,16 @@ where
         }
     }
 
-    fn add_vertex_label(&mut self, vertex: usize, label: L) {
+    fn add_label(&mut self, vertex: usize, label: L) {
         if vertex > self.v_count - 1 || self.vertex_deleted(vertex) {
             panic!("Vertex doesn't exist.");
         }
 
         self.node_labels.insert(vertex, label);
     }
-    fn append_vertex(&mut self, vertex: usize) -> usize {
+    fn append_vertex(&mut self) -> usize {
         todo!()
     }
-
 
     fn delete_edge(&mut self, from: usize, to: usize) {
         todo!() // ...
@@ -154,7 +156,8 @@ where
                 adj.push(Edit::Add(vertex));
             }
             None => {
-                self.uncommitted_edits.insert(vertex, vec![Edit::Add(vertex)]);
+                self.uncommitted_edits
+                    .insert(vertex, vec![Edit::Add(vertex)]);
             }
         }
     }
@@ -181,7 +184,7 @@ where
 
         // match self.uncommitted_edits.get_mut(&vertex) {
         //     Some(adj) => {
-        //         last = adj.last(); 
+        //         last = adj.last();
         //     }
         //     None => {
         //         return false;
@@ -199,11 +202,9 @@ where
 
         // self.has_uncommitted_edits = true;
     }
-    
 }
 
-impl<L> Directed for WTDigraph<L>
-{
+impl<L> Directed for WTDigraph<L> {
     fn outgoing_edges(&self, vertex: usize) -> Vec<usize> {
         let mut v_adj: Vec<usize> = Vec::new();
         let v = vertex; // this won't work if v is of type u128
@@ -236,8 +237,7 @@ impl<L> Directed for WTDigraph<L>
         v_inc
     }
 }
-impl<L> GraphSearch for WTDigraph<L>
-{
+impl<L> GraphSearch for WTDigraph<L> {
     fn connected(&self, from: usize, to: usize) -> bool {
         // is a connected to b?
         let mut list_of_outgoing_edges: VecDeque<usize> = VecDeque::new();
@@ -261,15 +261,15 @@ impl<L> GraphSearch for WTDigraph<L>
         }
         false
     }
-    
+
     fn shortest_path(&self, from: usize, to: usize, mode: ShortestPathAlgorithm) -> Vec<usize> {
         todo!()
     }
-    
+
     fn shortest_paths(&self, mode: ShortestPathAlgorithm) -> Vec<Vec<usize>> {
         todo!()
     }
-    
+
     fn connected_components(&self) -> Vec<Vec<usize>> {
         todo!()
     }
