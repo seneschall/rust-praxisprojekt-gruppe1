@@ -4,7 +4,7 @@ mod test {
 
     use wt_graphs::{
         graph::{wt_directed::WTDigraph, Edit},
-        traits::{Directed, Graph, GraphSearch},
+        traits::{Delete, Directed, Graph, GraphSearch},
     };
 
     use crate::common::{setup_digraph, setup_wtdigraph};
