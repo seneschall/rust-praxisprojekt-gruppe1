@@ -2,7 +2,7 @@ use crate::traits::Graph;
 use std::collections::HashMap;
 
 // USE ?
-use super::{Undirected, Weighted};
+use super::{Delete, Undirected, Weighted};
 
 // UNIT-TESTS for Graph and Weighted Graph
 #[cfg(test)]
@@ -93,23 +93,23 @@ impl<L> Graph<L> for UGraph<L> {
         todo!()
     }
 
-    fn add_vertex(&mut self, vertex: usize) {
-        todo!()
-    }
-
     fn add_label(&mut self, vertex: usize, label: L) {
         todo!()
     }
 
+    fn add_ledge(&mut self, from: L, to: L) {
+        todo!()
+    }
+
+    fn add_lvertex(&mut self, label: L) {
+        todo!()
+    }
+
+    fn add_vertex(&mut self, vertex: usize) {
+        todo!()
+    }
+
     fn append_vertex(&mut self) -> usize {
-        todo!()
-    }
-
-    fn delete_edge(&mut self, from: usize, to: usize) {
-        todo!()
-    }
-
-    fn delete_vertex(&mut self, vertex: usize) {
         todo!()
     }
 
@@ -121,6 +121,10 @@ impl<L> Graph<L> for UGraph<L> {
         todo!()
     }
 
+    fn get_index(&self, label: L) -> Option<&usize> {
+        todo!()
+    }
+
     fn get_label(&self, vertex: usize) -> Option<&L> {
         todo!()
     }
@@ -128,32 +132,49 @@ impl<L> Graph<L> for UGraph<L> {
     fn v_count(&self) -> usize {
         todo!()
     }
+}
 
-    fn vertex_deleted(&self, vertex: usize) -> bool {
+impl<L> Delete<L> for UGraph<L> {
+    fn delete_edge(&mut self, from: usize, to: usize) {
+        todo!()
+    }
+
+    fn delete_and_shift(&mut self, vertex: usize) {
         todo!()
     }
 }
 
-impl<L> Undirected for UGraph<L> {
+impl<L> Undirected<L> for UGraph<L> {
     fn edges(&self, vertex: usize) -> Vec<usize> {
+        todo!()
+    }
+
+    fn delete_edges_from(&self, vertex: usize) {
         todo!()
     }
 }
 
 // Weighted Graph - definition and methods
 
-pub struct Graph_Weighted<L> {
-    test: L,
+pub struct WeightedUGraph<L, W> {
+    ug: UGraph<L>,
+    weights: HashMap<(usize, usize), W>,
 }
 
-impl<L> Graph_Weighted<L> {}
-
-impl<L> Graph<L> for Graph_Weighted<L> {
+impl<L, W> Graph<L> for WeightedUGraph<L, W> {
     fn add_edge(&mut self, from: usize, to: usize) {
         todo!()
     }
 
+    fn add_ledge(&mut self, from: L, to: L) {
+        todo!()
+    }
+
     fn add_vertex(&mut self, vertex: usize) {
+        todo!()
+    }
+
+    fn add_lvertex(&mut self, label: L) {
         todo!()
     }
 
@@ -165,19 +186,11 @@ impl<L> Graph<L> for Graph_Weighted<L> {
         todo!()
     }
 
-    fn delete_edge(&mut self, from: usize, to: usize) {
-        todo!()
-    }
-
-    fn delete_vertex(&mut self, vertex: usize) {
-        todo!()
-    }
-
     fn e_count(&self) -> usize {
         todo!()
     }
 
-    fn edit_label(&mut self, vertex: usize, change: L) {
+    fn edit_label(&mut self, vertex: usize, label: L) {
         todo!()
     }
 
@@ -185,23 +198,41 @@ impl<L> Graph<L> for Graph_Weighted<L> {
         todo!()
     }
 
+    fn get_index(&self, label: L) -> Option<&usize> {
+        todo!()
+    }
+
     fn v_count(&self) -> usize {
         todo!()
     }
+}
 
-    fn vertex_deleted(&self, vertex: usize) -> bool {
+impl<L, W> Delete<L> for WeightedUGraph<L, W> {
+    fn delete_edge(&mut self, from: usize, to: usize) {
+        todo!()
+    }
+
+    fn delete_and_shift(&mut self, vertex: usize) {
         todo!()
     }
 }
 
-impl<L> Undirected for Graph_Weighted<L> {
+impl<L, W> Undirected<L> for WeightedUGraph<W, L> {
     fn edges(&self, vertex: usize) -> Vec<usize> {
         todo!()
     }
+
+    fn delete_edges_from(&self, vertex: usize) {
+        todo!()
+    }
 }
 
-impl<L> Weighted for Graph_Weighted<L> {
-    fn weight_of_edge(&self, from: usize, to: usize) -> f64 {
+impl<L, W> Weighted<W> for WeightedUGraph<L, W> {
+    fn weight(&self, from: usize, to: usize) -> W {
+        todo!()
+    }
+
+    fn edit_weight(&mut self, from: usize, to: usize, weight: W) {
         todo!()
     }
 }

@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use crate::graph::Graph;
 
-use super::{Directed, Weighted};
+use super::{Delete, Directed, Weighted};
 
 // UNIT-TESTS for Digraph and Weighed Digraph
 #[cfg(test)]
@@ -74,8 +74,8 @@ mod test {
     #[test]
     fn test_digraph_append_vertex() {
         let mut digraph: Digraph<usize> = Digraph::new(10);
-        assert_eq!(digraph.append_vertex(0), 10);
-        assert_eq!(digraph.append_vertex(0), 11);
+        assert_eq!(digraph.append_vertex(), 10);
+        assert_eq!(digraph.append_vertex(), 11);
         assert_eq!(digraph.outgoing_edges(10), vec![]);
         assert_eq!(digraph.incoming_edges(10), vec![]);
         assert_eq!(digraph.outgoing_edges(11), vec![]);
@@ -94,13 +94,13 @@ mod test {
         assert_eq!(digraph.e_count(), 0);
     }
     #[test]
-    fn test_digraph_delete_vertex() {
+    fn test_digraph_delete_and_shift() {
         let mut digraph: Digraph<usize> =
             Digraph::from_adjacency_list(2, 2, vec![vec![2], vec![3]]);
         // 0->2 , 1 ->3
-        digraph.delete_vertex(0);
+        digraph.delete_and_shift(0);
         assert_eq!(digraph.adj, vec![vec![3]]);
-        digraph.delete_vertex(0); // adj is now vec![]
+        digraph.delete_and_shift(0); // adj is now vec![]
         digraph.add_vertex(0);
         assert_eq!(digraph.adj, vec![vec![]]);
     }
@@ -203,6 +203,18 @@ where
         self.adj[from].push(to);
     }
 
+    fn add_label(&mut self, vertex: usize, label: L) {
+        self.node_labels.insert(vertex, label);
+    }
+
+    fn add_ledge(&mut self, from: L, to: L) {
+        todo!()
+    }
+
+    fn add_lvertex(&mut self, label: L) {
+        todo!()
+    }
+
     fn add_vertex(&mut self, vertex: usize) {
         if vertex >= self.v_count {
             for i in 0..vertex - self.v_count + 1 {
@@ -215,10 +227,6 @@ where
         }
     }
 
-    fn add_label(&mut self, vertex: usize, label: L) {
-        self.node_labels.insert(vertex, label);
-    }
-
     fn append_vertex(&mut self) -> usize {
         // question value of vertex ?
         // IF value of vertex doesn't matter
@@ -228,6 +236,28 @@ where
         self.v_count - 1 //len-1 = index
     }
 
+    fn e_count(&self) -> usize {
+        self.e_count
+    }
+
+    fn edit_label(&mut self, vertex: usize, label: L) {
+        self.node_labels.insert(vertex, label);
+    }
+
+    fn get_index(&self, label: L) -> Option<&usize> {
+        todo!()
+    }
+
+    fn get_label(&self, vertex: usize) -> Option<&L> {
+        self.node_labels.get(&vertex) // note from celine: can you explain this?
+    }
+
+    fn v_count(&self) -> usize {
+        self.v_count
+    }
+}
+
+impl<L> Delete<L> for Digraph<L> {
     fn delete_edge(&mut self, from: usize, to: usize) {
         let i_of_w: usize; // -- note from celine: could we use index_of_w for clarity?
         match self.adj.get(from) {
@@ -252,7 +282,9 @@ where
         self.e_count -= 1;
     }
 
-    fn delete_vertex(&mut self, vertex: usize) {
+    fn delete_and_shift(&mut self, vertex: usize) {
+        // todo: ist das jetzt delete_and_shift? -Simon
+        // vormals delete_and_shift
         for item in self.incoming_edges(vertex) {
             self.delete_edge(item, vertex);
         }
@@ -260,29 +292,9 @@ where
         self.adj.remove(vertex);
         self.v_count -= 1;
     }
-
-    fn e_count(&self) -> usize {
-        self.e_count
-    }
-
-    fn edit_label(&mut self, vertex: usize, label: L) {
-        self.node_labels.insert(vertex, label);
-    }
-
-    fn get_label(&self, vertex: usize) -> Option<&L> {
-        self.node_labels.get(&vertex) // note from celine: can you explain this?
-    }
-
-    fn v_count(&self) -> usize {
-        self.v_count
-    }
-
-    fn vertex_deleted(&self, vertex: usize) -> bool {
-        todo!()
-    }
 }
 
-impl<L> Directed for Digraph<L>
+impl<L> Directed<L> for Digraph<L>
 // no where L clone?
 {
     fn outgoing_edges(&self, vertex: usize) -> Vec<usize> {
@@ -298,6 +310,14 @@ impl<L> Directed for Digraph<L>
         }
         incoming_edges
     }
+
+    fn delete_outgoing_edges(&self, vertex: usize) {
+        todo!()
+    }
+
+    fn delete_incoming_edges(&self, vertex: usize) {
+        todo!()
+    }
 }
 
 // Weighted Digraph definition & methods
@@ -307,14 +327,14 @@ pub struct WeightedDigraph<L, W> {
     weights: HashMap<(usize, usize), W>,
 }
 
-impl<L> WeightedDigraph<L> {}
-
-impl<L> Graph<L> for WeightedDigraph<L> {
-    fn add_edge(&mut self, from: usize, to: usize) {
-        todo!()
+impl<L, W> WeightedDigraph<L, W> {
+    fn new() -> Self {
+        todo!();
     }
+}
 
-    fn add_vertex(&mut self, vertex: usize) {
+impl<L, W> Graph<L> for WeightedDigraph<L, W> {
+    fn add_edge(&mut self, from: usize, to: usize) {
         todo!()
     }
 
@@ -322,15 +342,19 @@ impl<L> Graph<L> for WeightedDigraph<L> {
         todo!()
     }
 
+    fn add_ledge(&mut self, from: L, to: L) {
+        todo!()
+    }
+
+    fn add_lvertex(&mut self, label: L) {
+        todo!()
+    }
+
+    fn add_vertex(&mut self, vertex: usize) {
+        todo!()
+    }
+
     fn append_vertex(&mut self) -> usize {
-        todo!()
-    }
-
-    fn delete_edge(&mut self, from: usize, to: usize) {
-        todo!()
-    }
-
-    fn delete_vertex(&mut self, vertex: usize) {
         todo!()
     }
 
@@ -342,6 +366,10 @@ impl<L> Graph<L> for WeightedDigraph<L> {
         todo!()
     }
 
+    fn get_index(&self, label: L) -> Option<&usize> {
+        todo!()
+    }
+
     fn get_label(&self, vertex: usize) -> Option<&L> {
         todo!()
     }
@@ -349,24 +377,42 @@ impl<L> Graph<L> for WeightedDigraph<L> {
     fn v_count(&self) -> usize {
         todo!()
     }
-
-    fn vertex_deleted(&self, vertex: usize) -> bool {
-        todo!()
-    }
 }
 
-impl<L> Directed for WeightedDigraph<L> {
-    fn outgoing_edges(&self, vertex: usize) -> Vec<usize> {
+impl<L, W> Directed<L> for WeightedDigraph<L, W> {
+    fn delete_incoming_edges(&self, vertex: usize) {
+        todo!()
+    }
+
+    fn delete_outgoing_edges(&self, vertex: usize) {
         todo!()
     }
 
     fn incoming_edges(&self, vertex: usize) -> Vec<usize> {
         todo!()
     }
+
+    fn outgoing_edges(&self, vertex: usize) -> Vec<usize> {
+        todo!()
+    }
 }
 
-impl<L> Weighted for WeightedDigraph<L> {
-    fn weight_of_edge(&self, from: usize, to: usize) -> f64 {
+impl<L, W> Weighted<W> for WeightedDigraph<L, W> {
+    fn weight(&self, from: usize, to: usize) -> W {
+        todo!()
+    }
+
+    fn edit_weight(&mut self, from: usize, to: usize, weight: W) {
+        todo!()
+    }
+}
+
+impl<L, W> Delete<L> for WeightedDigraph<L, W> {
+    fn delete_edge(&mut self, from: usize, to: usize) {
+        todo!()
+    }
+
+    fn delete_and_shift(&mut self, vertex: usize) {
         todo!()
     }
 }

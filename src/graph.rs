@@ -14,6 +14,19 @@ pub mod undirected;
 pub mod wt_directed;
 pub mod wt_undirected;
 
+// Enums
+
+#[derive(Clone)]
+pub enum Edit {
+    // moved Edit enum here so it can easily be accessed by wt_directed and wt_undirected
+    Add(usize),
+    AddLabel,
+    AddSelf,
+    AddWeight,
+    Delete(usize),
+    DeleteSelf,
+}
+
 // UNIT-TESTS Graph-Einlesen aus Datei
 #[cfg(test)]
 mod test {
@@ -43,8 +56,7 @@ mod test {
 }
 
 // Funktionen zum Einlesen vom Graphen aus einer Input-Datei
-pub fn import_graph_properties(filename: &str) -> (usize, usize)
-{
+pub fn import_graph_properties(filename: &str) -> (usize, usize) {
     let content = fs::read_to_string(filename).expect("Unable to open file");
     let mut lines = content.lines();
 
@@ -66,10 +78,7 @@ pub fn import_graph_properties(filename: &str) -> (usize, usize)
 }
 
 // create the adjecency list from a graph in the input file
-pub fn import_adjacency_list(
-    filename: &str,
-) -> Vec<Vec<usize>>
-{
+pub fn import_adjacency_list(filename: &str) -> Vec<Vec<usize>> {
     let content = fs::read_to_string(filename).expect("Unable to open file");
 
     let mut lines = content.lines();
@@ -84,7 +93,9 @@ pub fn import_adjacency_list(
 
     for line in lines {
         let line = line.trim();
-        let mut numbers = line.split_whitespace().filter_map(|s| s.parse::<usize>().ok());
+        let mut numbers = line
+            .split_whitespace()
+            .filter_map(|s| s.parse::<usize>().ok());
 
         if let (Some(vertex), Some(adjacent)) = (numbers.next(), numbers.next()) {
             adjacency_list[vertex.to_usize().unwrap()].push(adjacent);

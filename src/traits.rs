@@ -21,7 +21,7 @@ pub trait Graph<L> {
 
     fn get_label(&self, vertex: usize) -> Option<&L>;
 
-    fn get_index(&self, label: L) -> Option<usize>; // returns the index of the vertex with the given label
+    fn get_index(&self, label: L) -> Option<&usize>; // returns the index of the vertex with the given label
 
     fn v_count(&self) -> usize; // returns the number of vertices in graph
 }

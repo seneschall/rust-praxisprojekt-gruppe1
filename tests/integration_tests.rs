@@ -2,32 +2,32 @@ mod common;
 #[cfg(test)]
 mod test {
 
-    use wt_graphs::{graph::wt_directed::WTDigraph, traits::{Directed, Graph, GraphSearch}};
+    use wt_graphs::{
+        graph::{wt_directed::WTDigraph, Edit},
+        traits::{Directed, Graph, GraphSearch},
+    };
 
     use crate::common::{setup_digraph, setup_wtdigraph};
 
-
-
     #[test]
-    fn test_directed_add_vertex(){
+    fn test_directed_add_vertex() {
         let mut digraph = setup_digraph("tests/tinyDG.txt");
         let mut digraph2 = setup_digraph("tests/tinyDG.txt");
         digraph.add_vertex(0);
         assert_eq!(digraph.outgoing_edges(1), digraph2.outgoing_edges(0));
-        assert_eq!(digraph.v_count(), digraph2.v_count()+1);
+        assert_eq!(digraph.v_count(), digraph2.v_count() + 1);
         digraph.add_vertex(100);
         assert_eq!(digraph.v_count(), 101);
-
     }
     #[test]
-    fn test_directed_delete_vertex(){
+    fn test_directed_delete_vertex() {
         let mut digraph = setup_digraph("tests/tinyDG.txt");
         let mut digraph2 = setup_digraph("tests/tinyDG.txt");
-        for i in 0..digraph2.v_count(){
+        for i in 0..digraph2.v_count() {
             assert_eq!(digraph.outgoing_edges(i), digraph2.outgoing_edges(i))
         }
         // digraph2.delete_vertex(0);
-        for i in 0..digraph2.v_count(){
+        for i in 0..digraph2.v_count() {
             assert_eq!(digraph.outgoing_edges(0), digraph2.outgoing_edges(0));
         }
     }

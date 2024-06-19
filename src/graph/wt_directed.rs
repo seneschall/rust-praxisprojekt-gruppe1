@@ -1,20 +1,13 @@
+use super::Edit; // moved Edit enum to graph.rs because it's also needed for wt_undirected -Simon
 use crate::graph::directed::Digraph;
 use crate::traits::*;
-use num::{cast::AsPrimitive, FromPrimitive, PrimInt, ToPrimitive, Unsigned};
+// use num::{cast::AsPrimitive, FromPrimitive, PrimInt, ToPrimitive, Unsigned};
 use qwt::{AccessUnsigned, RankUnsigned, SelectUnsigned, QWT256};
 use std::{
     collections::{HashMap, VecDeque},
     hash::Hash,
 };
 use vers_vecs::{BitVec, RsVec};
-
-#[derive(Clone)]
-pub enum Edit {
-    Add(usize),
-    Delete(usize),
-    AddSelf,
-    DeleteSelf,
-}
 
 // UNIT-TESTS for WT-Digraph and WT-Weighted Digraph
 #[cfg(test)]
@@ -95,7 +88,7 @@ impl<L> WTDigraph<L> {
 
 impl<L> Graph<L> for WTDigraph<L>
 where
-    L: Clone,
+    L: Clone + Eq + PartialEq + Hash,
 {
     fn add_edge(&mut self, from: usize, to: usize) {
         // only adds to uncommitted edits
@@ -134,26 +127,10 @@ where
             panic!("Vertex doesn't exist.");
         }
 
-        self.vertex_labels.insert(vertex, label);
+        self.vertex_labels.insert(label, vertex);
     }
     fn append_vertex(&mut self) -> usize {
         todo!()
-    }
-
-    fn delete_vertex(&mut self, vertex: usize) {
-        if vertex > self.v_count - 1 {
-            panic!("Vertex doesn't exist.");
-        }
-
-        match self.uncommitted_edits.get_mut(&vertex) {
-            Some(adj) => {
-                adj.push(Edit::Add(vertex));
-            }
-            None => {
-                self.uncommitted_edits
-                    .insert(vertex, vec![Edit::Add(vertex)]);
-            }
-        }
     }
 
     fn e_count(&self) -> usize {
@@ -161,15 +138,31 @@ where
     }
 
     fn edit_label(&mut self, vertex: usize, change: L) {
-        self.vertex_labels.insert(vertex, change);
+        self.vertex_labels.insert(change, vertex);
     }
 
     fn get_label(&self, vertex: usize) -> Option<&L> {
-        self.vertex_labels.get(&vertex)
+        let label: Option<&L> =
+            self.vertex_labels
+                .iter()
+                .find_map(|(key, &value)| if vertex == value { Some(key) } else { None });
+        return label;
     }
 
     fn v_count(&self) -> usize {
         self.v_count
+    }
+
+    fn add_ledge(&mut self, from: L, to: L) {
+        todo!()
+    }
+
+    fn add_lvertex(&mut self, label: L) {
+        todo!()
+    }
+
+    fn get_index(&self, label: L) -> Option<&usize> {
+        self.vertex_labels.get(&label)
     }
 }
 
@@ -187,12 +180,20 @@ impl<L> WTDelete<L> for WTDigraph<L> {
         self.has_uncommitted_edits = true;
     }
 
-    fn delete_ledge(&mut self, from: L, to: L) {
-        todo!()
-    }
-
     fn delete_vertex(&mut self, vertex: usize) {
-        todo!()
+        if vertex > self.v_count - 1 {
+            panic!("Vertex doesn't exist.");
+        }
+
+        match self.uncommitted_edits.get_mut(&vertex) {
+            Some(adj) => {
+                adj.push(Edit::Add(vertex));
+            }
+            None => {
+                self.uncommitted_edits
+                    .insert(vertex, vec![Edit::Add(vertex)]);
+            }
+        }
     }
 
     fn vertex_deleted(&self, vertex: usize) -> bool {
