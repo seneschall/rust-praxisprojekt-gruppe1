@@ -16,7 +16,7 @@ mod test {
         assert_eq!(digraph.outgoing_edges(1), digraph2.outgoing_edges(0));
         assert_eq!(digraph.v_count(), digraph2.v_count()+1);
         digraph.add_vertex(100);
-        assert_eq!(digraph.v_count(), 100);
+        assert_eq!(digraph.v_count(), 101);
 
     }
     #[test]

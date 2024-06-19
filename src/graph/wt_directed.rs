@@ -148,14 +148,14 @@ where
         self.v_count += vertex - self.v_count + 1; // if the index of the newly add vertex is greater than than self.v_count we need to add all virtual vertices up to the index of `vertex`
     }
 
-    fn add_vertex_label(&mut self, vertex: usize, label: L) {
+    fn add_label(&mut self, vertex: usize, label: L) {
         if vertex > self.v_count - 1 || self.vertex_deleted(vertex) {
             panic!("Vertex doesn't exist.");
         }
 
         self.node_labels.insert(vertex, label);
     }
-    fn append_vertex(&mut self, vertex: usize) -> usize {
+    fn append_vertex(&mut self) -> usize {
         todo!()
     }
 

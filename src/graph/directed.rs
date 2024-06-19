@@ -10,72 +10,154 @@ mod test {
 
     use super::*;
     const V_COUNT: usize = 10;
-    #[test]
-    fn create_new_digraph() {
-        // code for digraph_weighted
+
+    #[test] // impl<L> Digraph<L>
+    fn test_digraph_new() {
+        let digraph: Digraph<usize> = Digraph::new(10);
+        assert_eq!(digraph.e_count(), 0);
+        assert_eq!(digraph.v_count(), 10);
+        assert_eq!(digraph.adj, vec![vec![]; digraph.v_count()]);
+        assert_eq!(digraph.node_labels, HashMap::new())
     }
     #[test]
-    fn create_digraph_from_adj() {
-        // code for digraph
+    fn test_digraph_from_adjacency_list() {
+        let digraph: Digraph<usize> = Digraph::from_adjacency_list(10, 2, vec![vec![2], vec![3]]);
+        assert_eq!(digraph.v_count(), 10);
+        assert_eq!(digraph.e_count(), 2);
+        assert_eq!(digraph.adj, vec![vec![2], vec![3]]); // edges from 0 -> 2, 1 -> 3
     }
     #[test]
-    fn create_weighted_digraph_from_adj() {
-        // code for digraph_weighted
+    fn test_digraph_vertex_exists() {
+        let digraph: Digraph<usize> = Digraph::new(10);
+        for i in 0..digraph.v_count() {
+            // adj has 10 entrys 0..9
+            assert_eq!(digraph.vertex_exists(i), true);
+        }
+        assert_eq!(digraph.vertex_exists(10), false); // vertex 10 doesn't exist
+    }
+
+    #[should_panic(expected = "One of vertices 5, 10 doesn't exist")] // maybe missing counterpart expected = ..10, 5..
+    #[test] // impl<L> Graph<L> for Digraph<L>
+    fn test_digraph_add_edge() {
+        let mut digraph: Digraph<usize> = Digraph::new(10);
+        digraph.add_edge(0, 1);
+        digraph.add_edge(9, 5);
+        let mut test_adj: Vec<Vec<usize>> = vec![vec![]; digraph.v_count()];
+        test_adj[0] = vec![1];
+        test_adj[9] = vec![5];
+        assert_eq!(digraph.adj, test_adj);
+        assert_eq!(digraph.e_count(), 2);
+        digraph.add_edge(5, 10); // panic here
+        digraph.add_edge(10, 5); // panic here
+        assert_eq!(digraph.adj, test_adj);
     }
     #[test]
-    fn add_edge_to_digraphs() {
-        // code for digraph
-        // code for digraph_weighted
+    fn test_digraph_add_vertex() {
+        let mut digraph: Digraph<usize> = Digraph::new(1);
+        digraph.add_vertex(2); // from [[]] to [[], [], []]
+        assert_eq!(digraph.adj, vec![vec![], vec![], vec![]]);
+        digraph.add_edge(2, 0);
+        assert_eq!(digraph.adj, vec![vec![], vec![], vec![0]]);
+        digraph.delete_edge(2, 0);
+        digraph.add_vertex(20);
+        assert_eq!(digraph.adj, vec![vec![]; digraph.v_count()]);
+        assert_eq!(digraph.vertex_exists(20), true);
     }
     #[test]
-    fn add_vertex_to_digraphs() {
-        // code for digraph
-        // code for digraph_weighted
+    fn test_digraph_add_vertex_label() {
+        let mut digraph: Digraph<usize> = Digraph::new(1);
+        digraph.add_label(0, 5);
+        let mut test: HashMap<usize, usize> = HashMap::new();
+        test.insert(0, 5);
+        assert_eq!(digraph.node_labels, test);
     }
     #[test]
-    fn append_vertex_to_digraphs() {
-        // code for digraph
-        // code for digraph_weighted
+    fn test_digraph_append_vertex() {
+        let mut digraph: Digraph<usize> = Digraph::new(10);
+        assert_eq!(digraph.append_vertex(0), 10);
+        assert_eq!(digraph.append_vertex(0), 11);
+        assert_eq!(digraph.outgoing_edges(10), vec![]);
+        assert_eq!(digraph.incoming_edges(10), vec![]);
+        assert_eq!(digraph.outgoing_edges(11), vec![]);
+        assert_eq!(digraph.incoming_edges(11), vec![]);
     }
     #[test]
-    fn remove_edge_from_digraphs() {
-        // code for digraph
-        // code for digraph_weighted
+    fn test_digraph_delete_edge() {
+        let mut digraph: Digraph<usize> =
+            Digraph::from_adjacency_list(10, 2, vec![vec![2], vec![3]]);
+        assert_eq!(digraph.adj, vec![vec![2], vec![3]]); // edges from 0 -> 2, 1 -> 3
+        assert_eq!(digraph.e_count(), 2);
+        digraph.delete_edge(0, 2);
+        assert_eq!(digraph.adj, vec![vec![], vec![3]]);
+        digraph.delete_edge(1, 3);
+        assert_eq!(digraph.adj, vec![vec![], vec![]]);
+        assert_eq!(digraph.e_count(), 0);
     }
     #[test]
-    fn remove_vertex_from_digraphs() {
-        // code for digraph
-        // code for digraph_weighted
+    fn test_digraph_delete_vertex() {
+        let mut digraph: Digraph<usize> =
+            Digraph::from_adjacency_list(2, 2, vec![vec![2], vec![3]]);
+        // 0->2 , 1 ->3
+        digraph.delete_vertex(0);
+        assert_eq!(digraph.adj, vec![vec![3]]);
+        digraph.delete_vertex(0); // adj is now vec![]
+        digraph.add_vertex(0);
+        assert_eq!(digraph.adj, vec![vec![]]);
     }
     #[test]
-    fn add_label_to_digraphs() {
-        // let mut graph: Digraph<String> = Digraph::new(V_COUNT);
-        // graph.add_vertex_label(0, String::from("test"));
-        // assert_eq!(graph.get_label(0), Some(&String::from("test")));
-        // assert_eq!(graph.get_label(1), None);
-        // code for digraph_weighted
+    fn test_digraph_edit_label() {
+        // edit_label & get_label
+        let mut digraph: Digraph<usize> = Digraph::new(10);
+        digraph.edit_label(0, 13);
+        assert_eq!(digraph.get_label(0), Some(&13usize));
+        digraph.edit_label(0, 10);
+        assert_eq!(digraph.get_label(0), Some(&10usize));
+        for i in 0..digraph.v_count() {
+            digraph.edit_label(i, i + 100);
+            assert_eq!(digraph.get_label(i), Some(&(i + 100)));
+        }
+    }
+    //impl<L> Directed for Digraph<L>
+    #[test]
+    fn test_digraph_incoming_edges() {
+        let mut digraph: Digraph<usize> = Digraph::new(10);
+        for i in 0..digraph.v_count() {
+            assert_eq!(digraph.incoming_edges(i), Vec::new());
+        }
+        for i in 0..digraph.v_count() - 1 {
+            digraph.add_edge(i, i + 1);
+        } // adds edges from 0 -> 1 , 1 -> 2, 2 -> 3 ...
+        for i in 0..digraph.v_count() - 1 {
+            assert_eq!(digraph.incoming_edges(i + 1), vec![i]);
+            assert_eq!(digraph.adj[i], vec![i + 1]);
+        }
+        for i in 0..digraph.v_count() - 1 {
+            digraph.delete_edge(i, i + 1);
+        }
+        for i in 0..digraph.v_count() - 1 {
+            assert_eq!(digraph.incoming_edges(i + 1), Vec::new());
+        }
     }
     #[test]
-    fn edit_label_on_digraphs() {
-        // code for digraph
-        // code for digraph_weighted
-    }
-    #[test]
-    fn outgoing_incoming_edges_on_digraphs() {
-        // code for digraph
-        // code for digraph_weighted
-    }
-    #[test]
-    fn print_weight_of_digraph_edge() {
-        // code for digraph_weighted
-    }
-    #[test]
-    fn add_edit_weight_of_digraph_edge() {
-        // code for digraph_weighted
-    }
-    #[test]
-    fn delete_weight_of_digraph_edge() {
-        // code for digraph_weighted
+    fn test_digraph_outgoing_edges() {
+        let mut digraph: Digraph<usize> = Digraph::new(10);
+        for i in 0..digraph.v_count() {
+            assert_eq!(digraph.outgoing_edges(i), Vec::new());
+        }
+        for i in 0..digraph.v_count() - 1 {
+            digraph.add_edge(i, i + 1);
+        } // adds edges from 0 -> 1 , 1 -> 2, 2 -> 3 ...
+        for i in 0..digraph.v_count() - 1 {
+            assert_eq!(digraph.outgoing_edges(i), vec![i + 1]);
+            assert_eq!(digraph.adj[i], vec![i + 1]);
+        }
+        for i in 0..digraph.v_count() - 1 {
+            digraph.delete_edge(i, i + 1);
+        }
+        for i in 0..digraph.v_count() - 1 {
+            assert_eq!(digraph.outgoing_edges(i), vec![]);
+        }
+        assert_eq!(digraph.adj, vec![vec![]; 10]);
     }
 }
 
@@ -97,7 +179,6 @@ impl<L> Digraph<L> {
         }
     }
     pub fn from_adjacency_list(v_count: usize, e_count: usize, adj: Vec<Vec<usize>>) -> Self {
-        // temporary, constructor with adj list -- note from celine: what is the meaning of this comment? is there a missing implementation?
         Digraph {
             v_count,
             e_count,
@@ -115,7 +196,7 @@ where
     L: Clone,
 {
     fn add_edge(&mut self, from: usize, to: usize) {
-        if !(self.vertex_exists(from) || self.vertex_exists(to)) {
+        if !(self.vertex_exists(from) && self.vertex_exists(to)) {
             panic!("One of vertices {}, {} doesn't exist", from, to)
         }
         self.e_count += 1;
@@ -123,24 +204,28 @@ where
     }
 
     fn add_vertex(&mut self, vertex: usize) {
-        if vertex >= self.v_count() {
-            let dummy = self.v_count();
-            for i in 0..vertex - self.v_count() {
-                self.adj.insert(dummy + i, vec![]);
-                self.v_count += 1;
+        if vertex >= self.v_count {
+            for i in 0..vertex - self.v_count + 1 {
+                self.adj.insert(self.v_count + i, vec![]);
             }
+            self.v_count += vertex - self.v_count + 1;
         } else {
             self.adj.insert(vertex, vec![]);
             self.v_count += 1;
         }
     }
 
-    fn add_vertex_label(&mut self, vertex: usize, label: L) {
+    fn add_label(&mut self, vertex: usize, label: L) {
         self.node_labels.insert(vertex, label);
     }
 
-    fn append_vertex(&mut self, vertex: usize) -> usize {
-        todo!()
+    fn append_vertex(&mut self) -> usize {
+        // question value of vertex ?
+        // IF value of vertex doesn't matter
+        // you just want to append a vertex and return the index of the new vertex
+        self.adj.push(vec![]);
+        self.v_count += 1;
+        self.v_count - 1 //len-1 = index
     }
 
     fn delete_edge(&mut self, from: usize, to: usize) {
@@ -168,14 +253,12 @@ where
     }
 
     fn delete_vertex(&mut self, vertex: usize) {
-        self.v_count -= 1;
-        self.e_count -= self.adj[vertex].len();
-        // need to implement incoming_edges first
-        // for item in self.incoming_edges(v){
-        //     self.delete_edge(item, v);
-        //     self.e_count -= 1;
-        // }
+        for item in self.incoming_edges(vertex) {
+            self.delete_edge(item, vertex);
+        }
+        self.e_count -= self.outgoing_edges(vertex).len();
         self.adj.remove(vertex);
+        self.v_count -= 1;
     }
 
     fn e_count(&self) -> usize {
@@ -183,7 +266,7 @@ where
     }
 
     fn edit_label(&mut self, vertex: usize, label: L) {
-        todo!() // ...
+        self.node_labels.insert(vertex, label);
     }
 
     fn get_label(&self, vertex: usize) -> Option<&L> {
@@ -195,7 +278,7 @@ where
     }
 
     fn vertex_deleted(&self, vertex: usize) -> bool {
-        todo!() // ...
+        todo!()
     }
 }
 
@@ -207,7 +290,13 @@ impl<L> Directed for Digraph<L>
     }
 
     fn incoming_edges(&self, vertex: usize) -> Vec<usize> {
-        todo!() // ...
+        let mut incoming_edges: Vec<usize> = Vec::new();
+        for i in 0..self.v_count {
+            if self.adj[i].contains(&vertex) {
+                incoming_edges.push(i);
+            }
+        }
+        incoming_edges
     }
 }
 
@@ -228,11 +317,11 @@ impl<L> Graph<L> for Digraph_Weighted<L> {
         todo!()
     }
 
-    fn add_vertex_label(&mut self, vertex: usize, label: L) {
+    fn add_label(&mut self, vertex: usize, label: L) {
         todo!()
     }
 
-    fn append_vertex(&mut self, vertex: usize) -> usize {
+    fn append_vertex(&mut self) -> usize {
         todo!()
     }
 

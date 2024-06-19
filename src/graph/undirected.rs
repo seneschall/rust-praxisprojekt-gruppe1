@@ -72,7 +72,7 @@ mod test {
 
 //Graph - definition and methods
 
-pub struct Graphundir<L>
+pub struct UGraph<L>
 // same as digraph?!
 {
     v_count: usize,                 // number of vertices
@@ -81,11 +81,14 @@ pub struct Graphundir<L>
     node_labels: HashMap<usize, L>, // format: index of node - value of node's label
 }
 
-impl<L> Graphundir<L> // same as digraph?!
+impl<L> UGraph<L> // same as digraph?!
 {
+    fn new() -> Self {
+        todo!();
+    }
 }
 
-impl<L> Graph<L> for Graphundir<L> {
+impl<L> Graph<L> for UGraph<L> {
     fn add_edge(&mut self, from: usize, to: usize) {
         todo!()
     }
@@ -94,11 +97,11 @@ impl<L> Graph<L> for Graphundir<L> {
         todo!()
     }
 
-    fn add_vertex_label(&mut self, vertex: usize, label: L) {
+    fn add_label(&mut self, vertex: usize, label: L) {
         todo!()
     }
 
-    fn append_vertex(&mut self, vertex: usize) -> usize {
+    fn append_vertex(&mut self) -> usize {
         todo!()
     }
 
@@ -131,7 +134,7 @@ impl<L> Graph<L> for Graphundir<L> {
     }
 }
 
-impl<L> Undirected for Graphundir<L> {
+impl<L> Undirected for UGraph<L> {
     fn edges(&self, vertex: usize) -> Vec<usize> {
         todo!()
     }
@@ -154,11 +157,11 @@ impl<L> Graph<L> for Graph_Weighted<L> {
         todo!()
     }
 
-    fn add_vertex_label(&mut self, vertex: usize, label: L) {
+    fn add_label(&mut self, vertex: usize, label: L) {
         todo!()
     }
 
-    fn append_vertex(&mut self, vertex: usize) -> usize {
+    fn append_vertex(&mut self) -> usize {
         todo!()
     }
 

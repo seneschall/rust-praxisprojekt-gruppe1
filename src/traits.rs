@@ -12,8 +12,9 @@ pub trait Graph<L> {
     fn add_lvertex(&mut self, label: L); // shortcut for `append_vertex` and `add_vertex_label`
 
     fn add_vertex_label(&mut self, vertex: usize, label: L); // adds a label for the vertex with index `vertex`; every label must be unique! Method should check this and return a Result type
+    fn add_label(&mut self, vertex: usize, label: L); // we should not use this until it behaves differently from edit_label!
 
-    fn append_vertex(&mut self, vertex: usize) -> usize; // adds vertex at position wt_adj.len() or at index of lowest deleted vertex (if that change hasn't been committed)
+    fn append_vertex(&mut self) -> usize; // adds vertex at position wt_adj.len() or at index of lowest deleted vertex (if that change hasn't been committed)
 
     fn e_count(&self) -> usize; // should eventually be changed to return a Result type
 
@@ -72,6 +73,11 @@ pub trait Directed<L> {
 
 // this trait applies to weighted graph structures
 pub trait Weighted {
+    // Die Frage ist, wie genau wir Weights implementieren
+    // Vorschlag: Komplett generic und nur für Algorithmen, die Floats
+    // brauchen, schränken wir es mit dem num crate so ein,
+    // dass die Weights f32 oder f64 sein müssen
+    // der num crate hat sicherlich ein Float trait
     fn weight_of_edge(&self, from: usize, to: usize) -> f64;
 }
 
