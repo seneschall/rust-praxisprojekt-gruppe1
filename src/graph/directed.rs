@@ -302,13 +302,14 @@ impl<L> Directed for Digraph<L>
 
 // Weighted Digraph definition & methods
 
-pub struct Digraph_Weighted<L> {
-    test: L,
+pub struct WeightedDigraph<L, W> {
+    dg: Digraph<L>,
+    weights: HashMap<(usize, usize), W>,
 }
 
-impl<L> Digraph_Weighted<L> {}
+impl<L> WeightedDigraph<L> {}
 
-impl<L> Graph<L> for Digraph_Weighted<L> {
+impl<L> Graph<L> for WeightedDigraph<L> {
     fn add_edge(&mut self, from: usize, to: usize) {
         todo!()
     }
@@ -354,7 +355,7 @@ impl<L> Graph<L> for Digraph_Weighted<L> {
     }
 }
 
-impl<L> Directed for Digraph_Weighted<L> {
+impl<L> Directed for WeightedDigraph<L> {
     fn outgoing_edges(&self, vertex: usize) -> Vec<usize> {
         todo!()
     }
@@ -364,7 +365,7 @@ impl<L> Directed for Digraph_Weighted<L> {
     }
 }
 
-impl<L> Weighted for Digraph_Weighted<L> {
+impl<L> Weighted for WeightedDigraph<L> {
     fn weight_of_edge(&self, from: usize, to: usize) -> f64 {
         todo!()
     }

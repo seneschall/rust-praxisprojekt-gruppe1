@@ -27,11 +27,13 @@ mod test {
 pub struct WTDigraph<L> {
     v_count: usize,                               // number of vertices
     e_count: usize,                               // number of edges
+    v_count_updated: usize,                       // number of vertices
+    e_count_updated: usize,                       // number of edges
     wt_adj: QWT256<usize>,                        // the wavelet tree adjacency list
     starting_indices: RsVec,                      // starting indices of each
     uncommitted_edits: HashMap<usize, Vec<Edit>>, // changes not yet committed to sequence
     has_uncommitted_edits: bool,
-    node_labels: HashMap<usize, L>, // name given to node format: index: value
+    vertex_labels: HashMap<L, usize>, // name given to vertex format: {label : index}
 }
 
 impl<L> WTDigraph<L> {
@@ -58,11 +60,13 @@ impl<L> WTDigraph<L> {
         return WTDigraph {
             v_count,
             e_count,
+            v_count_updated: v_count,
+            e_count_updated: e_count,
             wt_adj, // here sequence would be replaced by wavelet tree ...
             starting_indices,
             uncommitted_edits: HashMap::new(),
             has_uncommitted_edits: false,
-            node_labels: HashMap::new(),
+            vertex_labels: HashMap::new(),
         };
     }
 
@@ -78,11 +82,13 @@ impl<L> WTDigraph<L> {
         return WTDigraph {
             v_count,
             e_count,
+            v_count_updated: v_count,
+            e_count_updated: e_count,
             wt_adj,
             starting_indices,
             uncommitted_edits: HashMap::new(),
             has_uncommitted_edits: false,
-            node_labels: HashMap::new(),
+            vertex_labels: HashMap::new(),
         };
     }
 }
@@ -107,37 +113,12 @@ where
     }
 
     fn add_vertex(&mut self, vertex: usize) {
-        // adds vertex at given index; use at users own risk; if vertex doesn't exist (i.e. vertex is less than wt_adj.len()), it just adds it,
-        // if it does, it must not have incoming or outgoing edges
-
-        // ! Method needs to be changed to reflect current strategy
-        // That doesn't make any sense! I'll just change it to "it just adds it". If the vertex contains data, it gets wiped
-        // We did say to use this at one's own risk, after all!
-
-        // if vertex <= self.v_count - 1 {
-        //     // if the index of the vertex the user wants to add is smaller than the length of v_count, v exists in wt_adj
-        //     // we now have to check, whether it was already added and or deleted
-
-        //     let mut v_deleted: bool = self.vertex_deleted(vertex);
-
-        //     if self.uncommitted_edits.get(&vertex).is_some() && !v_deleted {
-        //         // if there is an entry for v in uncommitted_edits and v was not deleted, then:
-        //         panic!("Vertex already exists.");
-        //     }
-        //     if v_deleted {
-        //         // if v was deleted, that means an entry for v exists in self.uncommitted_edits
-        //         // therefore, we'll have to push `AddSelf` to the end of the uncommitted edits of v.
-        //         // When committing the edits, we'll only commit the changes after the final AddSelf in the changes list of v
-
-        //         // let mut edits_for_v: Vec<Edit> = self.uncommitted_edits.get(&vertex).unwrap();  // broken
-        //         // edits_for_v.push(Edit::AddSelf);
-        //     }
-        // } else {
-        //     self.uncommitted_edits.insert(vertex, vec![Edit::AddSelf]);
-        // }
+        // todo: write comment explaining what this does
         self.uncommitted_edits.insert(vertex, vec![Edit::AddSelf]); // wipes the outgoing edges of the vertex; the only valid
 
-        if vertex < self.v_count {
+        if (vertex < self.v_count_updated) && !(self.vertex_deleted(vertex)) {
+            // should just call self.delete_incoming_edges()
+            // but that can be implemented with the following logic
             for from in self.updated_incoming_edges(vertex) {
                 // deletes all incoming edges of vertex
                 // this would only makes sense if the vertex potentially has some
@@ -145,7 +126,7 @@ where
             }
             return;
         }
-        self.v_count += vertex - self.v_count + 1; // if the index of the newly add vertex is greater than than self.v_count we need to add all virtual vertices up to the index of `vertex`
+        self.v_count_updated += vertex - self.v_count_updated + 1; // if the index of the newly add vertex is greater than than self.v_count we need to add all virtual vertices up to the index of `vertex`
     }
 
     fn add_label(&mut self, vertex: usize, label: L) {
@@ -153,7 +134,7 @@ where
             panic!("Vertex doesn't exist.");
         }
 
-        self.node_labels.insert(vertex, label);
+        self.vertex_labels.insert(vertex, label);
     }
     fn append_vertex(&mut self) -> usize {
         todo!()
@@ -180,11 +161,11 @@ where
     }
 
     fn edit_label(&mut self, vertex: usize, change: L) {
-        self.node_labels.insert(vertex, change);
+        self.vertex_labels.insert(vertex, change);
     }
 
     fn get_label(&self, vertex: usize) -> Option<&L> {
-        self.node_labels.get(&vertex)
+        self.vertex_labels.get(&vertex)
     }
 
     fn v_count(&self) -> usize {

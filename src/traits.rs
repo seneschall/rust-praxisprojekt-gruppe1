@@ -9,9 +9,8 @@ pub trait Graph<L> {
 
     fn add_vertex(&mut self, vertex: usize); // adds vertex at given index; use at users own risk; if vertex doesn't exist (i.e. vertex is less than wt_adj.len()), it just adds it, if it does, it must not have incoming or outgoing edges
 
-    fn add_lvertex(&mut self, label: L); // shortcut for `append_vertex` and `add_vertex_label`
+    fn add_lvertex(&mut self, label: L); // shortcut for `append_vertex` and `edit_label`
 
-    fn add_vertex_label(&mut self, vertex: usize, label: L); // adds a label for the vertex with index `vertex`; every label must be unique! Method should check this and return a Result type
     fn add_label(&mut self, vertex: usize, label: L); // we should not use this until it behaves differently from edit_label!
 
     fn append_vertex(&mut self) -> usize; // adds vertex at position wt_adj.len() or at index of lowest deleted vertex (if that change hasn't been committed)
@@ -28,6 +27,8 @@ pub trait Graph<L> {
 }
 
 pub trait Delete<L> {
+    // decide later whether to implement delete_ledge etc.
+    // this trait must not be implemented by WT graphs
     fn delete_edge(&mut self, from: usize, to: usize);
 
     fn delete_and_shift(&mut self, vertex: usize); // deletes vertex at index and shifts all following indices 1 to the left
@@ -38,7 +39,7 @@ pub trait Delete<L> {
 pub trait WTDelete<L> {
     fn delete_edge(&mut self, from: usize, to: usize);
 
-    fn delete_ledge(&mut self, from: L, to: L); // get indices of `from` and `to` and call delete_edge on those
+    // fn delete_ledge(&mut self, from: L, to: L); // get indices of `from` and `to` and call delete_edge on those
 
     fn delete_vertex(&mut self, vertex: usize); // should eventually be changed to return a Result type
 
@@ -53,7 +54,7 @@ pub trait Undirected<L> {
 
     // fn edges_lvertex(label: L) -> Vec<L>; // returns the labels of all edges connected to vertex with label
 
-    fn delete_edges(&self, vertex: usize); // deletes all edges connected to vertex
+    fn delete_edges_from(&self, vertex: usize); // deletes all edges connected to vertex
 }
 
 // this trait applies to directed graph structures
@@ -72,22 +73,24 @@ pub trait Directed<L> {
 }
 
 // this trait applies to weighted graph structures
-pub trait Weighted {
-    // Die Frage ist, wie genau wir Weights implementieren
-    // Vorschlag: Komplett generic und nur für Algorithmen, die Floats
-    // brauchen, schränken wir es mit dem num crate so ein,
-    // dass die Weights f32 oder f64 sein müssen
-    // der num crate hat sicherlich ein Float trait
-    fn weight_of_edge(&self, from: usize, to: usize) -> f64;
+pub trait Weighted<W> {
+    // Weights implemented as generic, certain functions only possible if W is number
+    // Weights are HashMap<(from, to), weight>
+
+    fn weight(&self, from: usize, to: usize) -> W;
+
+    fn edit_weight(&mut self, from: usize, to: usize, weight: W); // todo: Result; only possible if has_uncommitted_changes == false
+
+    // fn add_wedge(&mut self, from: usize, to: usize, weight: W); // todo: Result; only possible if has_uncommitted_changes == false
 }
 
 //  this trait applies to all WT graph structures
 pub trait WT<L> {
-    fn commit_edits(&self);
+    fn commit_edits(&mut self);
 
     fn get_uncommitted_edits(&self) -> Option<HashMap<usize, L>>;
 
-    fn discard_edits(&self);
+    fn discard_edits(&mut self);
 
     fn shrink(&mut self) -> HashMap<usize, usize>; // removes all unconnected vertices from bitmap; only allowed, if has_uncommitted_edits == false; returns a Hashmap with old indices as keys and new indices as values
 }
