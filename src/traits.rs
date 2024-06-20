@@ -1,25 +1,27 @@
 use num::{ToPrimitive, Unsigned};
 use std::collections::HashMap;
 
+// The user only has two options: use labels for all vertices or for none.
+
 // this trait applies to all graph structures
 pub trait Graph<L> {
     fn add_edge(&mut self, from: usize, to: usize);
 
-    fn add_ledge(&mut self, from: L, to: L); // get indices of `from` and `to` and call add_edge on those
-
     fn add_vertex(&mut self, vertex: usize); // adds vertex at given index; use at users own risk; if vertex doesn't exist (i.e. vertex is less than wt_adj.len()), it just adds it, if it does, it must not have incoming or outgoing edges
 
-    fn add_lvertex(&mut self, label: L); // shortcut for `append_vertex` and `edit_label`
+    fn add_lvertex(&mut self, label: L) -> usize; // appends vertex and it adds a label
 
-    fn add_label(&mut self, vertex: usize, label: L); // we should not use this until it behaves differently from edit_label!
+    // fn add_ledge(&mut self, from: L, to: L); // get indices of `from` and `to` and call add_edge on those
+
+    // fn add_label(&mut self, vertex: usize, label: L); // we should not use this until it behaves differently from edit_label!
 
     fn append_vertex(&mut self) -> usize; // adds vertex at position wt_adj.len() or at index of lowest deleted vertex (if that change hasn't been committed)
 
-    fn e_count(&self) -> usize; // should eventually be changed to return a Result type
+    fn e_count(&self) -> usize;
 
-    fn edit_label(&mut self, vertex: usize, label: L); // true if last item in uncommitted edits for v is Edit::DeleteSelf
+    fn edit_label(&mut self, old_label: L, new_label: L); // true if last item in uncommitted edits for v is Edit::DeleteSelf; should return a Result
 
-    fn get_label(&self, vertex: usize) -> Option<&L>;
+    fn get_label(&self, vertex: usize) -> Option<&L>; // O(N) complexity
 
     fn get_index(&self, label: L) -> Option<&usize>; // returns the index of the vertex with the given label
 
@@ -31,9 +33,11 @@ pub trait Delete<L> {
     // this trait must not be implemented by WT graphs
     fn delete_edge(&mut self, from: usize, to: usize);
 
-    fn delete_and_shift(&mut self, vertex: usize); // deletes vertex at index and shifts all following indices 1 to the left
+    // fn delete_ledge(&mut self, from: L, to: L); // get indices of `from` and `to` and call delete_edge on those
 
-    // fn delete_lvertex_and_shift(&mut self, label: L); // deletes vertex at index and shifts all following indices 1 to the left
+    fn delete_and_shift(&mut self, vertex: usize); // deletes vertex at index and shifts all following indices 1 to the left; only possible if vertex_labels is empty
+
+    fn delete_lvertex_and_shift(&mut self, label: L); // deletes vertex at index and shifts all following indices 1 to the left; we need this, so the label can be deleted alongside the vertex and all other labels need to be changed
 }
 
 pub trait WTDelete<L> {
@@ -52,9 +56,11 @@ pub trait WTDelete<L> {
 pub trait Undirected<L> {
     fn edges(&self, vertex: usize) -> Vec<usize>; // returns all edges connected to vertex
 
-    // fn edges_lvertex(label: L) -> Vec<L>; // returns the labels of all edges connected to vertex with label
+    // fn ledges(label: L) -> Vec<L>; // returns the labels of all edges connected to vertex with label
 
     fn delete_edges_from(&self, vertex: usize); // deletes all edges connected to vertex
+
+    // fn delete_ledges_from(&self, label: L); // deletes all edges connected to vertex
 }
 
 // this trait applies to directed graph structures
@@ -69,7 +75,11 @@ pub trait Directed<L> {
 
     fn delete_outgoing_edges(&mut self, vertex: usize); // deletes all outgoing edges of vertex; should return a Result
 
+    // fn delete_outgoing_ledges(&mut self, label: L); // deletes all outgoing edges of vertex; should return a Result
+
     fn delete_incoming_edges(&mut self, vertex: usize); // deletes all incoming edges of vertex; should return a Result
+
+    // fn delete_incoming_ledges(&mut self, label: L); // deletes all incoming edges of vertex; should return a Result
 }
 
 // this trait applies to weighted graph structures

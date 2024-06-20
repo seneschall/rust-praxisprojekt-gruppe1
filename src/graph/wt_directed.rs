@@ -18,12 +18,13 @@ mod test {
 
 // WT-Digraph - definition and methods
 pub struct WTDigraph<L> {
-    v_count: usize,                               // number of vertices
-    e_count: usize,                               // number of edges
-    v_count_updated: usize,                       // number of vertices
-    e_count_updated: usize,                       // number of edges
-    wt_adj: QWT256<usize>,                        // the wavelet tree adjacency list
-    starting_indices: RsVec,                      // starting indices of each
+    all_vertices_labeled: bool, // are all vertices labeled or not?
+    v_count: usize,             // number of vertices
+    e_count: usize,             // number of edges
+    v_count_updated: usize,     // number of vertices
+    e_count_updated: usize,     // number of edges
+    wt_adj: QWT256<usize>,      // the wavelet tree adjacency list
+    starting_indices: RsVec,    // starting indices of each
     uncommitted_edits: HashMap<usize, Vec<Edit>>, // changes not yet committed to sequence
     has_uncommitted_edits: bool,
     vertex_labels: HashMap<L, usize>, // name given to vertex format: {label : index}
@@ -110,13 +111,7 @@ where
         self.uncommitted_edits.insert(vertex, vec![Edit::AddSelf]); // wipes the outgoing edges of the vertex; the only valid
 
         if (vertex < self.v_count_updated) && !(self.vertex_deleted(vertex)) {
-            // should just call self.delete_incoming_edges()
-            // but that can be implemented with the following logic
-            for from in self.updated_incoming_edges(vertex) {
-                // deletes all incoming edges of vertex
-                // this would only makes sense if the vertex potentially has some
-                self.delete_edge(from, vertex);
-            }
+            self.delete_incoming_edges(vertex);
             return;
         }
         self.v_count_updated += vertex - self.v_count_updated + 1; // if the index of the newly add vertex is greater than than self.v_count we need to add all virtual vertices up to the index of `vertex`
@@ -130,11 +125,14 @@ where
         self.vertex_labels.insert(label, vertex);
     }
     fn append_vertex(&mut self) -> usize {
-        todo!()
+        let vertex: usize = self.v_count_updated;
+        self.uncommitted_edits.insert(vertex, vec![Edit::AddSelf]);
+        self.v_count_updated += 1;
+        return vertex;
     }
 
     fn e_count(&self) -> usize {
-        self.e_count
+        return self.e_count;
     }
 
     fn edit_label(&mut self, vertex: usize, change: L) {
@@ -150,19 +148,24 @@ where
     }
 
     fn v_count(&self) -> usize {
-        self.v_count
+        return self.v_count;
     }
 
     fn add_ledge(&mut self, from: L, to: L) {
-        todo!()
+        // should return a Result
+        let from: usize = self.get_index(from).unwrap().to_owned(); // we'll have to do proper error handling here
+        let to: usize = self.get_index(to).unwrap().to_owned(); // we'll have to do proper error handling here
+        self.add_edge(from, to);
     }
 
     fn add_lvertex(&mut self, label: L) {
-        todo!()
+        // should return a Result
+        let vertex: usize = self.append_vertex();
+        self.add_label(vertex, label);
     }
 
     fn get_index(&self, label: L) -> Option<&usize> {
-        self.vertex_labels.get(&label)
+        return self.vertex_labels.get(&label);
     }
 }
 
@@ -267,13 +270,36 @@ impl<L> Directed<L> for WTDigraph<L> {
     }
 
     fn delete_outgoing_edges(&mut self, vertex: usize) {
-        todo!()
+        let outgoing: Vec<usize> = self.updated_outgoing_edges(vertex);
+        let num_of_deleted_vertices = outgoing.len() - 1;
+        for from in outgoing {
+            self.delete_edge(from, vertex);
+        }
+        self.e_count_updated -= num_of_deleted_vertices;
     }
 
     fn delete_incoming_edges(&mut self, vertex: usize) {
+        let incoming: Vec<usize> = self.updated_incoming_edges(vertex);
+        let num_of_deleted_vertices = incoming.len() - 1;
+        for from in incoming {
+            self.delete_edge(from, vertex);
+        }
+        self.e_count_updated -= num_of_deleted_vertices;
+    }
+}
+
+impl<L> WTDirected for WTDigraph<L> {
+    fn updated_outgoing_edges(&self, vertex: usize) -> Vec<usize> {
+        todo!()
+    }
+
+    fn updated_incoming_edges(&self, vertex: usize) -> Vec<usize> {
         todo!()
     }
 }
+
+// Optional methods:
+
 impl<L> GraphSearch for WTDigraph<L> {
     fn connected(&self, from: usize, to: usize) -> bool {
         // is a connected to b?
@@ -312,13 +338,3 @@ impl<L> GraphSearch for WTDigraph<L> {
     }
 }
 // WT-Weighted Digraph - definition and methods
-
-impl<L> WTDirected for WTDigraph<L> {
-    fn updated_outgoing_edges(&self, vertex: usize) -> Vec<usize> {
-        todo!()
-    }
-
-    fn updated_incoming_edges(&self, vertex: usize) -> Vec<usize> {
-        todo!()
-    }
-}
