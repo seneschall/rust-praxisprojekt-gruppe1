@@ -18,12 +18,13 @@ mod test {
 
 // WT-Digraph - definition and methods
 pub struct WTDigraph<L> {
-    v_count: usize,                               // number of vertices
-    e_count: usize,                               // number of edges
-    v_count_updated: usize,                       // number of vertices
-    e_count_updated: usize,                       // number of edges
-    wt_adj: QWT256<usize>,                        // the wavelet tree adjacency list
-    starting_indices: RsVec,                      // starting indices of each
+    all_vertices_labeled: bool, // are all vertices labeled or not?
+    v_count: usize,             // number of vertices
+    e_count: usize,             // number of edges
+    v_count_updated: usize,     // number of vertices
+    e_count_updated: usize,     // number of edges
+    wt_adj: QWT256<usize>,      // the wavelet tree adjacency list
+    starting_indices: RsVec,    // starting indices of each
     uncommitted_edits: HashMap<usize, Vec<Edit>>, // changes not yet committed to sequence
     has_uncommitted_edits: bool,
     vertex_labels: HashMap<L, usize>, // name given to vertex format: {label : index}
