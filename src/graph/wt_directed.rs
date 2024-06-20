@@ -12,9 +12,94 @@ use vers_vecs::{BitVec, RsVec};
 // UNIT-TESTS for WT-Digraph and WT-Weighted Digraph
 #[cfg(test)]
 mod test {
-    use super::*;
-    const V_COUNT: usize = 10;
-}
+    // use super::*; -- note to who may write the unit tests: do you need to import * ?
+    // const V_COUNT: usize = 10; ... and do you still use this const ?
+    impl<L> WTDigraph<L> 
+
+    fn test_from_digraph() {
+    todo!()
+    }
+    
+    fn test_from() {
+    todo!()
+    }
+    
+    
+    // impl<L> Graph<L> for WTDigraph<L>
+    
+    fn test_add_edge() {
+    todo!()
+    }
+    
+    fn test_add_vertex() {
+    todo!()
+    }
+    
+    fn test_append_vertex() {
+    todo!()
+    }
+    
+    fn test_edit_label() {
+    todo!()
+    }
+    
+    fn test_get_label() {
+    todo!()
+    }
+    
+    fn test_add_lvertex() {
+    todo!()
+    }
+    
+    fn test_get_index() {
+    todo!()
+    }
+    
+    
+    // impl<L> WTDelete<L> for WTDigraph<L>
+    
+    fn test_delete_edge() {
+    todo!()
+    }
+    
+    fn test_delete_vertex() {
+    todo!()
+    }
+    
+    fn test_vertex_deleted() {
+    todo!()
+    }
+    
+    
+    // impl<L> Directed<L> for WTDigraph<L>
+    
+    fn test_incoming_edges() {
+    todo!()
+    }
+    
+    fn test_outgoing_edges() {
+    todo!()
+    }
+    
+    fn test_delete_incoming_edges() {
+    todo!()
+    }
+    
+    fn test_delete_outgoing_edges() {
+    todo!()
+    }
+    
+    
+    // impl<L> WTDirected for WTDigraph<L>
+    
+    fn test_updated_incoming_edges() {
+    todo!()
+    }
+    
+    fn test_updated_outgoing_edges() {
+    todo!()
+    }
+}    
 
 // WT-Digraph - definition and methods
 pub struct WTDigraph<L> {
@@ -337,4 +422,5 @@ impl<L> GraphSearch for WTDigraph<L> {
         todo!()
     }
 }
+
 // WT-Weighted Digraph - definition and methods
