@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use crate::graph::Graph;
 
-use super::{Delete, Directed, Weighted};
+use super::{Delete, Directed, Labeled, Weighted};
 
 // UNIT-TESTS for Digraph and Weighed Digraph
 #[cfg(test)]
@@ -162,24 +162,140 @@ mod test {
 }
 
 // Digraph - definition and methods
-pub struct Digraph<L> {
+pub struct Digraph {
+    deleted_vertices: Vec<usize>,
+    v_count: usize,                  // number of vertices
+    e_count: usize,                  // number of edges
+    pub(crate) adj: Vec<Vec<usize>>, // adjacency list of indices -- note from group: should we set this to pub(crate)?
+}
+impl Digraph{
+    pub fn new() -> Self {
+        Digraph {
+            deleted_vertices: Vec::new(),
+            v_count: 0,
+            e_count: 0,
+            adj: vec![vec![]; 0],
+        }
+    }
+    pub fn append_vertex(){
+        todo!()
+    }
+}
+impl Graph<usize> for Digraph{
+    fn add_edge(&mut self, from: usize, to: usize) {
+        if !(self.vertex_exists(from) && self.vertex_exists(to)) {
+            panic!("One of vertices {}, {} doesn't exist", from, to)
+        }
+        self.e_count += 1;
+        self.adj[from].push(to);
+    }
+
+    fn add_vertex(&mut self, vertex: usize) -> usize {
+        if vertex >= self.v_count {
+            for i in 0..vertex - self.v_count + 1 {
+                self.adj.insert(self.v_count + i, vec![]);
+            }
+            self.v_count += vertex - self.v_count + 1;
+        } else {
+            self.adj.insert(vertex, vec![]);
+            self.v_count += 1;
+        }
+    }
+
+    fn e_count(&self) -> usize {
+        self.e_count
+    }
+
+    fn v_count(&self) -> usize {
+        self.v_count
+    }
+    
+    fn vertex_exists(&self, vertex: usize) -> bool {
+        !self.deleted_vertices.contains(&vertex) && vertex < self.v_count
+    }
+}
+impl Delete<usize> for Digraph{
+    fn delete_edge(&mut self, from: usize, to: usize) {
+        let i_of_w: usize; // -- note from celine: could we use index_of_w for clarity?
+        match self.adj.get(from) {
+            Some(vs) => {
+                let i_of_w_opt = vs.iter().position(|&x| x == to);
+                match i_of_w_opt {
+                    Some(i) => {
+                        i_of_w = i;
+                    } // swap_remove more efficient than remove because the order is not important
+                    None => {
+                        panic!("There was no edge from {from} to {to}.");
+                    }
+                }
+            }
+            None => {
+                panic!("Vertex {from} doesn't exist."); // Should be replaced by Result type
+            }
+        }
+        self.adj[from].swap_remove(i_of_w);
+        self.e_count -= 1;
+    }
+
+    fn delete_vertex(&mut self, vertex: usize) {
+        if vertex<self.v_count{
+            self.deleted_vertices.push(vertex);
+            self.delete_incoming_edges(vertex);
+            self.delete_outgoing_edges(vertex);
+            self.v_count -= 1;
+        } else {
+            panic!("delete_vertex : vertex >= self.v_count")
+        }
+    }
+
+    fn vertex_deleted(&self, vertex: usize) -> bool {
+        if self.deleted_vertices.contains(&vertex){
+            true
+        }
+        else {  false   }
+    }
+}
+
+impl Directed<usize> for Digraph{
+    fn outgoing_edges(&self, vertex: usize) -> Vec<usize> {
+        self.adj[vertex].clone()
+    }
+
+    fn incoming_edges(&self, vertex: usize) -> Vec<usize> {
+        let mut incoming_edges: Vec<usize> = Vec::new();
+        for i in 0..self.v_count {
+            if self.adj[i].contains(&vertex) {
+                incoming_edges.push(i);
+            }
+        }
+        incoming_edges
+    }
+
+    fn delete_outgoing_edges(&mut self, vertex: usize) {
+        todo!()
+    }
+
+    fn delete_incoming_edges(&mut self, vertex: usize) {
+        todo!()
+    }
+}
+pub struct LabeledDigraph<L> {
     v_count: usize,                  // number of vertices
     e_count: usize,                  // number of edges
     pub(crate) adj: Vec<Vec<usize>>, // adjacency list of indices -- note from group: should we set this to pub(crate)?
     vertex_labels: HashMap<usize, L>,  // format: index of vertex - value of vertex's label
 }
-
-impl<L> Digraph<L> {
-    pub fn new(v_count: usize) -> Self {
-        Digraph {
-            v_count,
+impl<L> LabeledDigraph<L> {
+    pub fn new() -> Self {
+        LabeledDigraph {
+            v_count: 0,
             e_count: 0,
-            adj: vec![vec![]; v_count],
+            adj: vec![vec![]; 0],
             vertex_labels: HashMap::new(),
         }
     }
     pub fn from_adjacency_list(v_count: usize, e_count: usize, adj: Vec<Vec<usize>>) -> Self {
-        Digraph {
+        LabeledDigraph {
             v_count,
             e_count,
             adj,
@@ -190,6 +306,122 @@ impl<L> Digraph<L> {
         vertex < self.v_count
     }
 }
+impl<L> Graph<L> for LabeledDigraph<L>{
+    fn add_edge(&mut self, from: L, to: L) {
+        todo!()
+    }
+
+    fn add_vertex(&mut self, vertex: L) -> usize {
+        todo!()
+    }
+
+    fn e_count(&self) -> usize {
+        todo!()
+    }
+
+    fn v_count(&self) -> usize {
+        todo!()
+    }
+    
+    fn vertex_exists(&self, vertex: L) -> bool {
+        todo!()
+    }
+}
+impl<L> Delete<L> for LabeledDigraph<L>{
+    fn delete_edge(&mut self, from: L, to: L) {
+        todo!()
+    }
+
+    fn delete_vertex(&mut self, vertex: L) {
+        todo!()
+    }
+
+    fn vertex_deleted(&self, vertex: L) -> bool {
+        todo!()
+    }
+}
+
+impl<L> Directed<L> for LabeledDigraph<L>{
+    fn outgoing_edges(&self, vertex: L) -> Vec<L> {
+        todo!()
+    }
+
+    fn incoming_edges(&self, vertex: L) -> Vec<L> {
+        todo!()
+    }
+
+    fn delete_outgoing_edges(&mut self, vertex: L) {
+        todo!()
+    }
+
+    fn delete_incoming_edges(&mut self, vertex: L) {
+        todo!()
+    }
+}
+
+impl<L> Labeled<L> for LabeledDigraph<L>{
+    fn edit_label(&mut self, old_label: L, new_label: L) {
+        todo!()
+    }
+
+    fn get_label(&self, vertex: usize) -> Option<&L> {
+        todo!()
+    }
+
+    fn get_index(&self, label: L) -> Option<&usize> {
+        todo!()
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 impl<L> Graph<L> for Digraph<L>
 where
@@ -323,7 +555,7 @@ impl<L> Directed<L> for Digraph<L>
 // Weighted Digraph definition & methods
 
 pub struct WeightedDigraph<L, W> {
-    dg: Digraph<L>,
+    dg: LabeledDigraph<L>,
     weights: HashMap<(usize, usize), W>,
 }
 
@@ -335,15 +567,8 @@ impl<L, W> WeightedDigraph<L, W> {
 
 impl<L, W> Graph<L> for WeightedDigraph<L, W> {
     fn add_edge(&mut self, from: usize, to: usize) {
-        todo!()
-    }
+        todo!();
 
-    fn add_label(&mut self, vertex: usize, label: L) {
-        todo!()
-    }
-
-    fn add_ledge(&mut self, from: L, to: L) {
-        todo!()
     }
 
     fn add_lvertex(&mut self, label: L) {
@@ -375,6 +600,10 @@ impl<L, W> Graph<L> for WeightedDigraph<L, W> {
     }
 
     fn v_count(&self) -> usize {
+        todo!()
+    }
+    
+    fn vertex_exists(&self, vertex: L) -> bool {
         todo!()
     }
 }

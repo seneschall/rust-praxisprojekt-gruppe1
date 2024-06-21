@@ -1,6 +1,7 @@
 use vers_vecs::RsVec;
 use wt_graphs::graph::{
-    create_sequence_and_bitmap, directed::Digraph, import_adjacency_list, import_graph_properties, wt_directed::WTDigraph
+    create_sequence_and_bitmap, directed::Digraph, import_adjacency_list, import_graph_properties,
+    wt_directed::WTDigraph,
 };
 
 pub fn setup_digraph(filename: &str) -> Digraph<usize> {
