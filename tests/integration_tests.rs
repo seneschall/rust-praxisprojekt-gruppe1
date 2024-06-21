@@ -2,10 +2,25 @@ mod common;
 #[cfg(test)]
 mod test {
 
-    use wt_graphs::traits::{Directed, Graph};
+    use wt_graphs::{
+        graph::directed::LabeledDigraph,
+        traits::{Directed, Graph},
+    };
 
     use crate::common::setup_digraph;
 
+    #[test]
+    fn test_labeled_digraph() {
+        let v_count = 10;
+        let e_count = 5;
+        let adj = vec![vec![0]; 10];
+        let mut labels: Vec<String> = Vec::new();
+        for i in 0..10 {
+            labels.push(i.to_string());
+        }
+        let ldg: LabeledDigraph<String> =
+            LabeledDigraph::from_adjacency_list(v_count, e_count, adj.clone(), labels);
+    }
     #[test]
     fn test_digraph_tinyDG() {
         let mut digraph = setup_digraph("tests/tinyDG.txt");
@@ -47,6 +62,7 @@ mod test {
         //     );
         // }
     }
+
     #[test]
     fn test_directed_add_vertex() {
         let mut digraph = setup_digraph("tests/tinyDG.txt");

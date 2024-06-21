@@ -27,33 +27,6 @@ pub enum Edit {
     DeleteSelf,
 }
 
-// UNIT-TESTS Graph-Einlesen aus Datei
-#[cfg(test)]
-mod test {
-
-    use super::*;
-
-    const V_COUNT: usize = 10;
-
-    #[test]
-    fn create_graph_and_add_edges() {
-        // let mut graph: Digraph<u32> = Digraph::new(V_COUNT);
-        // graph.add_edge(3, 2);
-        // graph.add_edge(5, 0);
-        // assert_eq!(graph.outgoing_edges(3), vec![2u32]);
-        // assert_eq!(graph.outgoing_edges(5), vec![0u32]);
-        // assert_eq!(graph.e_count(), 2);
-    }
-
-    #[test]
-    fn test_vertex_labels() {
-        // let mut graph: Digraph<u32, String> = Digraph::new(V_COUNT);
-        // graph.add_vertex_label(0, String::from("test"));
-        // assert_eq!(graph.get_label(0), Some(&String::from("test")));
-        // assert_eq!(graph.get_label(1), None);
-    }
-}
-
 // Funktionen zum Einlesen vom Graphen aus einer Input-Datei
 pub fn import_graph_properties(filename: &str) -> (usize, usize) {
     let content = fs::read_to_string(filename).expect("Unable to open file");
