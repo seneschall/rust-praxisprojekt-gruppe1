@@ -222,7 +222,7 @@ impl<L, W> Undirected<L> for WeightedUGraph<W, L> {
         todo!()
     }
 
-    fn delete_edges_from(&self, vertex: usize) {
+    fn delete_edges_from(&mut self, vertex: usize) {
         todo!()
     }
 }

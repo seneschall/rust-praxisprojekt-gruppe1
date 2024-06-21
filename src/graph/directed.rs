@@ -17,7 +17,7 @@ mod test {
         assert_eq!(digraph.e_count(), 0);
         assert_eq!(digraph.v_count(), 10);
         assert_eq!(digraph.adj, vec![vec![]; digraph.v_count()]);
-        assert_eq!(digraph.node_labels, HashMap::new())
+        assert_eq!(digraph.vertex_labels, HashMap::new())
     }
     #[test]
     fn test_digraph_from_adjacency_list() {
@@ -69,7 +69,7 @@ mod test {
         digraph.add_label(0, 5);
         let mut test: HashMap<usize, usize> = HashMap::new();
         test.insert(0, 5);
-        assert_eq!(digraph.node_labels, test);
+        assert_eq!(digraph.vertex_labels, test);
     }
     #[test]
     fn test_digraph_append_vertex() {
@@ -166,7 +166,7 @@ pub struct Digraph<L> {
     v_count: usize,                  // number of vertices
     e_count: usize,                  // number of edges
     pub(crate) adj: Vec<Vec<usize>>, // adjacency list of indices -- note from group: should we set this to pub(crate)?
-    node_labels: HashMap<usize, L>,  // format: index of node - value of node's label
+    vertex_labels: HashMap<usize, L>,  // format: index of vertex - value of vertex's label
 }
 
 impl<L> Digraph<L> {
@@ -175,7 +175,7 @@ impl<L> Digraph<L> {
             v_count,
             e_count: 0,
             adj: vec![vec![]; v_count],
-            node_labels: HashMap::new(),
+            vertex_labels: HashMap::new(),
         }
     }
     pub fn from_adjacency_list(v_count: usize, e_count: usize, adj: Vec<Vec<usize>>) -> Self {
@@ -183,7 +183,7 @@ impl<L> Digraph<L> {
             v_count,
             e_count,
             adj,
-            node_labels: HashMap::new(),
+            vertex_labels: HashMap::new(),
         }
     }
     fn vertex_exists(&self, vertex: usize) -> bool {
@@ -204,7 +204,7 @@ where
     }
 
     fn add_label(&mut self, vertex: usize, label: L) {
-        self.node_labels.insert(vertex, label);
+        self.vertex_labels.insert(vertex, label);
     }
 
     fn add_ledge(&mut self, from: L, to: L) {
@@ -241,7 +241,7 @@ where
     }
 
     fn edit_label(&mut self, vertex: usize, label: L) {
-        self.node_labels.insert(vertex, label);
+        self.vertex_labels.insert(vertex, label);
     }
 
     fn get_index(&self, label: L) -> Option<&usize> {
@@ -249,7 +249,7 @@ where
     }
 
     fn get_label(&self, vertex: usize) -> Option<&L> {
-        self.node_labels.get(&vertex) // note from celine: can you explain this?
+        self.vertex_labels.get(&vertex) // note from celine: can you explain this?
     }
 
     fn v_count(&self) -> usize {
