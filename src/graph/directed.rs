@@ -966,34 +966,6 @@ where
     }
 }
 
-/*
-pub fn from_adjacency_list(
-        v_count: usize,
-        e_count: usize,
-        adj: Vec<Vec<usize>>,
-        labels: Vec<L>,
-    ) -> Self {
-        let mut vec_vertex_labels: Vec<L> = Vec::new();
-        let mut hashmap_labels_vertex: HashMap<L, usize> = HashMap::new();
-        if !(labels.len() == v_count) {
-            panic!("Failed : v_count and labels.len() are not equal")
-        } else {
-            let mut i: usize = 0;
-            for item in labels {
-                vec_vertex_labels.push(item.clone()); // create Vec for Labels
-                hashmap_labels_vertex.insert(item, i); // create HashMap for Labels
-                i += 1;
-            }
-        }
-        LabeledDigraph {
-            dg: Digraph::from_adjacency_list(v_count, e_count, adj),
-            vec_vertex_labels: vec_vertex_labels,
-            hashmap_labels_vertex: hashmap_labels_vertex,
-        }
-    }
-
-
-*/
 impl<L, W> Weighted<L, W> for LabeledWeightedDigraph<L, W>
 where
     L: Hash + Eq + Clone,
