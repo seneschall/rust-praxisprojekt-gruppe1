@@ -30,7 +30,6 @@ pub enum Edit {
 // UNIT-TESTS Graph-Einlesen aus Datei
 #[cfg(test)]
 mod test {
-    use directed::Digraph;
 
     use super::*;
 
