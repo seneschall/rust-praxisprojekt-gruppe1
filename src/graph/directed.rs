@@ -314,11 +314,13 @@ mod labeleddigraph {
     #[test]
     fn from_adjacency_list() {
         let v_count = 10;
-        let e_count = 5;
+        let e_count = 10;
         let adj = vec![vec![0]; 10];
+        let mut testHashMap: HashMap<String, usize> = HashMap::new();
         let mut labels: Vec<String> = Vec::new();
         for i in 0..10 {
             labels.push(i.to_string());
+            testHashMap.insert(i.to_string(), i);
         }
         let ldg: LabeledDigraph<String> =
             LabeledDigraph::from_adjacency_list(v_count, e_count, adj.clone(), labels.clone());
@@ -327,16 +329,18 @@ mod labeleddigraph {
         assert_eq!(ldg.dg.adj, adj);
         assert!(ldg.dg.deleted_vertices.is_empty());
         assert_eq!(ldg.vec_vertex_labels, labels);
-        //todo HashMap
+        assert_eq!(ldg.hashmap_labels_vertex, testHashMap);
     }
     #[test]
     fn add_vertex() {
+        let mut testHashMap: HashMap<String, usize> = HashMap::new();
         let mut ldg: LabeledDigraph<String> = LabeledDigraph::new();
         for i in 0..9 {
             assert_eq!(i, ldg.add_vertex(i.to_string()));
             assert_eq!(ldg.vec_vertex_labels[i], i.to_string());
-            //todo HashMap
+            assert_eq!(testHashMap.insert(i.to_string(), i), None);
         }
+        assert_eq!(ldg.hashmap_labels_vertex, testHashMap);
     }
     #[test]
     fn add_edge() {
@@ -610,7 +614,9 @@ where
 {
     fn delete_vertex(&mut self, vertex: L) {
         self.dg
-            .delete_vertex(self.get_index(vertex).unwrap().to_owned())
+            .delete_vertex(self.get_index(vertex.clone()).unwrap().to_owned());
+        // let index = self.hashmap_labels_vertex.remove(&vertex).unwrap();
+        //TODO delete labels
     }
 
     fn vertex_deleted(&self, vertex: L) -> bool {
@@ -700,7 +706,7 @@ mod weighteddigraph {
     fn from_adjacency_list() {
         todo!()
     }
-    fn append_vertex(){
+    fn append_vertex() {
         todo!()
     }
     fn add_edge() {
@@ -715,20 +721,20 @@ mod weighteddigraph {
     fn get_weight() {
         todo!()
     }
-    fn delete_vertex(){
+    fn delete_vertex() {
         todo!()
     }
-    fn vertex_deleted(){
+    fn vertex_deleted() {
         todo!()
     }
-    fn delete_edge(){
+    fn delete_edge() {
         todo!()
     }
-    fn outgoing_edges(){
+    fn outgoing_edges() {
         todo!()
     }
 
-    fn incoming_edges(){
+    fn incoming_edges() {
         todo!()
     }
 
@@ -756,7 +762,7 @@ impl<W> WeightedDigraph<W> {
     fn from_adjacency_list() -> Self {
         todo!()
     }
-    fn append_vertex(){
+    fn append_vertex() {
         todo!()
     }
 }
@@ -851,16 +857,44 @@ impl<W> Directed<usize> for WeightedDigraph<W> {
     }
 }
 
-
 #[cfg(test)]
 mod labeledweighteddigraph {
+    use std::f64::{INFINITY, NEG_INFINITY};
+
+    use num::ToPrimitive;
+
     use super::*;
 
+    fn setuplwdg() -> LabeledWeightedDigraph<String, f64> {
+        let v_count = 5;
+        let e_count = 12;
+        let mut labels: Vec<String> = Vec::new();
+        for i in 0..v_count {
+            labels.push(i.to_string());
+        }
+        let adj: Vec<Vec<(usize, f64)>> = vec![
+            vec![(4, 0.22), (3, 0.1111111)],
+            vec![],
+            vec![(0, 5.13131)],
+            vec![
+                (0, 1111.0),
+                (1, 0.0),
+                (2, 2.1),
+                (3, INFINITY),
+                (4, NEG_INFINITY),
+            ],
+            vec![(0, 0.0), (1, 0.0), (2, 0.0), (3, 0.0)],
+        ];
+
+        let lwdg: LabeledWeightedDigraph<String, f64> =
+            LabeledWeightedDigraph::from_adjacency_list(v_count, e_count, adj, labels);
+        lwdg
+    }
     // dg: LabeledDigraph<L>,
     // weights: HashMap<(usize, usize), W>,
     #[test]
-    fn new(){
-        let lwdg: LabeledWeightedDigraph<String,f64> = LabeledWeightedDigraph::new();
+    fn new() {
+        let lwdg: LabeledWeightedDigraph<String, f64> = LabeledWeightedDigraph::new();
         assert!(lwdg.weights.is_empty());
         assert!(lwdg.dg.hashmap_labels_vertex.is_empty());
         assert!(lwdg.dg.vec_vertex_labels.is_empty());
@@ -869,56 +903,259 @@ mod labeledweighteddigraph {
         assert_eq!(lwdg.v_count(), 0);
         assert_eq!(lwdg.e_count(), 0);
     }
-    fn from_adjacency_list(){
+    #[test]
+    fn from_adjacency_list() {
+        let v_count = 5;
+        let e_count = 12;
         let mut labels: Vec<String> = Vec::new();
+        let mut test_labels_hashmap: HashMap<String, usize> = HashMap::new();
+        for i in 0..v_count {
+            labels.push(i.to_string());
+            test_labels_hashmap.insert(i.to_string(), i);
+        }
+        let adj: Vec<Vec<(usize, f64)>> = vec![
+            vec![(4, 0.22), (3, 0.1111111)],
+            vec![],
+            vec![(0, 5.13131)],
+            vec![
+                (0, 1111.0),
+                (1, 0.0),
+                (2, 2.1),
+                (3, INFINITY),
+                (4, NEG_INFINITY),
+            ],
+            vec![(0, 0.0), (1, 0.0), (2, 0.0), (3, 0.0)],
+        ];
+        let testadj: Vec<Vec<usize>> = vec![
+            vec![4, 3],
+            vec![],
+            vec![0],
+            vec![0, 1, 2, 3, 4],
+            vec![0, 1, 2, 3],
+        ];
+        let weights: Vec<Vec<f64>> = vec![
+            vec![0.22, 0.1111111],
+            vec![],
+            vec![5.13131],
+            vec![1111.0, 0.0, 2.1, INFINITY, NEG_INFINITY],
+            vec![0.0, 0.0, 0.0, 0.0],
+        ];
+        let mut testweights: HashMap<(usize, usize), f64> = HashMap::new();
+        let mut j = 0;
+        let mut u: usize = 0;
+        for from in testadj.clone() {
+            for to in from {
+                testweights.insert((j, to), weights[j].get(u).unwrap().clone());
+                u += 1;
+            }
+            u = 0;
+            j += 1;
+        }
+
+        let lwdg: LabeledWeightedDigraph<String, f64> = LabeledWeightedDigraph::from_adjacency_list(
+            v_count.clone(),
+            e_count.clone(),
+            adj.clone(),
+            labels.clone(),
+        );
+        assert_eq!(lwdg.e_count(), e_count);
+        assert_eq!(lwdg.v_count(), v_count);
+        assert_eq!(lwdg.dg.dg.adj, testadj);
+        assert_eq!(lwdg.dg.dg.deleted_vertices, vec![]);
+        assert_eq!(lwdg.dg.vec_vertex_labels, labels);
+        assert_eq!(lwdg.dg.hashmap_labels_vertex, test_labels_hashmap);
+        assert_eq!(lwdg.weights, testweights);
+    }
+    #[test]
+    fn add_edge() {
+        let (i, j): (usize, usize) = (1, 0);
+        let mut lwdg = setuplwdg();
+        lwdg.add_edge(1.to_string(), 0.to_string(), NEG_INFINITY);
+        assert_eq!(
+            lwdg.weights.get_key_value(&(1, 0)).unwrap(),
+            (&(i, j), &NEG_INFINITY)
+        );
+        assert_eq!(lwdg.e_count(), 13);
+    }
+    #[test]
+    fn add_vertex() {
+        let mut lwdg = setuplwdg();
+        lwdg.add_vertex(5.to_string());
+        assert_eq!(lwdg.v_count(), 6);
+        assert_eq!(
+            lwdg.dg
+                .hashmap_labels_vertex
+                .get_key_value(&5.to_string())
+                .unwrap(),
+            (&5.to_string(), &5)
+        );
+        assert_eq!(lwdg.dg.vec_vertex_labels[5], 5.to_string());
+        assert_eq!(
+            lwdg.dg.dg.adj,
+            vec![
+                vec![4, 3],
+                vec![],
+                vec![0],
+                vec![0, 1, 2, 3, 4],
+                vec![0, 1, 2, 3],
+                vec![]
+            ]
+        );
+    }
+    #[test]
+    fn edit_weight() {
+        let mut lwdg = setuplwdg();
+        let mut test_weights_hashmap: HashMap<(usize, usize), f64> = HashMap::new();
+        let weights: Vec<Vec<f64>> = vec![
+            vec![0.22, 0.1111111],
+            vec![],
+            vec![5.13131],
+            vec![1111.0, 0.0, 2.1, INFINITY, NEG_INFINITY],
+            vec![0.0, 0.0, 0.0, 0.0],
+        ];
+
+        let mut j = 0;
+        let mut u: usize = 0;
+        for from in lwdg.dg.dg.adj.clone() {
+            for to in from {
+                test_weights_hashmap.insert((j, to), weights[j].get(u).unwrap().clone());
+                u += 1;
+            }
+            u = 0;
+            j += 1;
+        }
+        lwdg.edit_weight(0.to_string(), 4.to_string(), NEG_INFINITY);
+        test_weights_hashmap.insert((0, 4), NEG_INFINITY);
+        assert_eq!(lwdg.weights, test_weights_hashmap);
+    }
+    #[test]
+    fn get_weight() {
+        let mut lwdg = setuplwdg();
+        let weights: Vec<Vec<f64>> = vec![
+            vec![0.22, 0.1111111],
+            vec![],
+            vec![5.13131],
+            vec![1111.0, 0.0, 2.1, INFINITY, NEG_INFINITY],
+            vec![0.0, 0.0, 0.0, 0.0],
+        ];
+        let mut test_weights_hashmap: HashMap<(usize, usize), f64> = HashMap::new();
+        let mut j = 0;
+        let mut u: usize = 0;
+        for from in lwdg.dg.dg.adj.clone() {
+            for to in from {
+                test_weights_hashmap.insert((j, to), weights[j].get(u).unwrap().clone());
+                assert_eq!(
+                    lwdg.get_weight(
+                        lwdg.dg.get_label(j).unwrap().clone(),
+                        lwdg.dg.get_label(to).unwrap().clone()
+                    ),
+                    test_weights_hashmap.get(&(j, to)).unwrap().clone()
+                );
+                u += 1;
+            }
+            u = 0;
+            j += 1;
+        }
+    }
+    #[test]
+    fn delete_vertex() {
+        let mut lwdg = setuplwdg();
+        lwdg.delete_vertex(0.to_string());
+        let v_count = 4;
+        let e_count = 7;
+        let mut labels: Vec<String> = Vec::new();
+        let mut test_labels_hashmap: HashMap<String, usize> = HashMap::new();
+        let mut test_weights_hashmap: HashMap<(usize, usize), f64> = HashMap::new();
         for i in 0..5 {
             labels.push(i.to_string());
+            test_labels_hashmap.insert(i.to_string(), i);
         }
-        todo!()
-        // let mut lwdg: LabeledWeightedDigraph<String,f64> =
-        //     LabeledWeightedDigraph::from_adjacency_list(5, 0, vec![vec![]; 5], labels.clone());
-        
-    }
-    fn add_edge() {
-        todo!()
-    }
+        test_weights_hashmap.insert((3.to_usize().unwrap(), 1.to_usize().unwrap()), 0.0);
+        test_weights_hashmap.insert((3.to_usize().unwrap(), 2.to_usize().unwrap()), 2.1);
+        test_weights_hashmap.insert((3.to_usize().unwrap(), 3.to_usize().unwrap()), INFINITY);
+        test_weights_hashmap.insert((3.to_usize().unwrap(), 4.to_usize().unwrap()), NEG_INFINITY);
 
-    fn add_vertex(){
-        todo!()
-    }
+        test_weights_hashmap.insert((4.to_usize().unwrap(), 1.to_usize().unwrap()), 0.0);
+        test_weights_hashmap.insert((4.to_usize().unwrap(), 2.to_usize().unwrap()), 0.0);
+        test_weights_hashmap.insert((4.to_usize().unwrap(), 3.to_usize().unwrap()), 0.0);
+        let adj: Vec<Vec<usize>> = vec![vec![], vec![], vec![], vec![4, 1, 2, 3], vec![3, 1, 2]]; // order is not important and changes here since we use swap_remove for more efficency
+        let weights: Vec<Vec<f64>> = vec![
+            vec![],
+            vec![0.22, 0.1111111],
+            vec![],
+            vec![],
+            vec![0.0, 2.1, INFINITY, NEG_INFINITY],
+            vec![0.0, 0.0, 0.0],
+        ];
 
-    fn edit_weight() {
-        todo!()
+        assert_eq!(lwdg.e_count(), e_count);
+        assert_eq!(lwdg.v_count(), v_count);
+        assert_eq!(lwdg.dg.dg.adj, adj);
+        assert_eq!(lwdg.dg.dg.deleted_vertices, vec![0]);
+        assert_eq!(lwdg.dg.vec_vertex_labels, labels);
+        assert_eq!(lwdg.dg.hashmap_labels_vertex, test_labels_hashmap);
     }
-
-    fn get_weight(){
-        todo!()
+    #[test]
+    fn vertex_deleted() {
+        let mut lwdg = setuplwdg();
+        lwdg.dg.dg.deleted_vertices.push(2);
+        assert_eq!(lwdg.vertex_deleted(lwdg.dg.get_label(2).unwrap().clone()),true);
     }
-    fn delete_vertex() {
-        todo!()
-    }
-
-    fn vertex_deleted(){
-        todo!()
-    }
+    #[test]
     fn delete_edge() {
-        todo!()
+        let mut lwdg = setuplwdg();
+        let testadj: Vec<Vec<usize>> = vec![
+            vec![4, 3],
+            vec![],
+            vec![0],
+            vec![0, 1, 2, 3, 4],
+            vec![0, 1, 2, 3],
+        ];
+        let mut j = 0;
+        let mut u: usize = 0;
+        for from in lwdg.dg.dg.adj.clone() {
+            for to in from {
+                lwdg.delete_edge(j.to_string(), to.to_string());
+            }
+            u = 0;
+            j += 1;
+        }
+        assert_eq!(lwdg.dg.dg.adj, vec![vec![];lwdg.v_count()]);
+        assert_eq!(lwdg.e_count(), 0);
     }
 
-    fn outgoing_edges(){
-        todo!()
+    fn outgoing_edges() {
+        let mut lwdg = setuplwdg();
+        let testadj: Vec<Vec<usize>> = vec![
+            vec![4, 3],
+            vec![],
+            vec![0],
+            vec![0, 1, 2, 3, 4],
+            vec![0, 1, 2, 3],
+        ];
+        //todo 
     }
 
-    fn incoming_edges(){
+    fn incoming_edges() {
         todo!()
     }
-
+    #[test]
     fn delete_outgoing_edges() {
-        todo!()
+        let mut lwdg = setuplwdg();
+        assert_eq!(lwdg.e_count(), 12);
+        for i in 0..lwdg.v_count() {
+            lwdg.delete_outgoing_edges(i.to_string());
+        }
+        assert_eq!(lwdg.e_count(), 0);
     }
-
+    #[test]
     fn delete_incoming_edges() {
-        todo!()
+        let mut lwdg = setuplwdg();
+        assert_eq!(lwdg.e_count(), 12);
+        for i in 0..lwdg.v_count() {
+            lwdg.delete_incoming_edges(i.to_string());
+        }
+        assert_eq!(lwdg.e_count(), 0);
     }
 }
 // LabeledWeightedDigraph
@@ -944,24 +1181,26 @@ where
     fn from_adjacency_list(
         v_count: usize,
         e_count: usize,
-        adj: Vec<Vec<usize>>,
+        adj: Vec<Vec<(usize, W)>>,
         labels: Vec<L>,
-        weights: Vec<Vec<W>>,) -> Self{
-            let mut hashmap_weights : HashMap<(usize, usize), W> = HashMap::new();
-            if !(weights.len()==adj.len())
-            {
-                panic!("weights.len != adj.len()")
+    ) -> Self {
+        let mut hashmap_weights: HashMap<(usize, usize), W> = HashMap::new();
+        if !(v_count == adj.len()) {
+            panic!("v_count != adj.len()")
+        }
+        let mut j = 0;
+        let mut adjlist: Vec<Vec<usize>> = vec![vec![]; v_count];
+        for item in adj {
+            for i in 0..item.len() {
+                let (to, weight): (usize, W) = item[i].clone();
+                hashmap_weights.insert((j, to), weight);
+                adjlist[j].push(to);
             }
-            let mut j = 0;
-            for item in adj.clone(){
-                for i in 0..item.len(){ // does this even work as intended? empty vertices?
-                    hashmap_weights.insert((j,i), weights[j].get(i).unwrap().clone());
-                }
-                j += 1;
-            }
+            j += 1;
+        }
         LabeledWeightedDigraph {
-            dg: LabeledDigraph::from_adjacency_list(v_count, e_count, adj, labels),
-            weights : hashmap_weights,
+            dg: LabeledDigraph::from_adjacency_list(v_count, e_count, adjlist, labels),
+            weights: hashmap_weights,
         }
     }
 }
@@ -1020,14 +1259,14 @@ where
     L: Hash + Eq + Clone + std::fmt::Display,
 {
     fn delete_vertex(&mut self, vertex: L) {
-        if self.dg.get_index(vertex.clone()).unwrap().to_owned() < self.dg.dg.v_count {
+        if self.dg.get_index(vertex.clone()).unwrap() < &self.dg.v_count() {
+            self.delete_incoming_edges(vertex.clone());
+            self.delete_outgoing_edges(vertex.clone());
+            self.dg.dg.v_count -= 1;
             self.dg
                 .dg
                 .deleted_vertices
                 .push(self.dg.get_index(vertex.clone()).unwrap().to_owned());
-            self.delete_incoming_edges(vertex.clone());
-            self.delete_outgoing_edges(vertex);
-            self.dg.dg.v_count -= 1;
         } else {
             panic!("delete_vertex : Can't delete Vertex : vertex >= self.v_count")
         }
@@ -1068,9 +1307,11 @@ where
             }
         }
         let from_index = self.dg.get_index(from.clone()).unwrap().clone();
-        self.dg.dg.adj[from_index].swap_remove(i_of_w);
-        self.weights
-            .remove(&(self.dg.get_index(from).unwrap().clone(), i_of_w));
+        self.dg.dg.adj[from_index].swap_remove(i_of_w); // deletes adj entry
+        self.weights.remove(&(
+            self.dg.get_index(from).unwrap().clone(),
+            self.dg.get_index(to).unwrap().clone(),
+        )); // deletes HashMap entry of weight
         self.dg.dg.e_count -= 1;
     }
 

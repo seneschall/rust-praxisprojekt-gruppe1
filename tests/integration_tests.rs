@@ -3,23 +3,39 @@ mod common;
 mod test {
 
     use wt_graphs::{
-        graph::directed::LabeledDigraph,
-        traits::{Directed, Graph},
+        graph::directed::{Digraph, LabeledDigraph},
+        traits::{Delete, Directed, Graph, Labeled},
     };
 
     use crate::common::setup_digraph;
 
     #[test]
     fn test_labeled_digraph() {
-        let v_count = 10;
-        let e_count = 5;
-        let adj = vec![vec![0]; 10];
-        let mut labels: Vec<String> = Vec::new();
-        for i in 0..10 {
-            labels.push(i.to_string());
+        let mut ldg: LabeledDigraph<&str> = LabeledDigraph::new();
+        let dg: Digraph = Digraph::new();
+        let index = ldg.add_vertex("2");
+        assert_eq!(ldg.v_count(), 1);
+        ldg.add_edge("2", "2");
+        for item in ldg.outgoing_edges("2") {
+            assert_eq!(item, "2");
         }
-        let ldg: LabeledDigraph<String> =
-            LabeledDigraph::from_adjacency_list(v_count, e_count, adj.clone(), labels);
+        ldg.add_vertex("3");
+        ldg.add_edge("2", "3");
+        ldg.add_edge("3", "2");
+        ldg.delete_vertex("2");
+
+        for item in ldg.outgoing_edges("2") {
+            assert_eq!(item, "2");
+        }
+        assert_eq!(ldg.e_count(), 0);
+        ldg.add_vertex("2");
+        assert_eq!(ldg.v_count(), 2);
+        ldg.add_edge("2", "3");
+
+        for item in ldg.outgoing_edges("2") {
+            assert_ne!(item, "2");
+        }
+        // assert_eq!(1,2);
     }
     #[test]
     fn test_digraph_tinyDG() {
