@@ -214,9 +214,9 @@ impl Graph<usize> for Digraph {
         self.v_count - 1
     }
 
-//     fn e_count(&self) -> usize {
-//         self.e_count
-//     }
+    fn e_count(&self) -> usize {
+        self.e_count
+    }
 
     fn v_count(&self) -> usize {
         self.v_count
@@ -275,15 +275,15 @@ impl Directed<usize> for Digraph {
         self.adj[vertex].clone()
     }
 
-//     fn incoming_edges(&self, vertex: usize) -> Vec<usize> {
-//         let mut incoming_edges: Vec<usize> = Vec::new();
-//         for i in 0..self.v_count {
-//             if self.adj[i].contains(&vertex) {
-//                 incoming_edges.push(i);
-//             }
-//         }
-//         incoming_edges
-//     }
+    fn incoming_edges(&self, vertex: usize) -> Vec<usize> {
+        let mut incoming_edges: Vec<usize> = Vec::new();
+        for i in 0..self.v_count {
+            if self.adj[i].contains(&vertex) {
+                incoming_edges.push(i);
+            }
+        }
+        incoming_edges
+    }
 
     fn delete_outgoing_edges(&mut self, vertex: usize) {
         for to in self.outgoing_edges(vertex) {
@@ -316,11 +316,11 @@ mod labeleddigraph {
         let v_count = 10;
         let e_count = 10;
         let adj = vec![vec![0]; 10];
-        let mut testHashMap: HashMap<String, usize> = HashMap::new();
+        let mut testhashmap: HashMap<String, usize> = HashMap::new();
         let mut labels: Vec<String> = Vec::new();
         for i in 0..10 {
             labels.push(i.to_string());
-            testHashMap.insert(i.to_string(), i);
+            testhashmap.insert(i.to_string(), i);
         }
         let ldg: LabeledDigraph<String> =
             LabeledDigraph::from_adjacency_list(v_count, e_count, adj.clone(), labels.clone());
@@ -329,18 +329,18 @@ mod labeleddigraph {
         assert_eq!(ldg.dg.adj, adj);
         assert!(ldg.dg.deleted_vertices.is_empty());
         assert_eq!(ldg.vec_vertex_labels, labels);
-        assert_eq!(ldg.hashmap_labels_vertex, testHashMap);
+        assert_eq!(ldg.hashmap_labels_vertex, testhashmap);
     }
     #[test]
     fn add_vertex() {
-        let mut testHashMap: HashMap<String, usize> = HashMap::new();
+        let mut testhashmap: HashMap<String, usize> = HashMap::new();
         let mut ldg: LabeledDigraph<String> = LabeledDigraph::new();
         for i in 0..9 {
             assert_eq!(i, ldg.add_vertex(i.to_string()));
             assert_eq!(ldg.vec_vertex_labels[i], i.to_string());
-            assert_eq!(testHashMap.insert(i.to_string(), i), None);
+            assert_eq!(testhashmap.insert(i.to_string(), i), None);
         }
-        assert_eq!(ldg.hashmap_labels_vertex, testHashMap);
+        assert_eq!(ldg.hashmap_labels_vertex, testhashmap);
     }
     #[test]
     fn add_edge() {
@@ -890,8 +890,7 @@ mod labeledweighteddigraph {
             LabeledWeightedDigraph::from_adjacency_list(v_count, e_count, adj, labels);
         lwdg
     }
-    // dg: LabeledDigraph<L>,
-    // weights: HashMap<(usize, usize), W>,
+    
     #[test]
     fn new() {
         let lwdg: LabeledWeightedDigraph<String, f64> = LabeledWeightedDigraph::new();
