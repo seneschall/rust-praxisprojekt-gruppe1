@@ -12,12 +12,12 @@ pub trait Graph<T> {
     fn e_count(&self) -> usize;
 
     fn v_count(&self) -> usize; // returns the number of vertices in graph
-    
+
     fn vertex_exists(&self, vertex: T) -> bool;
     // append can be added additionaly for unlabeled graph
     //fn append_vertex(&mut self) -> usize; // adds vertex at position wt_adj.len() or at index of lowest deleted vertex (if that change hasn't been committed)
 }
-pub trait Labeled<L>{    
+pub trait Labeled<L> {
     fn edit_label(&mut self, old_label: L, new_label: L); // true if last item in uncommitted edits for v is Edit::DeleteSelf; should return a Result
 
     fn get_label(&self, vertex: usize) -> Option<&L>; // O(N) complexity
@@ -45,7 +45,7 @@ pub trait Undirected<T> {
 // this trait applies to directed graph structures
 pub trait Directed<T> {
     fn delete_edge(&mut self, from: T, to: T);
-    
+
     fn outgoing_edges(&self, vertex: T) -> Vec<T>; // should probably be changed to return an iterator instead
 
     fn incoming_edges(&self, vertex: T) -> Vec<T>; // likewise here
@@ -53,13 +53,12 @@ pub trait Directed<T> {
     fn delete_outgoing_edges(&mut self, vertex: T); // deletes all outgoing edges of vertex; should return a Result
 
     fn delete_incoming_edges(&mut self, vertex: T); // deletes all incoming edges of vertex; should return a Result
-
 }
 
 // this trait applies to weighted graph structures
-pub trait Weighted<T,W> {
+pub trait Weighted<T, W> {
     // Weights implemented as generic, certain functions only possible if W is number
-    fn add_edge(&mut self, from: T, to: T, weight : W);
+    fn add_edge(&mut self, from: T, to: T, weight: W);
 
     fn add_vertex(&mut self, vertex: T) -> usize; // adds vertex at given index; use at users own risk; if vertex doesn't exist (i.e. vertex is less than wt_adj.len()), it just adds it, if it does, it must not have incoming or outgoing edges
 
@@ -67,10 +66,10 @@ pub trait Weighted<T,W> {
 
     fn v_count(&self) -> usize; // returns the number of vertices in graph
 
-    fn edit_weight(&mut self, from:T, to:T, weight: W); // todo: Result; only possible if has_uncommitted_changes == false
+    fn edit_weight(&mut self, from: T, to: T, weight: W); // todo: Result; only possible if has_uncommitted_changes == false
 
-    fn get_weight(&mut self, from: T, to:T,) -> W;
-   }
+    fn get_weight(&mut self, from: T, to: T) -> W;
+}
 
 //  this trait applies to all WT graph structures
 pub trait WT<T> {
