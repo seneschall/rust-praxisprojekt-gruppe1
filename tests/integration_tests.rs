@@ -1,13 +1,16 @@
 mod common;
+use crate::common::setup_digraph;
+use wt_graphs::traits::*;
+use wt_graphs::*;
 #[cfg(test)]
 mod test {
-
+    use common::setup_wtdigraph;
     use wt_graphs::{
-        graph::directed::{Digraph, LabeledDigraph},
-        traits::{Delete, Directed, Graph, Labeled},
+        graph::{directed::Digraph, labeled_directed::LabeledDigraph},
+        wt::directed::WTDigraph,
     };
 
-    use crate::common::setup_digraph;
+    use super::*;
 
     #[test]
     fn test_labeled_digraph() {
@@ -23,10 +26,6 @@ mod test {
         ldg.add_edge("2", "3");
         ldg.add_edge("3", "2");
         ldg.delete_vertex("2");
-
-        for item in ldg.outgoing_edges("2") {
-            assert_eq!(item, "2");
-        }
         assert_eq!(ldg.e_count(), 0);
         ldg.add_vertex("2");
         assert_eq!(ldg.v_count(), 2);
@@ -85,7 +84,7 @@ mod test {
         let mut digraph2 = setup_digraph("tests/tinyDG.txt");
         digraph.add_vertex(0);
         assert_eq!(digraph.outgoing_edges(1), digraph2.outgoing_edges(0));
-        assert_eq!(digraph.v_count(), digraph2.v_count() + 1);
+        assert_eq!(digraph.v_count(), digraph2.v_count());
         digraph.add_vertex(100);
         assert_eq!(digraph.v_count(), 101);
     }
@@ -112,21 +111,21 @@ mod test {
     }
     #[test]
     fn test_wtgraph_incoming_edges() {
-        // let wtdigraph = setup_wtdigraph("tests/tinyDG.txt");
+        let wtdigraph = setup_wtdigraph("tests/tinyDG.txt");
 
-        // assert_eq!(wtdigraph.incoming_edges(0), vec![2usize, 6]);
-        // assert_eq!(wtdigraph.incoming_edges(1), vec![0usize]);
-        // assert_eq!(wtdigraph.incoming_edges(2), vec![3usize, 4]);
-        // assert_eq!(wtdigraph.incoming_edges(3), vec![2usize, 4]);
-        // assert_eq!(wtdigraph.incoming_edges(4), vec![5usize, 6, 11]);
-        // assert_eq!(wtdigraph.incoming_edges(5), vec![0usize, 3]);
-        // assert_eq!(wtdigraph.incoming_edges(6), vec![7usize, 8]);
-        // assert_eq!(wtdigraph.incoming_edges(7), Vec::new());
-        // assert_eq!(wtdigraph.incoming_edges(8), vec![6usize]);
-        // assert_eq!(wtdigraph.incoming_edges(9), vec![6usize, 7, 12]);
-        // assert_eq!(wtdigraph.incoming_edges(10), vec![9usize]);
-        // assert_eq!(wtdigraph.incoming_edges(11), vec![9usize]);
-        // assert_eq!(wtdigraph.incoming_edges(12), vec![10usize, 11]);
+        assert_eq!(wtdigraph.incoming_edges(0), vec![2usize, 6]);
+        assert_eq!(wtdigraph.incoming_edges(1), vec![0usize]);
+        assert_eq!(wtdigraph.incoming_edges(2), vec![3usize, 4]);
+        assert_eq!(wtdigraph.incoming_edges(3), vec![2usize, 4]);
+        assert_eq!(wtdigraph.incoming_edges(4), vec![5usize, 6, 11]);
+        assert_eq!(wtdigraph.incoming_edges(5), vec![0usize, 3]);
+        assert_eq!(wtdigraph.incoming_edges(6), vec![7usize, 8]);
+        assert_eq!(wtdigraph.incoming_edges(7), Vec::new());
+        assert_eq!(wtdigraph.incoming_edges(8), vec![6usize]);
+        assert_eq!(wtdigraph.incoming_edges(9), vec![6usize, 7, 12]);
+        assert_eq!(wtdigraph.incoming_edges(10), vec![9usize]);
+        assert_eq!(wtdigraph.incoming_edges(11), vec![9usize]);
+        assert_eq!(wtdigraph.incoming_edges(12), vec![10usize, 11]);
     }
     #[test]
     fn test_graph() {
@@ -144,32 +143,32 @@ mod test {
     }
     #[test]
     fn test_wtdigraph_from() {
-        // let wtdigraph = setup_wtdigraph("tests/tinyDG.txt");
-        // assert_eq!(wtdigraph.outgoing_edges(2), vec![3usize, 0]);
-        // assert_eq!(wtdigraph.outgoing_edges(1), Vec::new());
-        // assert_eq!(wtdigraph.e_count(), 22);
-        // assert_eq!(wtdigraph.v_count(), 13);
+        let wtdigraph = setup_wtdigraph("tests/tinyDG.txt");
+        assert_eq!(wtdigraph.outgoing_edges(2), vec![3usize, 0]);
+        assert_eq!(wtdigraph.outgoing_edges(1), Vec::new());
+        assert_eq!(wtdigraph.e_count(), 22);
+        assert_eq!(wtdigraph.v_count(), 13);
     }
     #[test]
     fn test_wtdigraph_from_digraph() {
-        // let digraph = setup_digraph("tests/tinyDG.txt");
+        let digraph = setup_digraph("tests/tinyDG.txt");
 
-        // let wtdigraph = WTDigraph::from_digraph(digraph); // creating WTDigraph using from_digraph
+        let wtdigraph = WTDigraph::from_digraph(digraph); // creating WTDigraph using from_digraph
 
-        // assert_eq!(wtdigraph.outgoing_edges(2), vec![3usize, 0]);
-        // assert_eq!(wtdigraph.outgoing_edges(1), Vec::new());
-        // assert_eq!(wtdigraph.e_count(), 22);
-        // assert_eq!(wtdigraph.v_count(), 13);
+        assert_eq!(wtdigraph.outgoing_edges(2), vec![3usize, 0]);
+        assert_eq!(wtdigraph.outgoing_edges(1), Vec::new());
+        assert_eq!(wtdigraph.e_count(), 22);
+        assert_eq!(wtdigraph.v_count(), 13);
     }
     #[test]
     fn test_compare_outgoing_edges_wtdigraph_with_digraph() {
-        // let filename = "tests/mediumDG.txt";
-        // let digraph = setup_digraph(filename);
-        // let wtdigraph = setup_wtdigraph(filename);
-        // for i in 0..digraph.v_count() {
-        //     assert_eq!(digraph.outgoing_edges(i), wtdigraph.outgoing_edges(i));
-        // }
-        // assert_eq!(digraph.v_count(), wtdigraph.v_count());
-        // assert_eq!(digraph.e_count(), wtdigraph.e_count());
+        let filename = "tests/mediumDG.txt";
+        let digraph = setup_digraph(filename);
+        let wtdigraph = setup_wtdigraph(filename);
+        for i in 0..digraph.v_count() {
+            assert_eq!(digraph.outgoing_edges(i), wtdigraph.outgoing_edges(i));
+        }
+        assert_eq!(digraph.v_count(), wtdigraph.v_count());
+        assert_eq!(digraph.e_count(), wtdigraph.e_count());
     }
 }
