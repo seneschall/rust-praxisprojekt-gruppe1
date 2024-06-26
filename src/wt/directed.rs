@@ -2,7 +2,7 @@ use crate::graph::directed::Digraph;
 use crate::traits::{Directed, Graph, UnLabeled, Unweighted, WTDirected, WT};
 use crate::Edit;
 use core::panic;
-use num::Zero;
+use num::Zero; //todo: brauchen wir das noch?
 use qwt::{AccessUnsigned, RankUnsigned, SelectUnsigned, QWT256};
 use std::collections::{HashMap, VecDeque};
 use vers_vecs::{BitVec, RsVec};
@@ -59,7 +59,7 @@ impl WTDigraph {
             starting_indices,
             deleted_vertices: dg.deleted_vertices,
             adj_uncommitted: HashMap::new(),
-            deleted_vertices_uncommitted: Vec::new(), // changed from HashMap::new() to Vec::new()
+            deleted_vertices_uncommitted: HashMap::new(), // changed from HashMap::new() to Vec::new()
             has_uncommitted_edits: false,
         };
     }
@@ -80,9 +80,9 @@ impl WTDigraph {
             e_count_updated: e_count,
             wt_adj,
             starting_indices,
-            deleted_vertices: Vec::new(),
+            deleted_vertices: HashMap::new(),
             adj_uncommitted: HashMap::new(),
-            deleted_vertices_uncommitted: Vec::new(), // changed from HashMap::new() to Vec::new()
+            deleted_vertices_uncommitted: HashMap::new(), // changed from HashMap::new() to Vec::new()
             has_uncommitted_edits: false,
         };
     }
@@ -307,7 +307,48 @@ impl Unweighted<usize> for WTDigraph {
 }
 
 impl WT<usize> for WTDigraph {
-    fn commit_edits(&mut self) {}
+    fn commit_edits(&mut self) {
+        // build new sequence and bitvec
+
+        let mut sequence: Vec<usize> = Vec::new();
+        let mut bv = BitVec::new();
+
+        for v in self.wt_adj_len_updated {
+            bv.append(true); // appends a 1 to mark the beginning of a new vertex
+
+            if !self.vertex_exists_updated(v) {
+                continue;
+            }
+
+            let adj: Vec<usize> = self.outgoing_edges_updated(v);
+
+            for i in 0..adj.len() - 1 {
+                bv.append(false); // appends a 0 to bitmap for every element in adj
+                sequence.push(adj[i]); // moves all elements of adj into sequence
+            }
+        }
+
+        // apply all other changes
+        self.wt_adj_len = self.wt_adj_len_updated;
+
+        // update deleted_vertices
+        for (vertex, change) in self.deleted_vertices_uncommitted.iter() {
+            if change {
+                // i.e. if it was deleted
+                self.deleted_vertices.insert(vertex, true);
+            } else {
+                // i.e. if it was readded
+                self.deleted_vertices.remove(vertex);
+            }
+        }
+
+        self.adj_uncommitted = HashMap::new(); // reset adj_uncommitted
+
+        self.wt_adj = QWT256::new(&mut sequence);
+        self.starting_indices = bv;
+
+        self.discard_edits(); // reset all uncommitted changes
+    }
 
     // fn get_uncommitted_edits(&self) -> Option<HashMap<usize, usize>> {
     //     todo!()
@@ -315,8 +356,8 @@ impl WT<usize> for WTDigraph {
 
     fn discard_edits(&mut self) {
         // todo: make sure these are all fields with changes
-        self.wt_adj_len_updated = self.v_count();
-        self.e_count_updated = self.e_count();
+        self.wt_adj_len_updated = self.wt_adj_len;
+        self.e_count_updated = self.e_count;
         self.deleted_vertices_uncommitted = Vec::new();
         self.adj_uncommitted = HashMap::new();
         self.has_uncommitted_edits = false;
@@ -356,7 +397,19 @@ impl WT<usize> for WTDigraph {
     }
 
     fn v_count_updated(&self) -> usize {
-        todo!()
+        let mut v_count = self.v_count();
+
+        // apply changes
+        for deleted in self.deleted_vertices_uncommitted.values() {
+            if deleted {
+                // deleted is true if a vertex was deleted
+                v_count -= 1;
+            } else {
+                // deleted is false if a vertex was readded
+                v_count += 1;
+            }
+        }
+        return v_count;
     }
 }
 
