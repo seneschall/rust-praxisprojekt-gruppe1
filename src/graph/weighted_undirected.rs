@@ -30,10 +30,6 @@ impl<W> Graph<usize> for WeightedUGraph<W> {
         todo!()
     }
 
-    fn vertex_deleted(&self, vertex: usize) -> bool {
-        todo!()
-    }
-
     fn delete_edge(&mut self, from: usize, to: usize) {
         todo!()
     }

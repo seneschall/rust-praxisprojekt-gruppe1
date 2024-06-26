@@ -68,16 +68,6 @@ fn delete_vertex() {
     assert_eq!(digraph.v_count(), 4);
 }
 #[test]
-fn vertex_deleted() {
-    let mut digraph = Digraph::from_adjacency_list(5, 0, vec![vec![]; 5]);
-    assert_eq!(digraph.vertex_deleted(0), false);
-    digraph.deleted_vertices = vec![0];
-    assert_eq!(digraph.vertex_deleted(0), true);
-    assert_eq!(digraph.vertex_deleted(1), false);
-    digraph.deleted_vertices = vec![0, 1];
-    assert_eq!(digraph.vertex_deleted(1), true);
-}
-#[test]
 fn delete_edge() {
     let mut digraph = Digraph::from_adjacency_list(5, 5, vec![vec![1]; 5]);
     assert_eq!(

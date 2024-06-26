@@ -57,9 +57,6 @@ where
         self.ldg.v_count()
     }
 
-    fn vertex_deleted(&self, vertex: L) -> bool {
-        self.ldg.vertex_deleted(vertex)
-    }
 
     fn delete_edge(&mut self, from: L, to: L) {
         if self.get_index(from.clone()) <= self.get_index(to.clone()) {

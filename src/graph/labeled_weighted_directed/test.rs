@@ -226,12 +226,6 @@ fn delete_vertex() {
     assert_eq!(lwdg.dg.hashmap_labels_vertex, test_labels_hashmap);
 }
 #[test]
-fn vertex_deleted() {
-    let mut lwdg = setuplwdg();
-    lwdg.dg.dg.deleted_vertices.push(2);
-    assert_eq!(lwdg.dg.vertex_deleted(2.to_string()), true);
-}
-#[test]
 fn delete_edge() {
     let mut lwdg = setuplwdg();
     let mut j = 0;

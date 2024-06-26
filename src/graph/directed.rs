@@ -56,14 +56,6 @@ impl Graph<usize> for Digraph {
         self.v_count
     }
 
-    fn vertex_deleted(&self, vertex: usize) -> bool {
-        if self.deleted_vertices.contains(&vertex) {
-            true
-        } else {
-            false
-        }
-    }
-
     fn delete_edge(&mut self, from: usize, to: usize) {
         let i_of_w: usize; // -- note from celine: could we use index_of_w for clarity?
         match self.adj.get(from) {

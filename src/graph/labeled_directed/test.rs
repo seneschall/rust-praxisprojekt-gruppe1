@@ -87,22 +87,6 @@ fn delete_vertex() {
     assert_eq!(ldg.v_count(), 4);
 }
 #[test]
-fn vertex_deleted() {
-    let mut labels: Vec<String> = Vec::new();
-    for i in 0..5 {
-        labels.push(i.to_string());
-    }
-    let mut ldg: LabeledDigraph<String> =
-        LabeledDigraph::from_adjacency_list(5, 0, vec![vec![]; 5], labels.clone());
-
-    assert_eq!(ldg.vertex_deleted(0.to_string()), false);
-    ldg.dg.deleted_vertices = vec![0];
-    assert_eq!(ldg.vertex_deleted(0.to_string()), true);
-    assert_eq!(ldg.vertex_deleted(1.to_string()), false);
-    ldg.dg.deleted_vertices = vec![0, 1];
-    assert_eq!(ldg.vertex_deleted(1.to_string()), true);
-}
-#[test]
 fn delete_edge() {
     let mut labels: Vec<String> = Vec::new();
     for i in 0..5 {

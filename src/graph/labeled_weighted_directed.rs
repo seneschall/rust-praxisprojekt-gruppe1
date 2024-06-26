@@ -68,9 +68,6 @@ where
         self.dg.v_count()
     }
 
-    fn vertex_deleted(&self, vertex: L) -> bool {
-        self.dg.vertex_deleted(vertex)
-    }
 
     fn delete_edge(&mut self, from: L, to: L) {
         let i_of_w: usize; // -- note from celine: could we use index_of_w for clarity?

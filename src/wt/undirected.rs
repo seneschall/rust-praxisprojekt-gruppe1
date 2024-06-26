@@ -1,116 +1,116 @@
-use std::collections::HashMap;
+// use std::collections::HashMap;
 
-use crate::traits::{Directed, WTDirected};
-use crate::traits::{Graph, UnLabeled, Undirected, Unweighted, WTUndirected, WT};
-use crate::wt::directed::WTDigraph; // needed because of WTDigraph
-pub struct WTUGraph {
-    wtd: WTDigraph,
-}
-impl WTUGraph {
-    pub fn new() {
-        todo!()
-    }
-    pub fn from_ugraph() {
-        todo!()
-    }
-}
-impl Graph<usize> for WTUGraph {
-    fn add_vertex(&mut self, vertex: usize) -> usize {
-        self.wtd.add_vertex(vertex)
-    }
+// use crate::traits::{Directed, WTDirected};
+// use crate::traits::{Graph, UnLabeled, Undirected, Unweighted, WTUndirected, WT};
+// use crate::wt::directed::WTDigraph; // needed because of WTDigraph
+// pub struct WTUGraph {
+//     wtd: WTDigraph,
+// }
+// impl WTUGraph {
+//     pub fn new() {
+//         todo!()
+//     }
+//     pub fn from_ugraph() {
+//         todo!()
+//     }
+// }
+// impl Graph<usize> for WTUGraph {
+//     fn add_vertex(&mut self, vertex: usize) -> usize {
+//         self.wtd.add_vertex(vertex)
+//     }
 
-    fn e_count(&self) -> usize {
-        self.wtd.e_count()
-    }
+//     fn e_count(&self) -> usize {
+//         self.wtd.e_count()
+//     }
 
-    fn v_count(&self) -> usize {
-        self.wtd.v_count()
-    }
+//     fn v_count(&self) -> usize {
+//         self.wtd.v_count()
+//     }
 
-    fn vertex_deleted(&self, vertex: usize) -> bool {
-        self.wtd.vertex_deleted(vertex)
-    }
+//     fn vertex_deleted(&self, vertex: usize) -> bool {
+//         self.wtd.vertex_deleted(vertex)
+//     }
 
-    fn delete_edge(&mut self, from: usize, to: usize) {
-        if from <= to {
-            self.wtd.delete_edge(from, to);
-        } else {
-            self.wtd.delete_edge(to, from);
-        }
-    }
+//     fn delete_edge(&mut self, from: usize, to: usize) {
+//         if from <= to {
+//             self.wtd.delete_edge(from, to);
+//         } else {
+//             self.wtd.delete_edge(to, from);
+//         }
+//     }
 
-    fn delete_vertex(&mut self, vertex: usize) {
-        self.wtd.delete_vertex(vertex);
-    }
+//     fn delete_vertex(&mut self, vertex: usize) {
+//         self.wtd.delete_vertex(vertex);
+//     }
 
-    fn vertex_exists(&self, vertex: usize) -> bool {
-        self.wtd.vertex_exists(vertex)
-    }
+//     fn vertex_exists(&self, vertex: usize) -> bool {
+//         self.wtd.vertex_exists(vertex)
+//     }
 
-    fn shrink(&mut self) -> HashMap<usize, usize> {
-        self.wtd.shrink()
-    }
+//     fn shrink(&mut self) -> HashMap<usize, usize> {
+//         self.wtd.shrink()
+//     }
 
-    fn edge_exists(&self, from: usize, to: usize) -> bool {
-        todo!()
-    }
-}
-impl Undirected<usize> for WTUGraph {
-    fn edges(&self, vertex: usize) -> Vec<usize> {
-        // returns all edges connected to vertex
-        let mut edges: Vec<usize> = Vec::new();
-        edges = self.wtd.incoming_edges(vertex); // all incoming edges of vertex
-        edges.append(&mut self.wtd.outgoing_edges(vertex)); // + outgoing edges of vertex
-        edges
-    }
+//     fn edge_exists(&self, from: usize, to: usize) -> bool {
+//         todo!()
+//     }
+// }
+// impl Undirected<usize> for WTUGraph {
+//     fn edges(&self, vertex: usize) -> Vec<usize> {
+//         // returns all edges connected to vertex
+//         let mut edges: Vec<usize> = Vec::new();
+//         edges = self.wtd.incoming_edges(vertex); // all incoming edges of vertex
+//         edges.append(&mut self.wtd.outgoing_edges(vertex)); // + outgoing edges of vertex
+//         edges
+//     }
 
-    fn delete_edges_from(&mut self, vertex: usize) {
-        // deletes all edges connected to vertex
-        for item in self.edges(vertex) {
-            self.delete_edge(vertex, item);
-        }
-    }
-}
-impl UnLabeled<usize> for WTUGraph {
-    fn append_vertex(&mut self) -> usize {
-        self.wtd.append_vertex()
-    }
-}
-impl Unweighted<usize> for WTUGraph {
-    fn add_edge(&mut self, from: usize, to: usize) {
-        if from <= to {
-            self.wtd.add_edge(from, to);
-        } else {
-            self.wtd.add_edge(to, from);
-        }
-    }
-}
-impl WT<usize> for WTUGraph {
-    fn commit_edits(&mut self) {
-        self.wtd.commit_edits();
-    }
+//     fn delete_edges_from(&mut self, vertex: usize) {
+//         // deletes all edges connected to vertex
+//         for item in self.edges(vertex) {
+//             self.delete_edge(vertex, item);
+//         }
+//     }
+// }
+// impl UnLabeled<usize> for WTUGraph {
+//     fn append_vertex(&mut self) -> usize {
+//         self.wtd.append_vertex()
+//     }
+// }
+// impl Unweighted<usize> for WTUGraph {
+//     fn add_edge(&mut self, from: usize, to: usize) {
+//         if from <= to {
+//             self.wtd.add_edge(from, to);
+//         } else {
+//             self.wtd.add_edge(to, from);
+//         }
+//     }
+// }
+// impl WT<usize> for WTUGraph {
+//     fn commit_edits(&mut self) {
+//         self.wtd.commit_edits();
+//     }
 
-    // fn get_uncommitted_edits(&self) -> Option<HashMap<usize, usize>> {
-    //     self.wtd.get_uncommitted_edits()
-    // }
+//     // fn get_uncommitted_edits(&self) -> Option<HashMap<usize, usize>> {
+//     //     self.wtd.get_uncommitted_edits()
+//     // }
 
-    fn discard_edits(&mut self) {
-        self.wtd.discard_edits();
-    }
+//     fn discard_edits(&mut self) {
+//         self.wtd.discard_edits();
+//     }
 
-    fn vertex_exists_updated(&self, vertex: usize) -> bool {
-        self.wtd.vertex_exists_updated(vertex)
-    }
+//     fn vertex_exists_updated(&self, vertex: usize) -> bool {
+//         self.wtd.vertex_exists_updated(vertex)
+//     }
 
-    fn edge_exists_updated(&self, from: usize, to: usize) -> bool {
-        todo!()
-    }
-}
-impl WTUndirected<usize> for WTUGraph {
-    fn edges_updated(&self, vertex: usize) -> Vec<usize> {
-        // todo! might be wrong
-        let mut up_edges: Vec<usize> = self.wtd.incoming_edges_updated(vertex);
-        up_edges.append(&mut self.wtd.outgoing_edges(vertex));
-        up_edges
-    }
-}
+//     fn edge_exists_updated(&self, from: usize, to: usize) -> bool {
+//         todo!()
+//     }
+// }
+// impl WTUndirected<usize> for WTUGraph {
+//     fn edges_updated(&self, vertex: usize) -> Vec<usize> {
+//         // todo! might be wrong
+//         let mut up_edges: Vec<usize> = self.wtd.incoming_edges_updated(vertex);
+//         up_edges.append(&mut self.wtd.outgoing_edges(vertex));
+//         up_edges
+//     }
+// }

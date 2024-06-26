@@ -199,12 +199,6 @@ fn delete_vertex() {
     assert_eq!(wdg.dg.deleted_vertices, vec![0]);
 }
 #[test]
-fn vertex_deleted() {
-    let mut wdg = setupwdg();
-    wdg.dg.deleted_vertices.push(2);
-    assert_eq!(wdg.dg.vertex_deleted(2), true);
-}
-#[test]
 fn delete_edge() {
     let mut wdg = setupwdg();
     let mut j = 0;

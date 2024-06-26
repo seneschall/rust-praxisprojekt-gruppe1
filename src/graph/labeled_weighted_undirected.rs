@@ -39,9 +39,6 @@ where
         todo!()
     }
 
-    fn vertex_deleted(&self, vertex: L) -> bool {
-        todo!()
-    }
 
     fn delete_edge(&mut self, from: L, to: L) {
         todo!()

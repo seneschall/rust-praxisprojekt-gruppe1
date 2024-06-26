@@ -55,10 +55,6 @@ impl<W> Graph<usize> for WeightedDigraph<W> {
         self.dg.v_count
     }
 
-    fn vertex_deleted(&self, vertex: usize) -> bool {
-        self.dg.vertex_deleted(vertex)
-    }
-
     fn delete_edge(&mut self, from: usize, to: usize) {
         let i_of_w: usize; // -- note from celine: could we use index_of_w for clarity?
         match self.dg.adj.get(from) {
