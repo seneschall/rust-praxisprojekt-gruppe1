@@ -1,8 +1,17 @@
-use num::ToPrimitive;
-use std::fs;
-use vers_vecs::BitVec;
+/// This module is offering functionality to instantiate complete graphs from files. The file needs to contain the graph's data in the following format:
+/// <number of vertices in the graph>
+/// <number of edges in the graph>
+/// A. (if the graph doesn't contain weights)
+/// <vertex as usize> <adjacent vertex as usize>
+/// B. (if the graph contains weights) 
+/// <vertex as usize> <adjacent vertex as usize> <weight as W>
+/// C. (if the graph doesn't contain weights and is labeled) 
+/// <vertex as L> <adjacent vertex as L> 
+/// D. (if the graph contains weights) 
+/// <vertex as L> <adjacent vertex as L>  <weight as W> \
+/// Find example API calls in the documentation for the import functions
+pub mod from_file;
 pub mod traits;
-
 pub mod graph;
 pub mod wt;
 
@@ -11,72 +20,4 @@ pub mod wt;
 pub enum Edit<T> {
     Add(T),
     Delete(T),
-}
-
-// Funktionen zum Einlesen vom Graphen aus einer Input-Datei
-pub fn import_graph_properties(filename: &str) -> (usize, usize) {
-    let content = fs::read_to_string(filename).expect("Unable to open file");
-    let mut lines = content.lines();
-
-    let v_count = lines
-        .next()
-        .expect("Missing first line")
-        .trim()
-        .parse::<usize>()
-        .expect("First line (number of vertices) is not a valid input");
-
-    let e_count = lines
-        .next()
-        .expect("Missing second line")
-        .trim()
-        .parse::<usize>()
-        .expect("Second line (number of edges) is not a valid input");
-
-    (v_count, e_count)
-}
-
-// create the adjecency list from a graph in the input file
-pub fn import_adjacency_list(filename: &str) -> Vec<Vec<usize>> {
-    let content = fs::read_to_string(filename).expect("Unable to open file");
-
-    let mut lines = content.lines();
-    let size: usize = lines
-        .next()
-        .expect("Missing first line")
-        .trim()
-        .parse()
-        .expect("First line (number of vertices) is not a valid input");
-
-    let mut adjacency_list: Vec<Vec<usize>> = vec![vec![]; size]; // create Vec<Vec<T>> with the size equal to the amount of verticies
-
-    for line in lines {
-        let line = line.trim();
-        let mut numbers = line
-            .split_whitespace()
-            .filter_map(|s| s.parse::<usize>().ok());
-
-        if let (Some(vertex), Some(adjacent)) = (numbers.next(), numbers.next()) {
-            adjacency_list[vertex.to_usize().unwrap()].push(adjacent);
-        } else {
-            eprintln!("Invalid line: {}", line);
-        }
-    }
-
-    adjacency_list
-}
-
-// use output from import_adjacency_list to create a sequence for qwt and a bitmap
-// ex. let (sequence, bitmap) = create_sequence_and_bitmap(&adjacency_list);
-pub fn create_sequence_and_bitmap(map: &Vec<Vec<usize>>) -> (Vec<usize>, BitVec) {
-    let mut sequence = Vec::new();
-    let mut bitmap = BitVec::new();
-
-    for items in map {
-        bitmap.append(true);
-        for item in items {
-            bitmap.append(false);
-            sequence.push(item.clone());
-        }
-    }
-    (sequence, bitmap)
 }
