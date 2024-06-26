@@ -42,7 +42,7 @@ where
             .insert(index, Edit::Add(vertex));
         // need to return v_count_updated -1, but field is private
         // it no longer is -Simon
-        return self.dg.v_count_updated - 1;
+        return self.dg.wt_adj_len_updated - 1;
     }
 
     fn e_count(&self) -> usize {

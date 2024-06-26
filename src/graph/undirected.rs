@@ -33,10 +33,6 @@ impl Graph<usize> for UGraph {
         self.dg.v_count()
     }
 
-    fn vertex_deleted(&self, vertex: usize) -> bool {
-        self.dg.vertex_deleted(vertex)
-    }
-
     fn delete_edge(&mut self, from: usize, to: usize) {
         if from <= to {
             self.dg.delete_edge(from, to);

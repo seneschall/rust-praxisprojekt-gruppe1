@@ -6,7 +6,7 @@ use super::*;
 fn from_digraph() {
     let dg = Digraph::new();
     let wtdg = WTDigraph::from_digraph(dg.clone());
-    assert_eq!(dg.v_count(), wtdg.v_count);
+    assert_eq!(dg.v_count(), wtdg.wt_adj_len);
     assert_eq!(dg.e_count(), wtdg.e_count);
     // todo
 }
@@ -22,11 +22,11 @@ fn add_vertex() {
     dg.add_edge(0, 1); // 1 MAJOR if WTGraph has no edges, subtract overflow in qwt crate
     let mut wtdg = WTDigraph::from_digraph(dg.clone());
     wtdg.add_vertex(0);
-    assert_eq!(wtdg.v_count_updated, dg.v_count());
+    assert_eq!(wtdg.wt_adj_len_updated, dg.v_count());
     wtdg.add_vertex(1);
-    assert_eq!(wtdg.v_count_updated, dg.v_count());
+    assert_eq!(wtdg.wt_adj_len_updated, dg.v_count());
     wtdg.add_vertex(10);
-    assert_eq!(wtdg.v_count_updated + wtdg.deleted_vertices.len(), 11);
+    assert_eq!(wtdg.wt_adj_len_updated + wtdg.deleted_vertices.len(), 11);
 }
 #[test]
 fn vertex_deleted() {
@@ -53,7 +53,7 @@ fn delete_edge() {
     dg.add_edge(0, 1);
     let mut wtdg = WTDigraph::from_digraph(dg.clone());
     wtdg.delete_edge(0, 1);
-    assert_eq!(wtdg.uncommitted_adj.get(&0), Some(&vec![Edit::Add(1)]));
+    assert_eq!(wtdg.adj_uncommitted.get(&0), Some(&vec![Edit::Add(1)]));
     // wtdg.delete_edge(1,0); //will result in subtract with overflow
 }
 #[test]
@@ -62,11 +62,11 @@ fn delete_vertex() {
     dg.add_vertex(5);
     let mut wtdg = WTDigraph::from_digraph(dg.clone());
     for i in 0..5 {
-        println!("{:?}", wtdg.uncommitted_deleted_vertices);
+        println!("{:?}", wtdg.deleted_vertices_uncommitted);
         wtdg.delete_vertex(i);
     }
     assert_eq!(
-        wtdg.uncommitted_deleted_vertices,
+        wtdg.deleted_vertices_uncommitted,
         vec![
             Edit::Add(0),
             Edit::Add(1),
@@ -106,7 +106,8 @@ fn outgoing_edges() {
         }
     }
     let mut wtdg = WTDigraph::from_digraph(dg.clone());
-    for i in 0..10 { // maybe order is different
+    for i in 0..10 {
+        // maybe order is different
         assert_eq!(
             dg.outgoing_edges(i),
             wtdg.outgoing_edges(i),
@@ -138,17 +139,17 @@ fn delete_outgoing_edges() {
     // // thread 'graph::wt_directed::wtdigraph::delete_outgoing_edges' panicked at src\graph\wt_directed.rs:423:57:
     let mut dg = Digraph::new();
     dg.add_vertex(10);
-    for i in 0..10{
-        for j in 0..10{
+    for i in 0..10 {
+        for j in 0..10 {
             dg.add_edge(i, j);
         }
     }
     let mut wtdg = WTDigraph::from_digraph(dg);
-    for i in 0..10{
+    for i in 0..10 {
         wtdg.delete_outgoing_edges(i);
     }
     assert_eq!(wtdg.e_count_updated, 0);
-    for i in 0..10{
+    for i in 0..10 {
         assert_eq!(wtdg.outgoing_edges_updated(i), vec![]);
     }
 }
@@ -183,7 +184,7 @@ fn append_vertex() {
         "has_uncommitted_edits should be true, but is false"
     );
     assert_eq!(
-        wtdg.uncommitted_deleted_vertices.is_empty(),
+        wtdg.deleted_vertices_uncommitted.is_empty(),
         true,
         "has_uncommitted_deleted_vertices should be true, but is false"
     );
@@ -219,7 +220,7 @@ fn add_edge() {
         "Not all edges added, e_count_updated is wrong"
     );
     assert_eq!(
-        wtdg.uncommitted_adj, test,
+        wtdg.adj_uncommitted, test,
         "HashMap uncommitted_adj is wrong"
     );
 }
@@ -237,26 +238,26 @@ fn discard_edits() {
     dg.add_vertex(5);
     dg.add_edge(0, 1);
     let mut wtdg = WTDigraph::from_digraph(dg);
-    assert_eq!(wtdg.v_count_updated, 6);
+    assert_eq!(wtdg.wt_adj_len_updated, 6);
     assert_eq!(wtdg.e_count_updated, 1);
     assert_eq!(wtdg.has_uncommitted_edits, false);
     assert_eq!(wtdg.deleted_vertices.is_empty(), true);
-    assert_eq!(wtdg.uncommitted_adj.is_empty(), true);
-    assert_eq!(wtdg.uncommitted_deleted_vertices.is_empty(), true);
+    assert_eq!(wtdg.adj_uncommitted.is_empty(), true);
+    assert_eq!(wtdg.deleted_vertices_uncommitted.is_empty(), true);
     wtdg.add_vertex(15);
     wtdg.add_edge(10, 5);
     wtdg.delete_vertex(1);
-    assert_ne!(wtdg.v_count_updated, 6);
+    assert_ne!(wtdg.wt_adj_len_updated, 6);
     assert_ne!(wtdg.e_count_updated, 1);
     assert_ne!(wtdg.has_uncommitted_edits, false);
-    assert_ne!(wtdg.uncommitted_adj.is_empty(), true);
-    assert_ne!(wtdg.uncommitted_deleted_vertices.is_empty(), true);
+    assert_ne!(wtdg.adj_uncommitted.is_empty(), true);
+    assert_ne!(wtdg.deleted_vertices_uncommitted.is_empty(), true);
     wtdg.discard_edits();
-    assert_eq!(wtdg.v_count_updated, 6);
+    assert_eq!(wtdg.wt_adj_len_updated, 6);
     assert_eq!(wtdg.e_count_updated, 1);
     assert_eq!(wtdg.has_uncommitted_edits, false);
-    assert_eq!(wtdg.uncommitted_adj.is_empty(), true);
-    assert_eq!(wtdg.uncommitted_deleted_vertices.is_empty(), true);
+    assert_eq!(wtdg.adj_uncommitted.is_empty(), true);
+    assert_eq!(wtdg.deleted_vertices_uncommitted.is_empty(), true);
 }
 #[test]
 fn vertex_exists_updated() {

@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 
+// todo: change L to &L whereever possible!
+
 pub trait Graph<T> {
     // will be implemented by all graphs
     fn add_vertex(&mut self, vertex: T) -> usize; // adds vertex at given index; use at users own risk; if vertex doesn't exist (i.e. vertex is less than wt_adj.len()), it just adds it, if it does, it must not have incoming or outgoing edges
@@ -9,7 +11,7 @@ pub trait Graph<T> {
     // returns the number of edges in graph
     fn v_count(&self) -> usize;
     // returns the number of vertices in graph
-    fn vertex_deleted(&self, vertex: T) -> bool;
+    // fn vertex_deleted(&self, vertex: T) -> bool;
     // checks if the vertex is deleted, deleted vertices are stored in deleted_vertices
     fn delete_edge(&mut self, from: T, to: T);
     // deletes an edge from `from` to `to`
@@ -19,8 +21,7 @@ pub trait Graph<T> {
                                             // for unlabeled : vertex = index; deletes a vertex at index
                                             // for labeled : vertex = label, convert label to index, then use delete_vertex of non label parent
     fn vertex_exists(&self, vertex: T) -> bool;
-    // for unlabeled : vertex = index, checks if v_count < vertex
-    // for labeled : vertex = label, checks if label has a value in the hashmap
+
     fn shrink(&mut self) -> HashMap<usize, usize>; // removes all unconnected vertices from bitmap; only allowed, if has_uncommitted_edits == false; returns a Hashmap with old indices as keys and new indices as values
                                                    // can only be used after commit_edits; all deleted vertices will be removed ( index will shift )
                                                    // returns hashmap with deleted indices
@@ -68,6 +69,8 @@ pub trait Weighted<T, W> {
 }
 pub trait WT<T> {
     //todo, uncommited changes for edges missing?
+    fn v_count_updated(&self) -> usize;
+
     fn commit_edits(&mut self);
     // commits all edits, including labels, weights, edges, vertices; wt will be rebuild here
     // fn get_uncommitted_edits(&self) -> ?;
