@@ -1,8 +1,8 @@
 use vers_vecs::RsVec;
-use crate::import::indexed::helper::read_adj_directed;
+use crate::from_file::indexed::helper::read_adj_directed;
 use crate::wt::undirected::WTUGraph;
 use crate::Edit;
-use crate::import::v_e_count;
+use crate::from_file::v_e_count;
 use std::collections::HashMap;
 use qwt:: QWT256;
 use crate::wt::directed::WTDigraph;

@@ -1,6 +1,8 @@
 use crate::traits::{Graph, UnLabeled, Undirected, WTUndirected, WTWeighted, Weighted, WT};
 use crate::wt::undirected::WTUGraph;
 
+/// A structure holding an immutable Wavelet-Tree-Representation of an indexed graph with undirected edges, where each edge represents a weight, plus information on manual changes. 
+/// The greatest possible of number of edges or of vertices is usize vertices, vertex-indices are also usize-data-type. Weights can have any type.
 pub struct WeightedWTUGraph<W> {
     dg: WTUGraph,
     weights: W, // TODO so we have no compiler error

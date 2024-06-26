@@ -12,7 +12,8 @@ use vers_vecs::{BitVec, RsVec};
 #[cfg(test)]
 mod test;
 
-// // WT-Digraph - definition and methods
+/// A structure holding an immutable Wavelet-Tree-Representation of an indexed graph with directed edges, plus information on manual changes. 
+/// The greatest possible of number of edges or of vertices is usize vertices, vertex-indices are also usize-data-type.
 pub struct WTDigraph {
     pub(crate) wt_adj_len: usize,           // last index + 1
     e_count: usize,                         // number of edges
@@ -29,6 +30,7 @@ pub struct WTDigraph {
 }
 
 impl WTDigraph {
+    /// this function needs documentation
     pub fn from_digraph(dg: Digraph) -> Self {
         let mut bv = BitVec::new();
         let mut e_count: usize = 0;
@@ -64,6 +66,7 @@ impl WTDigraph {
         };
     }
 
+    /// this function needs documentation
     pub fn from(sequence: Vec<usize>, starting_indices: RsVec) -> Self {
         let length = starting_indices.len();
 
@@ -89,6 +92,8 @@ impl WTDigraph {
 }
 
 impl Graph<usize> for WTDigraph {
+
+    /// this function needs documentation
     fn add_vertex(&mut self, vertex: usize) -> usize {
         // use at own risk
 
@@ -180,6 +185,7 @@ impl Graph<usize> for WTDigraph {
         return false;
     }
 
+    /// this function needs documentation
     fn shrink(&mut self) -> Vec<Option<usize>> {
         // somebody else should check this. -Simon
         let mut sequence: Vec<usize> = Vec::new();
@@ -250,6 +256,7 @@ impl Graph<usize> for WTDigraph {
     }
 }
 impl Directed<usize> for WTDigraph {
+    /// this function needs documentation
     fn outgoing_edges(&self, vertex: usize) -> Vec<usize> {
         if !self.vertex_exists(vertex) {
             panic!("outgoing_edges: Vertex {} doesn't exist.", vertex);
@@ -270,7 +277,7 @@ impl Directed<usize> for WTDigraph {
 
         return outgoing;
     }
-
+    /// this function needs documentation
     fn incoming_edges(&self, vertex: usize) -> Vec<usize> {
         // returns a list of vertices that have outgoing edges to `vertex`
         if !self.vertex_exists(vertex) {
@@ -320,6 +327,7 @@ impl Directed<usize> for WTDigraph {
 }
 
 impl UnLabeled<usize> for WTDigraph {
+    /// this function needs documentation
     fn append_vertex(&mut self) -> usize {
         // appends a vertex at the end of uncommitted_adj and returns the index
 
@@ -334,6 +342,7 @@ impl UnLabeled<usize> for WTDigraph {
     }
 }
 impl Unweighted<usize> for WTDigraph {
+    /// this function needs documentation
     fn add_edge(&mut self, from: usize, to: usize) {
         // only adds to uncommitted edits
         // todo; its possible to add the same edge multiple times
@@ -360,6 +369,7 @@ impl Unweighted<usize> for WTDigraph {
 }
 
 impl WT<usize> for WTDigraph {
+    /// this function needs documentation
     fn commit_edits(&mut self) {
         // build new sequence and bitvec
 
@@ -407,6 +417,7 @@ impl WT<usize> for WTDigraph {
     //     todo!()
     // }
 
+    /// this function needs documentation
     fn discard_edits(&mut self) {
         // todo: make sure these are all fields with changes
         self.wt_adj_len_updated = self.wt_adj_len;
@@ -467,6 +478,7 @@ impl WT<usize> for WTDigraph {
 }
 
 impl WTDirected<usize> for WTDigraph {
+    /// this function needs documentation
     fn outgoing_edges_updated(&self, vertex: usize) -> Vec<usize> {
         if !self.vertex_exists_updated(vertex) {
             panic!("Vertex {vertex} doesn't exist!");
@@ -491,7 +503,7 @@ impl WTDirected<usize> for WTDigraph {
 
         return outgoing;
     }
-
+    /// this function needs documentation
     fn incoming_edges_updated(&self, vertex: usize) -> Vec<usize> {
         // this is a very expensive function!
         // It is strongly recommend to commit and call incoming_edges instead!

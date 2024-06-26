@@ -2,6 +2,8 @@ use crate::traits::{Graph, Labeled, Undirected, Unweighted, WTLabeled, WTUndirec
 use crate::wt::labeled_directed::LabeledWTDigraph;
 use std::hash::Hash;
 
+/// A structure holding an immutable Wavelet-Tree-Representation of a graph with undirected edges and labeled vertices, plus information on manual changes. 
+/// The greatest possible of number of edges or of vertices is usize. Labels can have any type and are referenced.
 pub struct LabeledWTUGraph<L>
 where
     L: Hash + Eq + Clone,
@@ -24,6 +26,7 @@ impl<L> Graph<L> for LabeledWTUGraph<L>
 where
     L: Hash + Eq + Clone,
 {
+    /// this function needs documentation
     fn add_vertex(&mut self, vertex: L) -> usize {
         todo!()
     }
@@ -36,10 +39,7 @@ where
         todo!()
     }
 
-    fn vertex_deleted(&self, vertex: L) -> bool {
-        todo!()
-    }
-
+    /// this function needs documentation
     fn delete_edge(&mut self, from: L, to: L) {
         todo!()
     }
@@ -52,6 +52,7 @@ where
         todo!()
     }
 
+        /// this function needs documentation
     fn shrink(&mut self) -> std::collections::HashMap<usize, usize> {
         todo!()
     }
@@ -84,6 +85,7 @@ where
         todo!()
     }
 
+    /// this function needs documentation
     fn get_index(&self, label: L) -> Option<&usize> {
         todo!()
     }
@@ -92,6 +94,7 @@ impl<L> Unweighted<L> for LabeledWTUGraph<L>
 where
     L: Hash + Eq + Clone,
 {
+        /// this function needs documentation
     fn add_edge(&mut self, from: L, to: L) {
         todo!()
     }
@@ -119,6 +122,7 @@ where
     fn edge_exists_updated(&self, from: L, to: L) -> bool {
         todo!()
     }
+    fn v_count_updated(&self) -> usize { todo!() }
 }
 impl<L> WTUndirected<L> for LabeledWTUGraph<L>
 where

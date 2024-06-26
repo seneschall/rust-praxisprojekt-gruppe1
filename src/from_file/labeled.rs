@@ -1,10 +1,28 @@
-// read in an directed labeled graph from file
-// read in a undirected labeled graph from file
-// read in an directed labeled graph with weighted edges from file
-// read in a undirected labeled graph with weighted edges from file
 
 
 
+
+
+
+/// read in a undirected labeled graph from file
+pub fn create_ugraph<L>(filepath: &str) { // -> UGraph<L> 
+    todo!()
+}
+
+/// read in an directed labeled graph from file
+pub fn create_digraph<L>(filepath: &str) { //-> Digraph<L> 
+    todo!()
+}
+
+/// read in a undirected labeled graph with weighted edges from file
+pub fn create_weighted_ugraph<L,W>(filepath: &str) { // -> WeightedUGraph<W,L> 
+    todo!()
+}
+
+/// read in an directed labeled graph with weighted edges from file
+pub fn create_weighted_digraph<L,W>(filepath: &str) { // -> WeightedDigraph<W,L>
+    todo!()
+}
 
 
 

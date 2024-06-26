@@ -11,6 +11,9 @@ pub struct Digraph {
     pub(crate) e_count: usize,       // number of edges
     pub(crate) adj: Vec<Vec<usize>>, // adjacency list of indices -- note from group: should we set this to pub(crate)?
 }
+
+/// An indexed, mutable graph with directed edges. 
+/// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type.
 impl Digraph {
     pub fn new() -> Self {
         Digraph {

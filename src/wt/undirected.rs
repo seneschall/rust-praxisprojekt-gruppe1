@@ -3,6 +3,8 @@ use std::collections::HashMap;
 use crate::traits::{Directed, WTDirected};
 use crate::traits::{Graph, UnLabeled, Undirected, Unweighted, WTUndirected, WT};
 use crate::wt::directed::WTDigraph; // needed because of WTDigraph
+/// A structure holding an immutable Wavelet-Tree-Representation of an indexed graph with undirected edges, plus information on manual changes. 
+/// The greatest possible of number of edges or of vertices is usize vertices, vertex-indices are also usize-data-type.
 pub struct WTUGraph {
     wtd: WTDigraph,
 }

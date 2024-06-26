@@ -5,7 +5,9 @@ use std::hash::Hash;
 
 #[cfg(test)]
 mod test;
-// LabeledWeightedDigraph
+/// A labeled, mutable graph with directed edges, where each edge represents a weight.
+/// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type. 
+/// Labels can have any type and are referenced.Weights can have any type.
 pub struct LabeledWeightedDigraph<L, W>
 where
     L: Hash + Eq,

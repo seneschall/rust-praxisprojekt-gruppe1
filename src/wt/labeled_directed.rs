@@ -7,6 +7,8 @@ use crate::Edit;
 use std::collections::HashMap;
 use std::hash::Hash;
 
+/// A structure holding an immutable Wavelet-Tree-Representation of a graph with directed edges and labeled vertices, plus information on manual changes. 
+/// The greatest possible of number of edges or of vertices is usize. Labels can have any type and are referenced.
 pub struct LabeledWTDigraph<L>
 where
     L: Hash + Clone + Eq,
@@ -53,9 +55,7 @@ where
         return self.dg.v_count();
     }
 
-    fn vertex_deleted(&self, vertex: L) -> bool {
-        todo!()
-    }
+
 
     fn delete_edge(&mut self, from: L, to: L) {
         todo!()

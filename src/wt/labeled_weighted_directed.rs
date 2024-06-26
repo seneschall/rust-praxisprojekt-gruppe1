@@ -2,6 +2,8 @@ use crate::traits::{Directed, Graph, Labeled, WTDirected, WTWeighted, Weighted, 
 use crate::wt::labeled_directed::LabeledWTDigraph;
 use std::hash::Hash;
 
+/// A structure holding an immutable Wavelet-Tree-Representation of a graph with directed edges and labeled vertices, where each edge represents a weight, plus information on manual changes. 
+/// The greatest possible of number of edges or of vertices is usize. Labels and Weights can have any type, Labels are referenced.
 pub struct LabeledWeightedDigraph<L, W>
 where
     L: Hash + Clone + Eq,

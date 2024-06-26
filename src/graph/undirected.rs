@@ -4,6 +4,8 @@ use std::collections::HashMap;
 
 #[cfg(test)]
 mod test;
+/// An indexed, mutable graph with undirected edges. 
+/// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type.
 pub struct UGraph {
     dg: Digraph,
 }

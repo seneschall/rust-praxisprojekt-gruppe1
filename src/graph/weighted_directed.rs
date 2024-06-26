@@ -5,6 +5,9 @@ use std::collections::HashMap;
 #[cfg(test)]
 mod test;
 
+/// An indexed, mutable graph with directed edges, where each edge represents a weight.
+/// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type. 
+/// Weights can have any type.
 pub struct WeightedDigraph<W> {
     dg: Digraph,
     weights: HashMap<(usize, usize), W>,

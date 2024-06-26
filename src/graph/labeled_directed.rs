@@ -6,6 +6,9 @@ use std::hash::Hash;
 #[cfg(test)]
 mod test;
 
+/// A labeled, mutable graph with directed edges. 
+/// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type. 
+/// Labels can have any type and are referenced.
 pub struct LabeledDigraph<L>
 where
     L: Eq + Hash,
