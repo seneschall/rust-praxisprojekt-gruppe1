@@ -22,10 +22,10 @@ pub trait Graph<T> {
                                             // for labeled : vertex = label, convert label to index, then use delete_vertex of non label parent
     fn vertex_exists(&self, vertex: &T) -> bool;
 
-    fn shrink(&mut self) -> HashMap<usize, usize>; // removes all unconnected vertices from bitmap; only allowed, if has_uncommitted_edits == false; returns a Hashmap with old indices as keys and new indices as values
-                                                   // can only be used after commit_edits; all deleted vertices will be removed ( index will shift )
-                                                   // returns hashmap with deleted indices
-                                                   // bitmap changes
+    fn shrink(&mut self) -> Vec<Option<usize>>; // removes all unconnected vertices from bitmap; only allowed, if has_uncommitted_edits == false; returns a Hashmap with old indices as keys and new indices as values
+                                                // can only be used after commit_edits; all deleted vertices will be removed ( index will shift )
+                                                // returns hashmap with deleted indices
+                                                // bitmap changes
 }
 pub trait Directed<T> {
     fn outgoing_edges(&self, vertex: &T) -> Vec<&T>; // should probably be changed to return an iterator instead
