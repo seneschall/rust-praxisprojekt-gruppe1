@@ -75,12 +75,12 @@ where
             .dg
             .dg
             .adj
-            .get(self.dg.get_index(from.clone()).unwrap().clone())
+            .get(self.dg.get_index(from.clone()))
         {
             Some(vs) => {
                 let i_of_w_opt = vs
                     .iter()
-                    .position(|&x| x == self.dg.get_index(to.clone()).unwrap().to_owned());
+                    .position(|&x| x == self.dg.get_index(to.clone()));
                 match i_of_w_opt {
                     Some(i) => {
                         i_of_w = i;
@@ -94,24 +94,20 @@ where
                 panic!("Vertex {from} doesn't exist."); // Should be replaced by Result type
             }
         }
-        let from_index = self.dg.get_index(from.clone()).unwrap().clone();
+        let from_index = self.dg.get_index(from.clone());
         self.dg.dg.adj[from_index].swap_remove(i_of_w); // deletes adj entry
         self.weights.remove(&(
-            self.dg.get_index(from).unwrap().clone(),
-            self.dg.get_index(to).unwrap().clone(),
+            self.dg.get_index(from),
+            self.dg.get_index(to),
         )); // deletes HashMap entry of weight
-        self.dg.dg.e_count -= 1;
+        self.dg.dg.adj_len -= 1;
     }
 
     fn delete_vertex(&mut self, vertex: L) {
-        if self.dg.get_index(vertex.clone()).unwrap() < &self.dg.v_count() {
-            self.delete_incoming_edges(vertex.clone());
-            self.delete_outgoing_edges(vertex.clone());
-            self.dg.dg.adj_len -= 1;
-            self.dg
-                .dg
-                .deleted_vertices
-                .push(self.dg.get_index(vertex.clone()).unwrap().to_owned());
+        if self.dg.get_index(vertex) < self.dg.v_count() {
+            self.delete_incoming_edges(vertex);
+            self.delete_outgoing_edges(vertex);
+            self.dg.delete_vertex(vertex);
         } else {
             panic!("delete_vertex : Can't delete Vertex : vertex >= self.v_count")
         }
@@ -161,11 +157,11 @@ where
         self.dg.edit_label(old_label, new_label);
     }
 
-    fn get_label(&self, vertex: usize) -> Option<&L> {
+    fn get_label(&self, vertex: usize) -> L {
         self.dg.get_label(vertex)
     }
 
-    fn get_index(&self, label: L) -> Option<&usize> {
+    fn get_index(&self, label: L) -> usize {
         self.dg.get_index(label)
     }
 }
@@ -175,21 +171,15 @@ where
     W: Clone,
 {
     fn add_edge(&mut self, from: L, to: L, weight: W) {
-        self.dg.add_edge(from.clone(), to.clone());
-        self.weights.insert(
-            (
-                self.dg.get_index(from).unwrap().to_owned(),
-                self.dg.get_index(to).unwrap().to_owned(),
-            ),
-            weight,
-        );
+        self.dg.add_edge(from, to);
+        self.weights.insert((self.get_index(from), self.get_index(to)),weight);
     }
 
     fn edit_weight(&mut self, from: L, to: L, weight: W) {
         self.weights.insert(
             (
-                self.dg.get_index(from).unwrap().to_owned(),
-                self.dg.get_index(to).unwrap().to_owned(),
+                self.dg.get_index(from),
+                self.dg.get_index(to),
             ),
             weight,
         );
@@ -198,8 +188,8 @@ where
     fn get_weight(&mut self, from: L, to: L) -> W {
         self.weights
             .get(&(
-                self.dg.get_index(from).unwrap().to_owned(),
-                self.dg.get_index(to).unwrap().to_owned(),
+                self.dg.get_index(from),
+                self.dg.get_index(to),
             ))
             .unwrap()
             .clone()
