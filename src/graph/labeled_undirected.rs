@@ -33,6 +33,16 @@ where
     ) -> Self {
         let mut vec_vertex_labels: Vec<L> = Vec::new();
         let mut hashmap_labels_vertex: HashMap<L, usize> = HashMap::new();
+        if !(labels.len() == v_count) {
+            panic!("Failed : v_count and labels.len() are not equal")
+        } else {
+            let mut i: usize = 0;
+            for item in labels {
+                vec_vertex_labels.push(item.clone()); // create Vec for Labels
+                hashmap_labels_vertex.insert(item, i); // create HashMap for Labels
+                i += 1;
+            }
+        }
         LabeledUGraph {
             ldg: LabeledDigraph::from_adjacency_list(v_count, e_count, adj, labels),
             vec_vertex_labels: vec_vertex_labels,
@@ -128,19 +138,23 @@ where
     }
 
     fn get_label(&self, vertex: usize) -> Option<&L> {
-        todo!()
+        self.ldg.get_label(vertex)
     }
 
     fn get_index(&self, label: L) -> Option<&usize> {
-        todo!()
+        self.ldg.get_index(label)
     }
 }
 
 impl<L> Unweighted<L> for LabeledUGraph<L>
 where
-    L: Hash + Eq,
+    L: Hash + Eq + Clone,
 {
     fn add_edge(&mut self, from: L, to: L) {
-        todo!()
+        if self.get_index(from.clone()) <= self.get_index(to.clone()) {
+            self.ldg.add_edge(from, to);
+        } else {
+            self.ldg.add_edge(to, from);
+        }
     }
 }

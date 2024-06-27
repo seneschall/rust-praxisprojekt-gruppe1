@@ -26,17 +26,17 @@ where
             panic!("v_count != adj.len()")
         }
         let mut j = 0;
-        let mut adjlist: Vec<Vec<usize>> = vec![vec![]; v_count];
+        let mut adj_list: Vec<Vec<usize>> = vec![vec![]; v_count];
         for item in adj {
             for i in 0..item.len() {
                 let (to, weight): (usize, W) = item[i].clone();
                 hashmap_weights.insert((j, to), weight);
-                adjlist[j].push(to);
+                adj_list[j].push(to);
             }
             j += 1;
         }
         WeightedDigraph {
-            dg: Digraph::from_adjacency_list(v_count, e_count, adjlist),
+            dg: Digraph::from_adjacency_list(v_count, e_count, adj_list),
             weights: hashmap_weights,
         }
     }

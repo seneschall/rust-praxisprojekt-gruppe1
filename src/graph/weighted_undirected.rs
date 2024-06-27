@@ -7,27 +7,52 @@ use crate::traits::{Graph, UnLabeled, Undirected, Weighted};
 mod test;
 pub struct WeightedUGraph<W> {
     wdg: WeightedDigraph<W>,
+    weights: HashMap<(usize, usize), W>,
 }
-impl<W> WeightedUGraph<W> {
-    pub fn new() {
-        todo!()
+impl<W> WeightedUGraph<W>
+where
+    W: Clone,
+{
+    pub fn new() -> Self {
+        WeightedUGraph {
+            wdg: WeightedDigraph::new(),
+            weights: HashMap::new(),
+        }
     }
-    pub fn from_adjacency_list() {
-        todo!()
+    pub fn from_adjacency_list(v_count: usize, e_count: usize, adj: Vec<Vec<(usize, W)>>) -> Self {
+        let mut hashmap_weights: HashMap<(usize, usize), W> = HashMap::new();
+        if !(v_count == adj.len()) {
+            panic!("v_count != adj.len()")
+        }
+        let mut j = 0;
+        let mut adj_list: Vec<Vec<usize>> = vec![vec![]; v_count];
+        for item in adj {
+            for i in 0..item.len() {
+                let (to, weight): (usize, W) = item[i].clone();
+                hashmap_weights.insert((j, to), weight);
+                adj_list[j].push(to);
+            }
+            j += 1;
+        }
+        WeightedUGraph {
+            wdg: WeightedDigraph::from_adjacency_list(v_count, e_count, adj_list),
+            weights: hashmap_weights,
+        }
     }
 }
+
 
 impl<W> Graph<usize> for WeightedUGraph<W> {
     fn add_vertex(&mut self, vertex: usize) -> usize {
-        todo!()
+        self.wdg.add_vertex(vertex)
     }
 
     fn e_count(&self) -> usize {
-        todo!()
+        self.wdg.e_count()
     }
 
     fn v_count(&self) -> usize {
-        todo!()
+        self.wdg.v_count()
     }
 
     fn delete_edge(&mut self, from: usize, to: usize) {
@@ -35,7 +60,7 @@ impl<W> Graph<usize> for WeightedUGraph<W> {
     }
 
     fn delete_vertex(&mut self, vertex: usize) {
-        todo!()
+        self.wdg.delete_vertex(vertex)
     }
 
     fn vertex_exists(&self, vertex: usize) -> bool {
