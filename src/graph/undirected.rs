@@ -60,9 +60,14 @@ impl Graph<usize> for UGraph {
     }
 
     fn edge_exists(&self, from: usize, to: usize) -> bool {
-        todo!()
+        if from <= to {
+            self.dg.edge_exists(from, to)
+        } else {
+            self.dg.edge_exists(to, from)
+        }
     }
 }
+
 
 impl Undirected<usize> for UGraph {
     fn edges(&self, vertex: usize) -> Vec<usize> {
