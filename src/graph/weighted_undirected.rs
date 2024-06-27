@@ -49,7 +49,6 @@ impl<W> Graph<usize> for WeightedUGraph<W> {
 
     fn vertex_exists(&self, vertex: usize) -> bool {
         self.wdg.vertex_exists(vertex)
-        self.wdg.vertex_exists(vertex)
     }
 
     fn shrink(&mut self) -> HashMap<usize, usize> {
