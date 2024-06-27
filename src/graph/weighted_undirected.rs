@@ -49,10 +49,11 @@ impl<W> Graph<usize> for WeightedUGraph<W> {
 
     fn vertex_exists(&self, vertex: usize) -> bool {
         self.wdg.vertex_exists(vertex)
+        self.wdg.vertex_exists(vertex)
     }
 
     fn shrink(&mut self) -> HashMap<usize, usize> {
-        todo!()
+        todo!()      // erstmal unwichtig
     }
 
     fn edge_exists(&self, from: usize, to: usize) -> bool {
@@ -61,11 +62,11 @@ impl<W> Graph<usize> for WeightedUGraph<W> {
 }
 impl<W> Undirected<usize> for WeightedUGraph<W> {
     fn edges(&self, vertex: usize) -> Vec<usize> {
-        todo!()
+        todo!()      // erstmal unwichtig
     }
 
     fn delete_edges_from(&mut self, vertex: usize) {
-        todo!()
+        todo!()     // erstmal unwichtig
     }
 }
 impl<W> UnLabeled<usize> for WeightedUGraph<W> {
