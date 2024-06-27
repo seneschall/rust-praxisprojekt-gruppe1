@@ -5,7 +5,7 @@ use crate::traits::{Directed, Graph, UnLabeled, Unweighted};
 fn new() {
     let digraph = Digraph::new();
     assert!(digraph.adj.is_empty());
-    assert_eq!(digraph.v_count, 0);
+    assert_eq!(digraph.adj_len, 0);
     assert_eq!(digraph.e_count, 0);
     assert!(digraph.deleted_vertices.is_empty());
 }
@@ -50,14 +50,14 @@ fn add_vertex() {
 #[test]
 fn vertex_exists() {
     let mut digraph = Digraph::new();
-    digraph.v_count = 2;
+    digraph.adj_len = 2;
     digraph.adj = vec![vec![]; 2];
     digraph.deleted_vertices = vec![0];
     assert_eq!(digraph.vertex_exists(0), false);
     assert_eq!(digraph.vertex_exists(1), true);
     digraph.deleted_vertices = vec![];
     assert_eq!(digraph.vertex_exists(0), true);
-    digraph.v_count = 0;
+    digraph.adj_len = 0;
     assert_eq!(digraph.vertex_exists(1), false);
 }
 #[test]

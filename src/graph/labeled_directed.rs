@@ -45,8 +45,8 @@ where
         }
         LabeledDigraph {
             dg: Digraph::from_adjacency_list(v_count, e_count, adj),
-            vec_vertex_labels: vec_vertex_labels,
-            hashmap_labels_vertex: hashmap_labels_vertex,
+            vec_vertex_labels,
+            hashmap_labels_vertex,
         }
     }
 }
@@ -65,11 +65,11 @@ where
     }
 
     fn e_count(&self) -> usize {
-        self.dg.e_count
+        self.dg.e_count()
     }
 
     fn v_count(&self) -> usize {
-        self.dg.v_count
+        self.dg.v_count()
     }
 
 
@@ -84,8 +84,6 @@ where
         self.dg
             .delete_vertex(self.get_index(vertex));
         self.hashmap_labels_vertex.remove(&vertex).unwrap();
-        // only delete entry in hashmap
-        // if we delete vec of labels, index is wrong
     }
 
     fn vertex_exists(&self, vertex: L) -> bool {
@@ -98,7 +96,7 @@ where
     }
 
     fn edge_exists(&self, from: L, to: L) -> bool {
-        todo!()
+        self.dg.edge_exists(self.get_index(from), self.get_index(to))
     }
 }
 impl<L> Directed<L> for LabeledDigraph<L>

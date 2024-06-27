@@ -6,16 +6,16 @@ mod test;
 
 #[derive(Debug, Clone)]
 pub struct Digraph {
-    pub(crate) deleted_vertices: Vec<usize>,
-    pub(crate) v_count: usize,       // number of vertices
+    pub(crate) deleted_vertices: HashMap<usize, bool>,
+    pub(crate) adj_len: usize,       // number of vertices
     pub(crate) e_count: usize,       // number of edges
     pub(crate) adj: Vec<Vec<usize>>, // adjacency list of indices -- note from group: should we set this to pub(crate)?
 }
 impl Digraph {
     pub fn new() -> Self {
         Digraph {
-            deleted_vertices: Vec::new(),
-            v_count: 0,
+            deleted_vertices: HashMap::new(),
+            adj_len: 0,
             e_count: 0,
             adj: vec![vec![]; 0],
         }
@@ -24,8 +24,8 @@ impl Digraph {
         // doesn't check valid input
         if v_count == adj.len() {
             Digraph {
-                deleted_vertices: Vec::new(),
-                v_count,
+                deleted_vertices: HashMap::new(),
+                adj_len: v_count,
                 e_count,
                 adj,
             }
@@ -36,16 +36,15 @@ impl Digraph {
 }
 impl Graph<usize> for Digraph {
     fn add_vertex(&mut self, vertex: usize) -> usize {
-        if vertex >= self.v_count {
-            for i in 0..vertex - self.v_count + 1 {
-                self.adj.insert(self.v_count + i, vec![]);
+        if vertex >= self.adj_len {
+            for i in 0..vertex - self.adj_len + 1 {
+                self.adj.insert(self.adj_len + i, vec![]);
             }
-            self.v_count += vertex - self.v_count + 1;
+            self.adj_len += vertex - self.adj_len + 1;
         } else {
             self.adj.insert(vertex, vec![]);
-            // self.v_count += 1; // this line is wrong
         }
-        self.v_count - 1
+        self.adj_len - 1
     }
 
     fn e_count(&self) -> usize {
@@ -53,7 +52,7 @@ impl Graph<usize> for Digraph {
     }
 
     fn v_count(&self) -> usize {
-        self.v_count
+        self.adj_len - self.deleted_vertices.len()
     }
 
     fn delete_edge(&mut self, from: usize, to: usize) {
@@ -79,19 +78,23 @@ impl Graph<usize> for Digraph {
     }
 
     fn delete_vertex(&mut self, vertex: usize) {
-        if vertex < self.v_count {
-            self.deleted_vertices.push(vertex);
+        if vertex < self.adj_len {
+            self.deleted_vertices.insert(vertex,true);
             self.delete_incoming_edges(vertex);
             self.delete_outgoing_edges(vertex);
-            self.v_count -= 1;
         } else {
             panic!("delete_vertex : Can't delete Vertex : vertex >= self.v_count")
         }
     }
 
     fn vertex_exists(&self, vertex: usize) -> bool {
-        (!self.deleted_vertices.contains(&vertex))
-            && vertex < self.v_count + self.deleted_vertices.len()
+        if self.deleted_vertices.contains_key(&vertex){
+            return false;
+        }
+        if vertex < self.adj_len{
+            return true;
+        }
+        return false;
     }
 
     fn shrink(&mut self) -> HashMap<usize, usize> {
@@ -113,7 +116,7 @@ impl Directed<usize> for Digraph {
 
     fn incoming_edges(&self, vertex: usize) -> Vec<usize> {
         let mut incoming_edges: Vec<usize> = Vec::new();
-        for i in 0..self.v_count {
+        for i in 0..self.adj_len {
             if self.adj[i].contains(&vertex) {
                 incoming_edges.push(i);
             }
@@ -136,8 +139,8 @@ impl Directed<usize> for Digraph {
 impl UnLabeled<usize> for Digraph {
     fn append_vertex(&mut self) -> usize {
         self.adj.push(vec![]);
-        self.v_count += 1;
-        self.v_count - 1
+        self.adj_len += 1;
+        self.adj_len - 1
     }
 }
 impl Unweighted<usize> for Digraph {
