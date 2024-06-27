@@ -94,7 +94,7 @@ where
     }
 
     fn shrink(&mut self) -> HashMap<usize, usize> {
-        todo!()
+        todo!()      // erstmal unwichtig
     }
 
     fn edge_exists(&self, from: L, to: L) -> bool {
