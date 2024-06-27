@@ -1,5 +1,5 @@
 use crate::graph::labeled_directed::LabeledDigraph;
-use crate::traits::{Graph, Labeled, Undirected, Unweighted};
+use crate::traits::{Graph, Labeled, Undirected, Unweighted,Directed};
 use std::collections::HashMap;
 use std::hash::Hash;
 
@@ -10,8 +10,8 @@ where
     L: Hash + Eq,
 {
     ldg: LabeledDigraph<L>,
-    vec_vertex_labels: Vec<L>,
-    hashmap_labels_vertex: HashMap<L, usize>,
+    // vec_vertex_labels: Vec<L>,
+    // hashmap_labels_vertex: HashMap<L, usize>,
 }
 
 impl<L> LabeledUGraph<L>
@@ -21,8 +21,6 @@ where
     pub fn new() -> Self {
         LabeledUGraph {
             ldg: LabeledDigraph::new(),
-            vec_vertex_labels: Vec::new(),
-            hashmap_labels_vertex: HashMap::new(),
         }
     }
     pub fn from_adjacency_list(
@@ -45,8 +43,6 @@ where
         }
         LabeledUGraph {
             ldg: LabeledDigraph::from_adjacency_list(v_count, e_count, adj, labels),
-            vec_vertex_labels: vec_vertex_labels,
-            hashmap_labels_vertex: hashmap_labels_vertex,
         }
     }
 }
@@ -77,16 +73,7 @@ where
     }
 
     fn delete_vertex(&mut self, vertex: L) {
-        if self.get_index(vertex.clone()).unwrap().clone() < self.v_count() {
-            self.ldg
-                .dg
-                .deleted_vertices
-                .push(self.get_index(vertex.clone()).unwrap().clone());
-            self.delete_edges_from(vertex);
-            self.ldg.dg.adj_len -= 1;
-        } else {
-            panic!("delete_vertex : Can't delete Vertex : vertex >= self.v_count")
-        }
+        self.ldg.delete_vertex(vertex);
     }
 
     fn vertex_exists(&self, vertex: L) -> bool {
@@ -98,7 +85,7 @@ where
     }
 
     fn edge_exists(&self, from: L, to: L) -> bool {
-        todo!()
+        self.ldg.edge_exists(from, to)
     }
 }
 impl<L> Undirected<L> for LabeledUGraph<L>
@@ -107,41 +94,43 @@ where
 {
     fn edges(&self, vertex: L) -> Vec<L> {
         let mut edges: Vec<L> = Vec::new();
-        for i in 0..self.get_index(vertex.clone()).unwrap().clone() {
-            if self.ldg.dg.adj[i].contains(&self.get_index(vertex.clone()).unwrap()) {
-                edges.push(self.get_label(i).unwrap().clone());
+        for i in 0..self.get_index(vertex.clone()) {
+            if self.ldg.dg.adj[i].contains(&self.get_index(vertex.clone())) {
+                edges.push(self.get_label(i));
             }
         }
-        for item in &self.ldg.dg.adj[self.get_index(vertex).unwrap().clone()] {
-            edges.push(self.get_label(item.clone()).unwrap().clone());
+        for item in &self.ldg.dg.adj[self.get_index(vertex)] {
+            edges.push(self.get_label(item.clone()));
         }
         edges
     }
 
     fn delete_edges_from(&mut self, vertex: L) {
-        for from in 0..self.get_index(vertex.clone()).unwrap().clone() {
-            if self.ldg.dg.adj[from].contains(&self.get_index(vertex.clone()).unwrap()) {
-                self.delete_edge(self.get_label(from).unwrap().clone(), vertex.clone());
+        for from in 0..self.get_index(vertex.clone()) {
+            if self.ldg.dg.adj[from].contains(&self.get_index(vertex.clone())) {
+                self.delete_edge(self.get_label(from), vertex.clone());
             }
         }
-        for to in self.ldg.dg.adj[self.get_index(vertex.clone()).unwrap().clone()].clone() {
-            self.delete_edge(vertex.clone(), self.get_label(to).unwrap().clone());
+        for to in self.ldg.dg.adj[self.get_index(vertex.clone())] {
+            self.delete_edge(vertex.clone(), self.get_label(to));
         }
     }
 }
 impl<L> Labeled<L> for LabeledUGraph<L>
 where
-    L: Hash + Eq,
+    L: Hash + Eq + Clone,
 {
     fn edit_label(&mut self, old_label: L, new_label: L) {
-        todo!()
+        self.ldg.edit_label(old_label, new_label);
     }
 
-    fn get_label(&self, vertex: usize) -> Option<&L> {
+    fn get_label(&self, vertex: usize) -> L {
+        // gets label from index of vec label
         self.ldg.get_label(vertex)
     }
 
-    fn get_index(&self, label: L) -> Option<&usize> {
+    fn get_index(&self, label: L) -> usize {
+        //gets index from key in hashmap
         self.ldg.get_index(label)
     }
 }
@@ -151,7 +140,7 @@ where
     L: Hash + Eq + Clone,
 {
     fn add_edge(&mut self, from: L, to: L) {
-        if self.get_index(from.clone()) <= self.get_index(to.clone()) {
+        if self.get_index(from) <= self.get_index(to) {
             self.ldg.add_edge(from, to);
         } else {
             self.ldg.add_edge(to, from);

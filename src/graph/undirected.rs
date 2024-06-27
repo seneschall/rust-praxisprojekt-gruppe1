@@ -42,13 +42,7 @@ impl Graph<usize> for UGraph {
     }
 
     fn delete_vertex(&mut self, vertex: usize) {
-        if vertex < self.v_count() {
-            self.dg.deleted_vertices.push(vertex);
-            self.delete_edges_from(vertex);
-            self.dg.adj_len -= 1;
-        } else {
-            panic!("delete_vertex : Can't delete Vertex : vertex >= self.v_count")
-        }
+        self.dg.delete_vertex(vertex);
     }
 
     fn vertex_exists(&self, vertex: usize) -> bool {

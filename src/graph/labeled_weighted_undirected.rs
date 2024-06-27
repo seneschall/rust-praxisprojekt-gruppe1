@@ -25,31 +25,32 @@ where
 }
 impl<L, W> Graph<L> for LabeledWeightedUGraph<L, W>
 where
-    L: Hash + Eq,
+    L: Hash + Eq + Clone+ std::fmt::Display,
 {
     fn add_vertex(&mut self, vertex: L) -> usize {
-        todo!()
+        self.lwdg.add_vertex(vertex)
     }
 
     fn e_count(&self) -> usize {
-        todo!()
+        self.lwdg.e_count()
     }
 
     fn v_count(&self) -> usize {
-        todo!()
+        self.lwdg.v_count()
     }
 
 
     fn delete_edge(&mut self, from: L, to: L) {
-        todo!()
+        //todo
+        self.lwdg.delete_edge(from, to);
     }
 
     fn delete_vertex(&mut self, vertex: L) {
-        todo!()
+        self.lwdg.delete_vertex(vertex);
     }
 
     fn vertex_exists(&self, vertex: L) -> bool {
-        todo!()
+        self.lwdg.vertex_exists(vertex)
     }
 
     fn shrink(&mut self) -> HashMap<usize, usize> {
@@ -57,7 +58,7 @@ where
     }
 
     fn edge_exists(&self, from: L, to: L) -> bool {
-        todo!()
+        self.lwdg.edge_exists(from, to)
     }
 }
 impl<L, W> Undirected<L> for LabeledWeightedUGraph<L, W>
@@ -74,33 +75,34 @@ where
 }
 impl<L, W> Labeled<L> for LabeledWeightedUGraph<L, W>
 where
-    L: Hash + Eq,
+    L: Hash + Eq + Clone,
 {
     fn edit_label(&mut self, old_label: L, new_label: L) {
-        todo!()
+        self.lwdg.edit_label(old_label, new_label);
     }
 
-    fn get_label(&self, vertex: usize) -> Option<&L> {
-        todo!()
+    fn get_label(&self, vertex: usize) -> L {
+        self.lwdg.get_label(vertex)
     }
 
-    fn get_index(&self, label: L) -> Option<&usize> {
-        todo!()
+    fn get_index(&self, label: L) -> usize {
+        self.lwdg.get_index(label)
     }
 }
 impl<L, W> Weighted<L, W> for LabeledWeightedUGraph<L, W>
 where
-    L: Hash + Eq,
+    L: Hash + Eq + Clone,
+    W: Clone,
 {
     fn add_edge(&mut self, from: L, to: L, weight: W) {
         todo!()
     }
 
     fn edit_weight(&mut self, from: L, to: L, weight: W) {
-        todo!()
+        self.lwdg.edit_weight(from,to,weight);
     }
 
     fn get_weight(&mut self, from: L, to: L) -> W {
-        todo!()
+        self.lwdg.get_weight(from, to)
     }
 }

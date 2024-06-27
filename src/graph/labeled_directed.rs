@@ -146,35 +146,29 @@ where
     L: Eq + Hash + Clone,
 {
     fn edit_label(&mut self, old_label: L, new_label: L) {
-        self.vec_vertex_labels[self
-            .hashmap_labels_vertex
-            .get(&old_label)
-            .unwrap()
-            .to_owned()] = new_label; // update Vec
-
-        let value = self
-            .hashmap_labels_vertex
-            .remove(&old_label)
-            .unwrap()
-            .to_owned(); // update HashMap
-        self.hashmap_labels_vertex.insert(new_label, value);
+        if self.vertex_exists(old_label) && !self.vertex_exists(new_label){
+            let old_label_index = self.get_index(old_label);
+            self.vec_vertex_labels[old_label_index] = new_label;
+            let index = self.hashmap_labels_vertex.remove(&old_label);
+            self.hashmap_labels_vertex.insert(new_label, index.unwrap());
+        }
     }
 
     fn get_label(&self, vertex: usize) -> L {
         // gets label from index of vec label
         if self.dg.vertex_exists(vertex) {
-            self.vec_vertex_labels[vertex]
+            self.vec_vertex_labels.get(vertex).unwrap().clone()
         } else {
-            panic!("get_label : vertex is deleted");
+            panic!("Index has no label");
         }
     }
 
     fn get_index(&self, label: L) -> usize {
         //gets index from key in hashmap
         if self.hashmap_labels_vertex.contains_key(&label) {
-            self.hashmap_labels_vertex.get(&label).unwrap().clone()
+            return self.hashmap_labels_vertex.get(&label).unwrap().clone();
         } else {
-            panic!("get_index : Label not valid or deleted");
+            panic!("Label does not exist");
         }
     }
 }
@@ -183,9 +177,6 @@ where
     L: Eq + Hash + Clone,
 {
     fn add_edge(&mut self, from: L, to: L) {
-        self.dg.add_edge(
-            self.get_index(from),
-            self.get_index(to),
-        );
+        self.dg.add_edge(self.get_index(from), self.get_index(to));
     }
 }

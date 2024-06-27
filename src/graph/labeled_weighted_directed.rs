@@ -104,7 +104,7 @@ where
     }
 
     fn delete_vertex(&mut self, vertex: L) {
-        if self.dg.get_index(vertex) < self.dg.v_count() {
+        if self.dg.get_index(vertex) < self.dg.dg.adj_len {
             self.delete_incoming_edges(vertex);
             self.delete_outgoing_edges(vertex);
             self.dg.delete_vertex(vertex);
@@ -122,7 +122,7 @@ where
     }
 
     fn edge_exists(&self, from: L, to: L) -> bool {
-        todo!()
+        self.dg.edge_exists(from, to)
     }
 }
 impl<L, W> Directed<L> for LabeledWeightedDigraph<L, W>
