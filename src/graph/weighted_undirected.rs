@@ -25,17 +25,15 @@ where
             panic!("v_count != adj.len()")
         }
         let mut j = 0;
-        let mut adj_list: Vec<Vec<usize>> = vec![vec![]; v_count];
         for item in adj {
             for i in 0..item.len() {
                 let (to, weight): (usize, W) = item[i].clone();
                 hashmap_weights.insert((j, to), weight);
-                adj_list[j].push(to);
             }
             j += 1;
         }
         WeightedUGraph {
-            wdg: WeightedDigraph::from_adjacency_list(v_count, e_count, adj_list),
+            wdg: WeightedDigraph::from_adjacency_list(v_count, e_count, adj),
             weights: hashmap_weights,
         }
     }
@@ -56,7 +54,11 @@ impl<W> Graph<usize> for WeightedUGraph<W> {
     }
 
     fn delete_edge(&mut self, from: usize, to: usize) {
-        todo!()
+        if from <= to {
+            self.wdg.delete_edge(from, to);
+        } else {
+            self.wdg.delete_edge(to, from);
+        }
     }
 
     fn delete_vertex(&mut self, vertex: usize) {
@@ -64,11 +66,11 @@ impl<W> Graph<usize> for WeightedUGraph<W> {
     }
 
     fn vertex_exists(&self, vertex: usize) -> bool {
-        todo!()
+        self.wdg.vertex_exists(vertex)
     }
 
     fn shrink(&mut self) -> HashMap<usize, usize> {
-        todo!()
+        todo!()      // erstmal unwichtig
     }
 
     fn edge_exists(&self, from: usize, to: usize) -> bool {
@@ -77,11 +79,11 @@ impl<W> Graph<usize> for WeightedUGraph<W> {
 }
 impl<W> Undirected<usize> for WeightedUGraph<W> {
     fn edges(&self, vertex: usize) -> Vec<usize> {
-        todo!()
+        todo!()      // erstmal unwichtig
     }
 
     fn delete_edges_from(&mut self, vertex: usize) {
-        todo!()
+        todo!()     // erstmal unwichtig
     }
 }
 impl<W> UnLabeled<usize> for WeightedUGraph<W> {
@@ -89,9 +91,16 @@ impl<W> UnLabeled<usize> for WeightedUGraph<W> {
         todo!()
     }
 }
-impl<W> Weighted<usize, W> for WeightedUGraph<W> {
+impl<W> Weighted<usize, W> for WeightedUGraph<W>
+where
+    W: Copy,
+{
     fn add_edge(&mut self, from: usize, to: usize, weight: W) {
-        todo!()
+        if from <= to {
+            self.wdg.add_edge(from, to, weight);
+        } else {
+            self.wdg.add_edge(to, from, weight);
+        }
     }
 
     fn edit_weight(&mut self, from: usize, to: usize, weight: W) {
@@ -99,6 +108,6 @@ impl<W> Weighted<usize, W> for WeightedUGraph<W> {
     }
 
     fn get_weight(&mut self, from: usize, to: usize) -> W {
-        todo!()
+       self.wdg.get_weight(from, to)
     }
 }

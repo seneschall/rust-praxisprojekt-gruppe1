@@ -56,7 +56,7 @@ impl Graph<usize> for UGraph {
     }
 
     fn shrink(&mut self) -> HashMap<usize, usize> {
-        todo!()
+        todo!()         // erstmal unwichtig
     }
 
     fn edge_exists(&self, from: usize, to: usize) -> bool {
