@@ -75,14 +75,14 @@ where
 
     fn delete_edge(&mut self, from: L, to: L) {
         self.dg.delete_edge(
-            self.get_index(from).unwrap().to_owned(),
-            self.get_index(to).unwrap().to_owned(),
+            self.get_index(from),
+            self.get_index(to),
         )
     }
 
     fn delete_vertex(&mut self, vertex: L) {
         self.dg
-            .delete_vertex(self.get_index(vertex.clone()).unwrap().to_owned());
+            .delete_vertex(self.get_index(vertex));
         self.hashmap_labels_vertex.remove(&vertex).unwrap();
         // only delete entry in hashmap
         // if we delete vec of labels, index is wrong
@@ -90,7 +90,7 @@ where
 
     fn vertex_exists(&self, vertex: L) -> bool {
         self.dg
-            .vertex_exists(self.get_index(vertex).unwrap().to_owned())
+            .vertex_exists(self.get_index(vertex))
     }
 
     fn shrink(&mut self) -> HashMap<usize, usize> {
@@ -112,9 +112,9 @@ where
         let mut outgoing_edges: Vec<L> = Vec::new();
         for item in self
             .dg
-            .outgoing_edges(self.get_index(vertex).unwrap().to_owned())
+            .outgoing_edges(self.get_index(vertex))
         {
-            outgoing_edges.push(self.get_label(item).unwrap().to_owned());
+            outgoing_edges.push(self.get_label(item));
         }
         outgoing_edges
     }
@@ -126,21 +126,21 @@ where
         let mut incoming_edges: Vec<L> = Vec::new();
         for item in self
             .dg
-            .incoming_edges(self.get_index(vertex).unwrap().to_owned())
+            .incoming_edges(self.get_index(vertex))
         {
-            incoming_edges.push(self.get_label(item).unwrap().to_owned());
+            incoming_edges.push(self.get_label(item));
         }
         incoming_edges
     }
 
     fn delete_outgoing_edges(&mut self, vertex: L) {
         self.dg
-            .delete_outgoing_edges(self.get_index(vertex).unwrap().to_owned())
+            .delete_outgoing_edges(self.get_index(vertex))
     }
 
     fn delete_incoming_edges(&mut self, vertex: L) {
         self.dg
-            .delete_incoming_edges(self.get_index(vertex).unwrap().to_owned())
+            .delete_incoming_edges(self.get_index(vertex))
     }
 }
 impl<L> Labeled<L> for LabeledDigraph<L>
@@ -152,7 +152,7 @@ where
             .hashmap_labels_vertex
             .get(&old_label)
             .unwrap()
-            .to_owned()] = new_label.clone(); // update Vec
+            .to_owned()] = new_label; // update Vec
 
         let value = self
             .hashmap_labels_vertex
@@ -162,19 +162,19 @@ where
         self.hashmap_labels_vertex.insert(new_label, value);
     }
 
-    fn get_label(&self, vertex: usize) -> Option<&L> {
-        // gets label from index of vec labels
+    fn get_label(&self, vertex: usize) -> L {
+        // gets label from index of vec label
         if self.dg.vertex_exists(vertex) {
-            return self.vec_vertex_labels.get(vertex);
+            self.vec_vertex_labels[vertex]
         } else {
             panic!("get_label : vertex is deleted");
         }
     }
 
-    fn get_index(&self, label: L) -> Option<&usize> {
+    fn get_index(&self, label: L) -> usize {
         //gets index from key in hashmap
         if self.hashmap_labels_vertex.contains_key(&label) {
-            self.hashmap_labels_vertex.get(&label)
+            self.hashmap_labels_vertex.get(&label).unwrap().clone()
         } else {
             panic!("get_index : Label not valid or deleted");
         }
@@ -186,8 +186,8 @@ where
 {
     fn add_edge(&mut self, from: L, to: L) {
         self.dg.add_edge(
-            self.get_index(from).unwrap().to_owned(),
-            self.get_index(to).unwrap().to_owned(),
+            self.get_index(from),
+            self.get_index(to),
         );
     }
 }
