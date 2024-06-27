@@ -107,7 +107,7 @@ where
         if self.dg.get_index(vertex.clone()).unwrap() < &self.dg.v_count() {
             self.delete_incoming_edges(vertex.clone());
             self.delete_outgoing_edges(vertex.clone());
-            self.dg.dg.v_count -= 1;
+            self.dg.dg.adj_len -= 1;
             self.dg
                 .dg
                 .deleted_vertices

@@ -73,7 +73,7 @@ where
                 .deleted_vertices
                 .push(self.get_index(vertex.clone()).unwrap().clone());
             self.delete_edges_from(vertex);
-            self.ldg.dg.v_count -= 1;
+            self.ldg.dg.adj_len -= 1;
         } else {
             panic!("delete_vertex : Can't delete Vertex : vertex >= self.v_count")
         }

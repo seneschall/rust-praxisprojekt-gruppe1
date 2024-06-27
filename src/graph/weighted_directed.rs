@@ -52,7 +52,7 @@ impl<W> Graph<usize> for WeightedDigraph<W> {
     }
 
     fn v_count(&self) -> usize {
-        self.dg.v_count
+        self.dg.adj_len
     }
 
     fn delete_edge(&mut self, from: usize, to: usize) {
@@ -79,11 +79,11 @@ impl<W> Graph<usize> for WeightedDigraph<W> {
     }
 
     fn delete_vertex(&mut self, vertex: usize) {
-        if vertex < self.dg.v_count {
+        if vertex < self.dg.adj_len {
             self.dg.deleted_vertices.push(vertex);
             self.delete_incoming_edges(vertex);
             self.delete_outgoing_edges(vertex);
-            self.dg.v_count -= 1;
+            self.dg.adj_len -= 1;
         } else {
             panic!("delete_vertex : Can't delete Vertex : vertex >= self.v_count")
         }

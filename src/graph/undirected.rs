@@ -45,7 +45,7 @@ impl Graph<usize> for UGraph {
         if vertex < self.v_count() {
             self.dg.deleted_vertices.push(vertex);
             self.delete_edges_from(vertex);
-            self.dg.v_count -= 1;
+            self.dg.adj_len -= 1;
         } else {
             panic!("delete_vertex : Can't delete Vertex : vertex >= self.v_count")
         }

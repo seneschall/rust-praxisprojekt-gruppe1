@@ -6,7 +6,7 @@ use std::collections::HashMap;
 fn new() {
     let ldg: LabeledDigraph<String> = LabeledDigraph::new();
     assert!(ldg.dg.adj.is_empty());
-    assert_eq!(ldg.dg.v_count, 0);
+    assert_eq!(ldg.dg.adj_len, 0);
     assert_eq!(ldg.dg.e_count, 0);
     assert!(ldg.dg.deleted_vertices.is_empty());
     assert!(ldg.hashmap_labels_vertex.is_empty());
@@ -70,7 +70,7 @@ fn vertex_exists() {
     assert_eq!(ldg.vertex_exists(1.to_string()), true);
     ldg.dg.deleted_vertices = vec![];
     assert_eq!(ldg.vertex_exists(0.to_string()), true);
-    ldg.dg.v_count = 0;
+    ldg.dg.adj_len = 0;
     assert_eq!(ldg.vertex_exists(1.to_string()), false);
 }
 #[test]
