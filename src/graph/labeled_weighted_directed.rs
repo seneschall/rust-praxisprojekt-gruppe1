@@ -69,23 +69,23 @@ where
     }
 
     fn delete_edge(&mut self, from: L, to: L) {
-        let from_index = self.get_index(from);
-        let to_index = self.get_index(to);
+        let from_index = self.get_index(&from);
+        let to_index = self.get_index(&to);
         if from_index.is_none() {
             panic!("lwdg add_edge : from is none");
         }
         if to_index.is_none() {
             panic!("lwdg add_edge : tois none");
         }
-        let from_index = from_index.unwrap().clone();
-        let to_index = to_index.unwrap().clone();
+        let from_index = from_index.unwrap();
+        let to_index = to_index.unwrap();
         
         self.ldg.dg.delete_edge(from_index, to_index);
         self.weights.remove(&(from_index, to_index));
     }
 
     fn delete_vertex(&mut self, vertex: L) {
-        let vertex_index = self.get_index(vertex.clone());
+        let vertex_index = self.get_index(&vertex);
         if vertex_index.is_none(){
             panic!("lwdg delete_vertex : vertex is none");
         }
@@ -127,7 +127,7 @@ where
         // if vertex_index.is_none(){
         //     panic!("lwdg delete_incoming_edges : vertex is none");
         // }
-        // let vertex_index = vertex_index.unwrap().clone();
+        // let vertex_index = vertex_index.unwrap();
         for to in self.outgoing_edges(vertex.clone()) {
             self.delete_edge(vertex.clone(), to);
         }
@@ -139,7 +139,7 @@ where
         // if vertex_index.is_none(){
         //     panic!("lwdg delete_incoming_edges : vertex is none");
         // }
-        // let vertex_index = vertex_index.unwrap().clone();
+        // let vertex_index = vertex_index.unwrap();
 
         for from in self.incoming_edges(vertex.clone()) {
             self.delete_edge(from, vertex.clone());
@@ -158,7 +158,7 @@ where
         self.ldg.get_label(vertex)
     }
 
-    fn get_index(&self, label: L) -> Option<&usize> {
+    fn get_index(&self, label: &L) -> Option<usize> {
         self.ldg.get_index(label)
     }
 }
@@ -168,46 +168,46 @@ where
     W: Clone,
 {
     fn add_edge(&mut self, from: L, to: L, weight: W) {
-        let from_index = self.get_index(from.clone());
-        let to_index = self.get_index(to.clone());
+        let from_index = self.get_index(&from);
+        let to_index = self.get_index(&to);
         if from_index.is_none() {
             panic!("lwdg add_edge : from is none");
         }
         if to_index.is_none() {
             panic!("lwdg add_edge : tois none");
         }
-        let from_index = from_index.unwrap().clone();
-        let to_index = to_index.unwrap().clone();
+        let from_index = from_index.unwrap();
+        let to_index = to_index.unwrap();
 
         self.ldg.add_edge(from, to);
         self.weights.insert((from_index, to_index), weight);
     }
 
     fn edit_weight(&mut self, from: L, to: L, weight: W) {
-        let from_index = self.get_index(from);
-        let to_index = self.get_index(to);
+        let from_index = self.get_index(&from);
+        let to_index = self.get_index(&to);
         if from_index.is_none() {
             panic!("lwdg add_edge : from is none");
         }
         if to_index.is_none() {
             panic!("lwdg add_edge : tois none");
         }
-        let from_index = from_index.unwrap().clone();
-        let to_index = to_index.unwrap().clone();
+        let from_index = from_index.unwrap();
+        let to_index = to_index.unwrap();
         self.weights.insert((from_index, to_index), weight);
     }
 
     fn get_weight(&mut self, from: L, to: L) -> W {
-        let from_index = self.get_index(from);
-        let to_index = self.get_index(to);
+        let from_index = self.get_index(&from);
+        let to_index = self.get_index(&to);
         if from_index.is_none() {
             panic!("lwdg add_edge : from is none");
         }
         if to_index.is_none() {
             panic!("lwdg add_edge : to is none");
         }
-        let from_index = from_index.unwrap().clone();
-        let to_index = to_index.unwrap().clone();
+        let from_index = from_index.unwrap();
+        let to_index = to_index.unwrap();
 
         return self.weights.get(&(from_index, to_index)).unwrap().clone();
     }

@@ -247,7 +247,7 @@ fn outgoing_edges() {
     let mut outgoing_edges_to_index: Vec<usize> = Vec::new();
     for i in 0..lwdg.v_count() {
         for item in lwdg.outgoing_edges(i.to_string()) {
-            outgoing_edges_to_index.push(lwdg.ldg.get_index(item).unwrap().clone());
+            outgoing_edges_to_index.push(lwdg.ldg.get_index(&item).unwrap().clone());
         }
         assert_eq!(outgoing_edges_to_index, testadj[i]);
         outgoing_edges_to_index.clear();
@@ -266,7 +266,7 @@ fn incoming_edges() {
     let mut incoming_edges_to_index: Vec<usize> = Vec::new();
     for i in 0..lwdg.v_count() {
         for item in lwdg.incoming_edges(i.to_string()) {
-            incoming_edges_to_index.push(lwdg.ldg.get_index(item).unwrap().clone());
+            incoming_edges_to_index.push(lwdg.ldg.get_index(&item).unwrap().clone());
         }
         println!("{i}");
         assert_eq!(incoming_edges_to_index, testadj[i]);

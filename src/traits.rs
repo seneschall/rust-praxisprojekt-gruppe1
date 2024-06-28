@@ -52,7 +52,7 @@ pub trait Labeled<L> {
                                                           //changes old_Label to new_label
     fn get_label(&self, vertex: usize) -> Option<&L>;
     //input:index, output Option<&L>; check in vec[vertex] for label
-    fn get_index(&self, label: L) -> Option<&usize>; // returns the index of the vertex with the given label
+    fn get_index(&self, label: &L) -> Option<usize>; // returns the index of the vertex with the given label
                                                      //input:Label, output Option<&usize>; check in hashmaps value
 }
 pub trait Unweighted<T> {
@@ -100,7 +100,7 @@ pub trait WTWeighted<T, W> {
 }
 pub trait WTLabeled<L> {
     fn get_label_updated(&self, index: usize) -> Option<&L>;
-    fn get_index_updated(&self, label: L) -> Option<&usize>;
+    fn get_index_updated(&self, label: L) -> Option<usize>;
 }
 
 // additional graph functionality

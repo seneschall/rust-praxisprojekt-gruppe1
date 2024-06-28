@@ -52,16 +52,16 @@ where
     }
 
     fn delete_edge(&mut self, from: L, to: L) {
-        let from_index = self.get_index(from.clone());
-        let to_index = self.get_index(to.clone());
+        let from_index = self.get_index(&from);
+        let to_index = self.get_index(&to);
         if from_index.is_none() {
             panic!("lug delete_edge : from index is none");
         }
         if to_index.is_none() {
             panic!("lug delete_edge : to index is none");
         }
-        let from_index = from_index.unwrap().clone();
-        let to_index = to_index.unwrap().clone();
+        let from_index = from_index.unwrap();
+        let to_index = to_index.unwrap();
         if from_index <= to_index {
             self.ldg.delete_edge(from, to);
         } else {
@@ -90,13 +90,13 @@ where
     L: Hash + Eq + Clone,
 {
     fn edges(&self, vertex: L) -> Vec<L> {
-        let vertex_index = self.get_index(vertex);
+        let vertex_index = self.get_index(&vertex);
         if vertex_index.is_none() {
             panic!("lug edges : vertex is none");
         }
-        let vertex_index = vertex_index.unwrap().clone();
+        let vertex_index = vertex_index.unwrap();
         let mut edges: Vec<L> = Vec::new();
-        for i in 0..vertex_index.clone() {
+        for i in 0..vertex_index {
             if self.ldg.dg.adj[i].contains(&vertex_index) {
                 edges.push(self.get_label(i).unwrap().clone());
             }
@@ -108,11 +108,11 @@ where
     }
 
     fn delete_edges_from(&mut self, vertex: L) {
-        let vertex_index = self.get_index(vertex.clone());
+        let vertex_index = self.get_index(&vertex);
         if vertex_index.is_none() {
             panic!("lug delete_edges_from : vertex is none");
         }
-        let vertex_index = vertex_index.unwrap().clone();
+        let vertex_index = vertex_index.unwrap();
         for from in 0..vertex_index {
             if self.ldg.dg.adj[from].contains(&vertex_index) {
                 self.delete_edge(self.get_label(from).unwrap().clone(), vertex.clone());
@@ -136,7 +136,7 @@ where
         self.ldg.get_label(vertex)
     }
 
-    fn get_index(&self, label: L) -> Option<&usize> {
+    fn get_index(&self, label: &L) -> Option<usize> {
         //gets index from key in hashmap
         self.ldg.get_index(label)
     }
@@ -147,7 +147,7 @@ where
     L: Hash + Eq + Clone,
 {
     fn add_edge(&mut self, from: L, to: L) {
-        if self.get_index(from.clone()) <= self.get_index(to.clone()) {
+        if self.get_index(&from) <= self.get_index(&to) {
             self.ldg.add_edge(from, to);
         } else {
             self.ldg.add_edge(to, from);
