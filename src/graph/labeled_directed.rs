@@ -72,40 +72,35 @@ where
         self.dg.v_count()
     }
 
-
     fn delete_edge(&mut self, from: L, to: L) {
         let from_index = self.get_index(from);
         let to_index = self.get_index(to);
-        if from_index.is_none(){
+        if from_index.is_none() {
             panic!("ldg delete edge : From index is none");
         }
-        if to_index.is_none(){
+        if to_index.is_none() {
             panic!("ldg delete edge : To index is none");
         }
-        self.dg.delete_edge(
-            from_index.unwrap().clone(),
-            to_index.unwrap().clone(),
-        )
+        self.dg
+            .delete_edge(from_index.unwrap().clone(), to_index.unwrap().clone())
     }
 
     fn delete_vertex(&mut self, vertex: L) {
-        let vertex_index = self.get_index(vertex);
-        if vertex_index.is_none(){
+        let vertex_index = self.get_index(vertex.clone());
+        if vertex_index.is_none() {
             panic!("ldg delete_vertex : vertex index is none");
         }
 
-        self.dg
-            .delete_vertex(vertex_index.unwrap().clone());
+        self.dg.delete_vertex(vertex_index.unwrap().clone());
         self.hashmap_labels_vertex.remove(&vertex).unwrap();
     }
 
     fn vertex_exists(&self, vertex: L) -> bool {
         let vertex_index = self.get_index(vertex);
-        if vertex_index.is_none(){
+        if vertex_index.is_none() {
             panic!("ldg vertex_exists : vertex index is none");
         }
-        self.dg
-            .vertex_exists(vertex_index.unwrap().clone())
+        self.dg.vertex_exists(vertex_index.unwrap().clone())
     }
 
     fn shrink(&mut self) -> HashMap<usize, usize> {
@@ -115,13 +110,14 @@ where
     fn edge_exists(&self, from: L, to: L) -> bool {
         let from_index = self.get_index(from);
         let to_index = self.get_index(to);
-        if from_index.is_none(){
+        if from_index.is_none() {
             panic!("ldg edge exists : from index is none");
         }
-        if to_index.is_none(){
+        if to_index.is_none() {
             panic!("ldg edge exists : to index is none");
         }
-        self.dg.edge_exists(from_index.unwrap().clone(),to_index.unwrap().clone())
+        self.dg
+            .edge_exists(from_index.unwrap().clone(), to_index.unwrap().clone())
     }
 }
 impl<L> Directed<L> for LabeledDigraph<L>
@@ -129,36 +125,30 @@ where
     L: Eq + Hash + Clone,
 {
     fn outgoing_edges(&self, vertex: L) -> Vec<L> {
-        let vertex_index = self.get_index(vertex);
-        if vertex_index.is_none(){
+        let vertex_index = self.get_index(vertex.clone());
+        if vertex_index.is_none() {
             panic!("ldg outgoing edges vertex label is none");
         }
         if !(self.vertex_exists(vertex)) {
             panic!("ldg outgoing edges of a Label which doesn't exist");
         }
         let mut outgoing_edges: Vec<L> = Vec::new();
-        for item in self
-            .dg
-            .outgoing_edges(vertex_index.unwrap().clone())
-        {
+        for item in self.dg.outgoing_edges(vertex_index.unwrap().clone()) {
             outgoing_edges.push(self.get_label(item).unwrap().clone());
         }
         outgoing_edges
     }
 
     fn incoming_edges(&self, vertex: L) -> Vec<L> {
-        let vertex_index = self.get_index(vertex);
-        if vertex_index.is_none(){
+        let vertex_index = self.get_index(vertex.clone());
+        if vertex_index.is_none() {
             panic!("ldg incoming edges : vertex is none");
         }
         if !(self.vertex_exists(vertex)) {
             panic!("ldg incoming edges of a Label which doesn't exist");
         }
         let mut incoming_edges: Vec<L> = Vec::new();
-        for item in self
-            .dg
-            .incoming_edges(vertex_index.unwrap().clone())
-        {
+        for item in self.dg.incoming_edges(vertex_index.unwrap().clone()) {
             incoming_edges.push(self.get_label(item).unwrap().clone());
         }
         incoming_edges
@@ -166,20 +156,18 @@ where
 
     fn delete_outgoing_edges(&mut self, vertex: L) {
         let vertex_index = self.get_index(vertex);
-        if vertex_index.is_none(){
+        if vertex_index.is_none() {
             panic!("ldg delete_incoming_edges : vertex is none");
         }
-        self.dg
-            .delete_outgoing_edges(vertex_index.unwrap().clone());
+        self.dg.delete_outgoing_edges(vertex_index.unwrap().clone());
     }
 
     fn delete_incoming_edges(&mut self, vertex: L) {
-        let vertex_index =  self.get_index(vertex);
-        if vertex_index.is_none(){
+        let vertex_index = self.get_index(vertex);
+        if vertex_index.is_none() {
             panic!("ldg delete_incoming_edges : vertex is none");
         }
-        self.dg
-            .delete_incoming_edges(vertex_index.unwrap().clone());
+        self.dg.delete_incoming_edges(vertex_index.unwrap().clone());
     }
 }
 impl<L> Labeled<L> for LabeledDigraph<L>
@@ -187,18 +175,21 @@ where
     L: Eq + Hash + Clone,
 {
     fn edit_label(&mut self, old_label: L, new_label: L) {
-        let old_label_index = self.get_index(old_label);
-        if old_label_index.is_none(){ // if it's some, valid input
+        let old_label_index = self.get_index(old_label.clone());
+        if old_label_index.is_none() {
+            // if it's some, valid input
             panic!("ldg edit_label : old_label_index is none");
         }
-        if self.get_index(new_label).is_some(){ // if it's none, valid input
+        if self.get_index(new_label.clone()).is_some() {
+            // if it's none, valid input
             panic!("ldg edit_label : new_label is some"); // new label should be none
         }
         let old_label_index = old_label_index.unwrap().clone(); // save unwrap, since old_label_index is some
-        self.vec_vertex_labels[old_label_index] = new_label; // update vec
+        self.vec_vertex_labels[old_label_index] = new_label.clone(); // update vec
 
         self.hashmap_labels_vertex.remove(&old_label); // remove old entry in the hasmap
-        self.hashmap_labels_vertex.insert(new_label, old_label_index); // insert new label with old index
+        self.hashmap_labels_vertex
+            .insert(new_label, old_label_index); // insert new label with old index
     }
 
     fn get_label(&self, vertex: usize) -> Option<&L> {
@@ -225,12 +216,13 @@ where
     fn add_edge(&mut self, from: L, to: L) {
         let from_index = self.get_index(from);
         let to_index = self.get_index(to);
-        if from_index.is_none(){
+        if from_index.is_none() {
             panic!("ldg add_edge : from index is none");
         }
-        if to_index.is_none(){
+        if to_index.is_none() {
             panic!("ldg add_edge : to index is none");
         }
-        self.dg.add_edge(from_index.unwrap().clone(), to_index.unwrap().clone());
+        self.dg
+            .add_edge(from_index.unwrap().clone(), to_index.unwrap().clone());
     }
 }

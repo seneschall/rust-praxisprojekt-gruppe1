@@ -65,10 +65,10 @@ fn vertex_exists() {
     }
     let mut ldg: LabeledDigraph<String> =
         LabeledDigraph::from_adjacency_list(5, 0, vec![vec![]; 5], labels.clone());
-    ldg.dg.deleted_vertices = vec![0];
+    ldg.dg.deleted_vertices.insert(0, true);
     assert_eq!(ldg.vertex_exists(0.to_string()), false);
     assert_eq!(ldg.vertex_exists(1.to_string()), true);
-    ldg.dg.deleted_vertices = vec![];
+    ldg.dg.deleted_vertices = HashMap::new();
     assert_eq!(ldg.vertex_exists(0.to_string()), true);
     ldg.dg.adj_len = 0;
     assert_eq!(ldg.vertex_exists(1.to_string()), false);
@@ -83,7 +83,7 @@ fn delete_vertex() {
         LabeledDigraph::from_adjacency_list(5, 0, vec![vec![]; 5], labels.clone());
 
     ldg.delete_vertex(0.to_string());
-    assert_eq!(ldg.dg.deleted_vertices, vec![0]);
+    assert_eq!(ldg.dg.deleted_vertices.contains_key(&0), true);
     assert_eq!(ldg.v_count(), 4);
 }
 #[test]

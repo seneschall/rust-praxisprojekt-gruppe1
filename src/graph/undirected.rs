@@ -50,7 +50,7 @@ impl Graph<usize> for UGraph {
     }
 
     fn shrink(&mut self) -> HashMap<usize, usize> {
-        todo!()         // erstmal unwichtig
+        todo!() // erstmal unwichtig
     }
 
     fn edge_exists(&self, from: usize, to: usize) -> bool {
@@ -61,7 +61,6 @@ impl Graph<usize> for UGraph {
         }
     }
 }
-
 
 impl Undirected<usize> for UGraph {
     fn edges(&self, vertex: usize) -> Vec<usize> {

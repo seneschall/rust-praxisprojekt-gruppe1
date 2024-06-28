@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use crate::graph::directed::Digraph;
 use crate::traits::{Directed, Graph, UnLabeled, Unweighted};
 
@@ -52,10 +54,10 @@ fn vertex_exists() {
     let mut digraph = Digraph::new();
     digraph.adj_len = 2;
     digraph.adj = vec![vec![]; 2];
-    digraph.deleted_vertices = vec![0];
+    digraph.deleted_vertices.insert(0, true);
     assert_eq!(digraph.vertex_exists(0), false);
     assert_eq!(digraph.vertex_exists(1), true);
-    digraph.deleted_vertices = vec![];
+    digraph.deleted_vertices = HashMap::new();
     assert_eq!(digraph.vertex_exists(0), true);
     digraph.adj_len = 0;
     assert_eq!(digraph.vertex_exists(1), false);
@@ -64,7 +66,7 @@ fn vertex_exists() {
 fn delete_vertex() {
     let mut digraph = Digraph::from_adjacency_list(5, 0, vec![vec![]; 5]);
     digraph.delete_vertex(0);
-    assert_eq!(digraph.deleted_vertices, vec![0]);
+    assert_eq!(digraph.deleted_vertices.contains_key(&0), true);
     assert_eq!(digraph.v_count(), 4);
 }
 #[test]

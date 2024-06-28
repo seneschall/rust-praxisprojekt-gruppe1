@@ -25,7 +25,7 @@ where
 }
 impl<L, W> Graph<L> for LabeledWeightedUGraph<L, W>
 where
-    L: Hash + Eq + Clone+ std::fmt::Display,
+    L: Hash + Eq + Clone + std::fmt::Display,
 {
     fn add_vertex(&mut self, vertex: L) -> usize {
         self.lwdg.add_vertex(vertex)
@@ -39,10 +39,23 @@ where
         self.lwdg.v_count()
     }
 
-
     fn delete_edge(&mut self, from: L, to: L) {
+        let from_index = self.get_index(from.clone());
+        let to_index = self.get_index(to.clone());
+        if from_index.is_none() {
+            panic!("lwug add_edge : from is none");
+        }
+        if to_index.is_none() {
+            panic!("lwug add_edge : to is none");
+        }
+        let from_index = from_index.unwrap().clone();
+        let to_index = to_index.unwrap().clone();
         //todo
-        self.lwdg.delete_edge(from, to);
+        if from_index <= to_index{
+            self.lwdg.delete_edge(from,to);
+        } else {
+            self.lwdg.delete_edge(to, from);
+        }
     }
 
     fn delete_vertex(&mut self, vertex: L) {
@@ -58,19 +71,61 @@ where
     }
 
     fn edge_exists(&self, from: L, to: L) -> bool {
-        self.lwdg.edge_exists(from, to)
+        let from_index = self.get_index(from.clone());
+        let to_index = self.get_index(to.clone());
+        if from_index.is_none() {
+            panic!("lwug add_edge : from is none");
+        }
+        if to_index.is_none() {
+            panic!("lwug add_edge : to is none");
+        }
+        let from_index = from_index.unwrap().clone();
+        let to_index = to_index.unwrap().clone();
+
+        // todo
+        if from_index <= to_index{
+            return self.lwdg.edge_exists(from, to);
+        } else {
+            return self.lwdg.edge_exists(to, from);
+        }
     }
 }
 impl<L, W> Undirected<L> for LabeledWeightedUGraph<L, W>
 where
-    L: Hash + Eq,
+    L: Hash + Eq + Clone + std::fmt::Display,
 {
     fn edges(&self, vertex: L) -> Vec<L> {
-        todo!()
+        let vertex_index = self.get_index(vertex);
+        if vertex_index.is_none() {
+            panic!("lug edges : vertex is none");
+        }
+        let vertex_index = vertex_index.unwrap().clone();
+        let mut edges: Vec<L> = Vec::new();
+        for i in 0..vertex_index {
+            if self.lwdg.ldg.dg.adj[i].contains(&vertex_index) {
+                edges.push(self.get_label(i).unwrap().clone());
+            }
+        }
+        for item in self.lwdg.ldg.dg.adj[vertex_index].clone() {
+            edges.push(self.get_label(item).unwrap().clone());
+        }
+        edges
     }
 
     fn delete_edges_from(&mut self, vertex: L) {
-        todo!()
+        let vertex_index = self.get_index(vertex.clone());
+        if vertex_index.is_none() {
+            panic!("lug delete_edges_from : vertex is none");
+        }
+        let vertex_index = vertex_index.unwrap().clone();
+        for from in 0..vertex_index {
+            if self.lwdg.ldg.dg.adj[from].contains(&vertex_index) {
+                self.delete_edge(self.get_label(from).unwrap().clone(), vertex.clone());
+            }
+        }
+        for to in self.lwdg.ldg.dg.adj[vertex_index].clone() {
+            self.delete_edge(vertex.clone(), self.get_label(to).unwrap().clone());
+        }
     }
 }
 impl<L, W> Labeled<L> for LabeledWeightedUGraph<L, W>
@@ -81,11 +136,11 @@ where
         self.lwdg.edit_label(old_label, new_label);
     }
 
-    fn get_label(&self, vertex: usize) -> L {
+    fn get_label(&self, vertex: usize) -> Option<&L> {
         self.lwdg.get_label(vertex)
     }
 
-    fn get_index(&self, label: L) -> usize {
+    fn get_index(&self, label: L) -> Option<&usize>{
         self.lwdg.get_index(label)
     }
 }
@@ -95,11 +150,11 @@ where
     W: Clone,
 {
     fn add_edge(&mut self, from: L, to: L, weight: W) {
-        todo!()
+        self.lwdg.add_edge(from, to, weight);
     }
 
     fn edit_weight(&mut self, from: L, to: L, weight: W) {
-        self.lwdg.edit_weight(from,to,weight);
+        self.lwdg.edit_weight(from, to, weight);
     }
 
     fn get_weight(&mut self, from: L, to: L) -> W {

@@ -24,7 +24,6 @@ where
     }
 }
 
-
 impl<W> Graph<usize> for WeightedUGraph<W> {
     fn add_vertex(&mut self, vertex: usize) -> usize {
         self.wdg.add_vertex(vertex)
@@ -40,7 +39,7 @@ impl<W> Graph<usize> for WeightedUGraph<W> {
 
     fn delete_edge(&mut self, from: usize, to: usize) {
         //todo
-        self.wdg.delete_edge(from,to);
+        self.wdg.delete_edge(from, to);
     }
 
     fn delete_vertex(&mut self, vertex: usize) {
@@ -52,7 +51,7 @@ impl<W> Graph<usize> for WeightedUGraph<W> {
     }
 
     fn shrink(&mut self) -> HashMap<usize, usize> {
-        todo!()      // erstmal unwichtig
+        todo!() // erstmal unwichtig
     }
 
     fn edge_exists(&self, from: usize, to: usize) -> bool {
@@ -61,11 +60,11 @@ impl<W> Graph<usize> for WeightedUGraph<W> {
 }
 impl<W> Undirected<usize> for WeightedUGraph<W> {
     fn edges(&self, vertex: usize) -> Vec<usize> {
-        todo!()      // erstmal unwichtig
+        todo!() // erstmal unwichtig
     }
 
     fn delete_edges_from(&mut self, vertex: usize) {
-        todo!()     // erstmal unwichtig
+        todo!() // erstmal unwichtig
     }
 }
 impl<W> UnLabeled<usize> for WeightedUGraph<W> {
@@ -73,8 +72,9 @@ impl<W> UnLabeled<usize> for WeightedUGraph<W> {
         self.wdg.append_vertex()
     }
 }
-impl<W> Weighted<usize, W> for WeightedUGraph<W> 
-where W : Copy,
+impl<W> Weighted<usize, W> for WeightedUGraph<W>
+where
+    W: Copy,
 {
     fn add_edge(&mut self, from: usize, to: usize, weight: W) {
         //todo
@@ -87,6 +87,6 @@ where W : Copy,
 
     fn get_weight(&mut self, from: usize, to: usize) -> W {
         //todo
-        return self.wdg.get_weight(from,to);
+        return self.wdg.get_weight(from, to);
     }
 }

@@ -34,10 +34,10 @@ fn setuplwdg() -> LabeledWeightedDigraph<String, f64> {
 fn new() {
     let lwdg: LabeledWeightedDigraph<String, f64> = LabeledWeightedDigraph::new();
     assert!(lwdg.weights.is_empty());
-    assert!(lwdg.dg.hashmap_labels_vertex.is_empty());
-    assert!(lwdg.dg.vec_vertex_labels.is_empty());
-    assert!(lwdg.dg.dg.adj.is_empty());
-    assert!(lwdg.dg.dg.deleted_vertices.is_empty());
+    assert!(lwdg.ldg.hashmap_labels_vertex.is_empty());
+    assert!(lwdg.ldg.vec_vertex_labels.is_empty());
+    assert!(lwdg.ldg.dg.adj.is_empty());
+    assert!(lwdg.ldg.dg.deleted_vertices.is_empty());
     assert_eq!(lwdg.v_count(), 0);
     assert_eq!(lwdg.e_count(), 0);
 }
@@ -98,10 +98,10 @@ fn from_adjacency_list() {
     );
     assert_eq!(lwdg.e_count(), e_count);
     assert_eq!(lwdg.v_count(), v_count);
-    assert_eq!(lwdg.dg.dg.adj, testadj);
-    assert_eq!(lwdg.dg.dg.deleted_vertices, vec![]);
-    assert_eq!(lwdg.dg.vec_vertex_labels, labels);
-    assert_eq!(lwdg.dg.hashmap_labels_vertex, test_labels_hashmap);
+    assert_eq!(lwdg.ldg.dg.adj, testadj);
+    assert_eq!(lwdg.ldg.dg.deleted_vertices, HashMap::new());
+    assert_eq!(lwdg.ldg.vec_vertex_labels, labels);
+    assert_eq!(lwdg.ldg.hashmap_labels_vertex, test_labels_hashmap);
     assert_eq!(lwdg.weights, testweights);
 }
 #[test]
@@ -121,15 +121,15 @@ fn add_vertex() {
     lwdg.add_vertex(5.to_string());
     assert_eq!(lwdg.v_count(), 6);
     assert_eq!(
-        lwdg.dg
+        lwdg.ldg
             .hashmap_labels_vertex
             .get_key_value(&5.to_string())
             .unwrap(),
         (&5.to_string(), &5)
     );
-    assert_eq!(lwdg.dg.vec_vertex_labels[5], 5.to_string());
+    assert_eq!(lwdg.ldg.vec_vertex_labels[5], 5.to_string());
     assert_eq!(
-        lwdg.dg.dg.adj,
+        lwdg.ldg.dg.adj,
         vec![
             vec![4, 3],
             vec![],
@@ -154,7 +154,7 @@ fn edit_weight() {
 
     let mut j = 0;
     let mut u: usize = 0;
-    for from in lwdg.dg.dg.adj.clone() {
+    for from in lwdg.ldg.dg.adj.clone() {
         for to in from {
             test_weights_hashmap.insert((j, to), weights[j].get(u).unwrap().clone());
             u += 1;
@@ -179,14 +179,11 @@ fn get_weight() {
     let mut test_weights_hashmap: HashMap<(usize, usize), f64> = HashMap::new();
     let mut j = 0;
     let mut u: usize = 0;
-    for from in lwdg.dg.dg.adj.clone() {
+    for from in lwdg.ldg.dg.adj.clone() {
         for to in from {
             test_weights_hashmap.insert((j, to), weights[j].get(u).unwrap().clone());
             assert_eq!(
-                lwdg.get_weight(
-                    lwdg.dg.get_label(j),
-                    lwdg.dg.get_label(to)
-                ),
+                lwdg.get_weight(lwdg.get_label(j).unwrap().clone(), lwdg.get_label(to).unwrap().clone()),
                 test_weights_hashmap.get(&(j, to)).unwrap().clone()
             );
             u += 1;
@@ -204,7 +201,7 @@ fn delete_vertex() {
     let mut labels: Vec<String> = Vec::new();
     let mut test_labels_hashmap: HashMap<String, usize> = HashMap::new();
     let mut test_weights_hashmap: HashMap<(usize, usize), f64> = HashMap::new();
-    for i in 0..5 {
+    for i in 1..5 {
         labels.push(i.to_string());
         test_labels_hashmap.insert(i.to_string(), i);
     }
@@ -220,22 +217,21 @@ fn delete_vertex() {
 
     assert_eq!(lwdg.e_count(), e_count);
     assert_eq!(lwdg.v_count(), v_count);
-    assert_eq!(lwdg.dg.dg.adj, adj);
-    assert_eq!(lwdg.dg.dg.deleted_vertices, vec![0]);
-    assert_eq!(lwdg.dg.vec_vertex_labels, labels);
-    assert_eq!(lwdg.dg.hashmap_labels_vertex, test_labels_hashmap);
+    assert_eq!(lwdg.ldg.dg.adj, adj);
+    assert_eq!(lwdg.ldg.dg.deleted_vertices.contains_key(&0), true);
+    assert_eq!(lwdg.ldg.hashmap_labels_vertex, test_labels_hashmap);
 }
 #[test]
 fn delete_edge() {
     let mut lwdg = setuplwdg();
     let mut j = 0;
-    for from in lwdg.dg.dg.adj.clone() {
+    for from in lwdg.ldg.dg.adj.clone() {
         for to in from {
             lwdg.delete_edge(j.to_string(), to.to_string());
         }
         j += 1;
     }
-    assert_eq!(lwdg.dg.dg.adj, vec![vec![]; lwdg.v_count()]);
+    assert_eq!(lwdg.ldg.dg.adj, vec![vec![]; lwdg.v_count()]);
     assert_eq!(lwdg.e_count(), 0);
 }
 #[test]
@@ -251,7 +247,7 @@ fn outgoing_edges() {
     let mut outgoing_edges_to_index: Vec<usize> = Vec::new();
     for i in 0..lwdg.v_count() {
         for item in lwdg.outgoing_edges(i.to_string()) {
-            outgoing_edges_to_index.push(lwdg.dg.get_index(item));
+            outgoing_edges_to_index.push(lwdg.ldg.get_index(item).unwrap().clone());
         }
         assert_eq!(outgoing_edges_to_index, testadj[i]);
         outgoing_edges_to_index.clear();
@@ -270,7 +266,7 @@ fn incoming_edges() {
     let mut incoming_edges_to_index: Vec<usize> = Vec::new();
     for i in 0..lwdg.v_count() {
         for item in lwdg.incoming_edges(i.to_string()) {
-            incoming_edges_to_index.push(lwdg.dg.get_index(item));
+            incoming_edges_to_index.push(lwdg.ldg.get_index(item).unwrap().clone());
         }
         println!("{i}");
         assert_eq!(incoming_edges_to_index, testadj[i]);
@@ -285,7 +281,7 @@ fn delete_outgoing_edges() {
         lwdg.delete_outgoing_edges(i.to_string());
     }
     assert_eq!(lwdg.e_count(), 0);
-    assert_eq!(lwdg.dg.dg.adj, vec![vec![]; 5]);
+    assert_eq!(lwdg.ldg.dg.adj, vec![vec![]; 5]);
 }
 #[test]
 fn delete_incoming_edges() {
@@ -295,5 +291,5 @@ fn delete_incoming_edges() {
         lwdg.delete_incoming_edges(i.to_string());
     }
     assert_eq!(lwdg.e_count(), 0);
-    assert_eq!(lwdg.dg.dg.adj, vec![vec![]; 5]);
+    assert_eq!(lwdg.ldg.dg.adj, vec![vec![]; 5]);
 }

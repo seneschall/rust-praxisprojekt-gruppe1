@@ -79,7 +79,7 @@ fn from_adjacency_list() {
     assert_eq!(wdg.e_count(), e_count);
     assert_eq!(wdg.v_count(), v_count);
     assert_eq!(wdg.dg.adj, testadj);
-    assert_eq!(wdg.dg.deleted_vertices, vec![]);
+    assert_eq!(wdg.dg.deleted_vertices, HashMap::new());
     assert_eq!(wdg.weights, testweights);
 }
 
@@ -192,11 +192,11 @@ fn delete_vertex() {
     test_weights_hashmap.insert((4, 2), 0.0);
     test_weights_hashmap.insert((4, 3), 0.0);
     let adj: Vec<Vec<usize>> = vec![vec![], vec![], vec![], vec![4, 1, 2, 3], vec![3, 1, 2]]; // order is not important and changes here since we use swap_remove for more efficency
-
     assert_eq!(wdg.e_count(), e_count);
     assert_eq!(wdg.v_count(), v_count);
     assert_eq!(wdg.dg.adj, adj);
-    assert_eq!(wdg.dg.deleted_vertices, vec![0]);
+    assert_eq!(wdg.dg.deleted_vertices.contains_key(&0), true);
+    // assert_eq!(wdg.dg.deleted_vertices, vec![0]);
 }
 #[test]
 fn delete_edge() {

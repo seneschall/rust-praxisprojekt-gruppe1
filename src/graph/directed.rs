@@ -79,7 +79,7 @@ impl Graph<usize> for Digraph {
 
     fn delete_vertex(&mut self, vertex: usize) {
         if vertex < self.adj_len {
-            self.deleted_vertices.insert(vertex,true);
+            self.deleted_vertices.insert(vertex, true);
             self.delete_incoming_edges(vertex);
             self.delete_outgoing_edges(vertex);
         } else {
@@ -88,10 +88,10 @@ impl Graph<usize> for Digraph {
     }
 
     fn vertex_exists(&self, vertex: usize) -> bool {
-        if self.deleted_vertices.contains_key(&vertex){
+        if self.deleted_vertices.contains_key(&vertex) {
             return false;
         }
-        if vertex < self.adj_len{
+        if vertex < self.adj_len {
             return true;
         }
         return false;
