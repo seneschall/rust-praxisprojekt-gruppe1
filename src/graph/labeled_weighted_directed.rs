@@ -54,7 +54,7 @@ where
 
 impl<L, W> Graph<L> for LabeledWeightedDigraph<L, W>
 where
-    L: Eq + Hash + Clone + std::fmt::Display,
+    L: Eq + Hash + Clone,
 {
     fn add_vertex(&mut self, vertex: L) -> usize {
         self.ldg.add_vertex(vertex)
@@ -111,7 +111,7 @@ where
 }
 impl<L, W> Directed<L> for LabeledWeightedDigraph<L, W>
 where
-    L: Eq + Hash + Clone + std::fmt::Display,
+    L: Eq + Hash + Clone,
 {
     fn outgoing_edges(&self, vertex: L) -> Vec<L> {
         self.ldg.outgoing_edges(vertex)
@@ -194,6 +194,9 @@ where
         }
         let from_index = from_index.unwrap();
         let to_index = to_index.unwrap();
+        if !self.edge_exists(from, to){
+            panic!("edge doesn't exist");
+        }
         self.weights.insert((from_index, to_index), weight);
     }
 

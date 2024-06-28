@@ -100,7 +100,7 @@ pub trait WTWeighted<T, W> {
 }
 pub trait WTLabeled<L> {
     fn get_label_updated(&self, index: usize) -> Option<&L>;
-    fn get_index_updated(&self, label: L) -> Option<usize>;
+    fn get_index_updated(&self, label: &L) -> Option<usize>;
 }
 
 // additional graph functionality
