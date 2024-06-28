@@ -98,7 +98,7 @@ impl<W> Graph<usize> for WeightedDigraph<W> {
     }
 
     fn edge_exists(&self, from: usize, to: usize) -> bool {
-        todo!()
+        self.dg.edge_exists(from, to)
     }
 }
 impl<W> Directed<usize> for WeightedDigraph<W> {

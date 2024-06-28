@@ -14,10 +14,11 @@ where
 
 impl<L, W> LabeledWeightedUGraph<L, W>
 where
-    L: Hash + Eq,
+    L: Hash + Eq + Clone,
+    W : Clone,
 {
-    pub fn new() {
-        todo!()
+    pub fn new() -> Self{
+        LabeledWeightedUGraph{ lwdg: LabeledWeightedDigraph::new() }
     }
     pub fn from_adjacency_list() {
         todo!()
