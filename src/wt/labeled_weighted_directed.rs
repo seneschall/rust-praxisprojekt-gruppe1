@@ -28,6 +28,7 @@ where
 impl<L, W> Graph<L> for LabeledWeightedWTDigraph<L, W>
 where
     L: Hash + Clone + Eq,
+    W: Clone,
 {
     fn add_vertex(&mut self, vertex: L) -> usize {
         self.ldg.add_vertex(vertex)
@@ -53,9 +54,10 @@ where
         let from_index = from_index.unwrap();
         let to_index = to_index.unwrap();
         
-        self.ldg.delete_edge(from, to);
-        
-    }
+        self.ldg.delete_edge(from.clone(), to.clone());
+        let weight = self.get_weight(from,to); // checkme fixme seems ugly this way
+        self.weights_uncommitted.insert((from_index,to_index), Edit::Delete(weight));
+        }
 
     fn delete_vertex(&mut self, vertex: L) {
         let vertex_index = self.get_index(&vertex);
@@ -85,6 +87,7 @@ where
 impl<L, W> Directed<L> for LabeledWeightedWTDigraph<L, W>
 where
     L: Hash + Clone + Eq,
+    W: Clone,
 {
     fn outgoing_edges(&self, vertex: L) -> Vec<L> {
         self.ldg.outgoing_edges(vertex)
@@ -226,7 +229,7 @@ where
                 Edit::Add(weight) => {
                     return weight.to_owned();
                 }
-                Edit::Delete(weight)=> {
+                Edit::Delete(_weight)=> {
                     if self.weights.contains_key(&(from_index, to_index)){
                         return self.weights.get(&(from_index,to_index)).unwrap().to_owned();
                     }
