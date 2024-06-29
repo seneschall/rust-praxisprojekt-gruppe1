@@ -96,22 +96,20 @@ impl Graph<usize> for WTDigraph {
     /// this function needs documentation
     fn add_vertex(&mut self, vertex: usize) -> usize {
         // use at own risk
-        // checkme this was broken whyever, maybe due to merge bug
-        // maybe i fucked this up - Martin
+
         self.adj_uncommitted.insert(vertex, Vec::new()); // wipes the outgoing edges of the vertex; the only valid
 
         if self.vertex_exists(vertex) {
             self.delete_incoming_edges(vertex);
-            self.deleted_vertices_uncommitted.insert(vertex,false); // readded?
             return vertex;
         } else {
             // removes vertex from deleted_vertices
-            self.deleted_vertices_uncommitted.insert(vertex, true);
+            self.deleted_vertices_uncommitted.insert(vertex, false);
         }
 
         self.wt_adj_len_updated += vertex - self.wt_adj_len_updated + 1; // if the index of the newly add vertex is greater than than self.v_count we need to add all virtual vertices up to the index of `vertex`
         self.has_uncommitted_edits = true;
-        return self.wt_adj_len_updated-1;
+        return vertex;
     }
 
     fn e_count(&self) -> usize {
@@ -375,10 +373,11 @@ impl WT<usize> for WTDigraph {
             }
 
             let adj: Vec<usize> = self.outgoing_edges_updated(v);
-
-            for i in 0..adj.len() - 1 {
-                bv.append(false); // appends a 0 to bitmap for every element in adj
-                sequence.push(adj[i]); // moves all elements of adj into sequence
+            if adj.len() !=0{
+                for i in 0..adj.len() - 1 {
+                    bv.append(false); // appends a 0 to bitmap for every element in adj
+                    sequence.push(adj[i]); // moves all elements of adj into sequence
+                }
             }
         }
 
@@ -452,19 +451,18 @@ impl WT<usize> for WTDigraph {
     }
 
     fn v_count_updated(&self) -> usize {
-        let mut v_count = self.v_count();
-
+        let mut v_count_updated = self.v_count();
         // apply changes
         for deleted in self.deleted_vertices_uncommitted.values() {
             if *deleted {
                 // deleted is true if a vertex was deleted
-                v_count -= 1;
+                v_count_updated -= 1;
             } else {
                 // deleted is false if a vertex was readded
-                v_count += 1;
+                v_count_updated += 1;
             }
         }
-        return v_count;
+        return v_count_updated;
     }
 }
 
@@ -474,9 +472,10 @@ impl WTDirected<usize> for WTDigraph {
         if !self.vertex_exists_updated(vertex) {
             panic!("Vertex {vertex} doesn't exist!");
         }
-
-        let mut outgoing: Vec<usize> = self.outgoing_edges(vertex);
-
+        let mut outgoing : Vec<usize> = Vec::new();
+        if self.vertex_exists(vertex){
+            let mut outgoing: Vec<usize> = self.outgoing_edges(vertex);
+        }
         let binding = Vec::new();
         let changes: &Vec<Edit<usize>> = self.adj_uncommitted.get(&vertex).unwrap_or(&binding); // if there are no changes, this is an empty list
 
@@ -502,8 +501,12 @@ impl WTDirected<usize> for WTDigraph {
         if !self.vertex_exists_updated(vertex) {
             panic!("Vertex {vertex} doesn't exist!");
         }
+        let mut incoming : Vec<usize> = Vec::new();
+        if self.vertex_exists(vertex){
+            let mut incoming: Vec<usize> = self.incoming_edges(vertex);
+        }
 
-        let mut incoming: Vec<usize> = self.incoming_edges(vertex); // this should be an empty list, if there are no incoming edges
+         // this should be an empty list, if there are no incoming edges
 
         let mut changes: Vec<Edit<usize>> = Vec::new(); // changed from 'let mut changes: &Vec<Edit<usize>>;'
 
