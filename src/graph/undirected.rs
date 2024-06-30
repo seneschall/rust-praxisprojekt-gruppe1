@@ -49,10 +49,6 @@ impl Graph<usize> for UGraph {
         self.dg.vertex_exists(vertex)
     }
 
-    fn shrink(&mut self) -> HashMap<usize, usize> {
-        todo!() // erstmal unwichtig
-    }
-
     fn edge_exists(&self, from: usize, to: usize) -> bool {
         if from <= to {
             self.dg.edge_exists(from, to)
@@ -89,6 +85,10 @@ impl Undirected<usize> for UGraph {
 impl UnLabeled<usize> for UGraph {
     fn append_vertex(&mut self) -> usize {
         self.dg.append_vertex()
+    }
+    
+    fn shrink(&mut self) -> Vec<Option<usize>> {
+        todo!()
     }
 }
 

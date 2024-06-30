@@ -1,4 +1,6 @@
-use crate::traits::{Directed, Graph, Labeled, Unweighted, WTDirected, WTLabeled, WTWeighted, Weighted, WT};
+use crate::traits::{
+    Directed, Graph, Labeled, Unweighted, WTDirected, WTLabeled, WTWeighted, Weighted, WT,
+};
 use crate::wt::labeled_directed::LabeledWTDigraph;
 use crate::Edit;
 use std::collections::HashMap;
@@ -9,10 +11,10 @@ where
     L: Hash + Clone + Eq,
 {
     ldg: LabeledWTDigraph<L>,
-    weights_uncommitted: HashMap<(usize,usize), Edit<W>>,
-    weights: HashMap<(usize,usize), W>,
+    weights_uncommitted: HashMap<(usize, usize), Edit<W>>,
+    weights: HashMap<(usize, usize), W>,
 }
-impl<L,W> LabeledWeightedWTDigraph<L,W>
+impl<L, W> LabeledWeightedWTDigraph<L, W>
 where
     L: Hash + Clone + Eq,
 {
@@ -53,18 +55,19 @@ where
         }
         let from_index = from_index.unwrap();
         let to_index = to_index.unwrap();
-        
+
         self.ldg.delete_edge(from.clone(), to.clone());
-        let weight = self.get_weight(from,to); // checkme fixme seems ugly this way
-        self.weights_uncommitted.insert((from_index,to_index), Edit::Delete(weight));
-        }
+        let weight = self.get_weight(from, to); // checkme fixme seems ugly this way
+        self.weights_uncommitted
+            .insert((from_index, to_index), Edit::Delete(weight));
+    }
 
     fn delete_vertex(&mut self, vertex: L) {
         let vertex_index = self.get_index(&vertex);
-        if vertex_index.is_none(){
+        if vertex_index.is_none() {
             panic!("lwdg delete_vertex : vertex is none");
         }
-        if !self.vertex_exists(vertex.clone()){
+        if !self.vertex_exists(vertex.clone()) {
             panic!("lwdg delete_vertex : vertex does not exist");
         }
         self.delete_incoming_edges(vertex.clone());
@@ -76,9 +79,6 @@ where
         self.ldg.vertex_exists(vertex)
     }
 
-    fn shrink(&mut self) -> std::collections::HashMap<usize, usize> {
-        todo!()
-    }
 
     fn edge_exists(&self, from: L, to: L) -> bool {
         self.ldg.edge_exists(from, to)
@@ -124,6 +124,10 @@ where
     fn get_index(&self, label: &L) -> Option<usize> {
         self.ldg.get_index(label)
     }
+    
+    fn shrink(&mut self) -> HashMap<L, Option<L>> {
+        todo!()
+    }
 }
 impl<L, W> Weighted<L, W> for LabeledWeightedWTDigraph<L, W>
 where
@@ -143,7 +147,8 @@ where
         let to_index = to_index.unwrap();
 
         self.ldg.add_edge(from, to);
-        self.weights_uncommitted.insert((from_index, to_index), Edit::Add(weight));
+        self.weights_uncommitted
+            .insert((from_index, to_index), Edit::Add(weight));
     }
 
     fn edit_weight(&mut self, from: L, to: L, weight: W) {
@@ -157,10 +162,11 @@ where
         }
         let from_index = from_index.unwrap();
         let to_index = to_index.unwrap();
-        if !self.edge_exists(from, to){
+        if !self.edge_exists(from, to) {
             panic!("edge doesn't exist");
         }
-        self.weights_uncommitted.insert((from_index, to_index), Edit::Add(weight));
+        self.weights_uncommitted
+            .insert((from_index, to_index), Edit::Add(weight));
     }
 
     fn get_weight(&mut self, from: L, to: L) -> W {
@@ -193,7 +199,6 @@ where
     fn discard_edits(&mut self) {
         self.ldg.discard_edits();
         self.weights_uncommitted = HashMap::new();
-
     }
 
     fn vertex_exists_updated(&self, vertex: L) -> bool {
@@ -203,7 +208,7 @@ where
     fn edge_exists_updated(&self, from: L, to: L) -> bool {
         self.ldg.edge_exists_updated(from, to)
     }
-    
+
     fn v_count_updated(&self) -> usize {
         self.ldg.v_count_updated()
     }
@@ -211,37 +216,48 @@ where
 impl<L, W> WTWeighted<L, W> for LabeledWeightedWTDigraph<L, W>
 where
     L: Hash + Clone + Eq,
-    W : Clone,
+    W: Clone,
 {
     fn get_weight_updated(&mut self, from: L, to: L) -> W {
         let from_index = self.get_index_updated(&from);
         let to_index = self.get_index_updated(&to);
-        if from_index.is_none(){
+        if from_index.is_none() {
             panic!("ldg edge_exists : from_index is none")
         }
-        if to_index.is_none(){
+        if to_index.is_none() {
             panic!("ldg edge_exists : to_index is none")
         }
         let from_index = from_index.unwrap();
         let to_index = to_index.unwrap();
-        if self.weights_uncommitted.contains_key(&(from_index,to_index)){
-            match self.weights_uncommitted.get(&(from_index,to_index)).unwrap(){
+        if self
+            .weights_uncommitted
+            .contains_key(&(from_index, to_index))
+        {
+            match self
+                .weights_uncommitted
+                .get(&(from_index, to_index))
+                .unwrap()
+            {
                 Edit::Add(weight) => {
                     return weight.to_owned();
                 }
-                Edit::Delete(_weight)=> {
-                    if self.weights.contains_key(&(from_index, to_index)){
-                        return self.weights.get(&(from_index,to_index)).unwrap().to_owned();
-                    }
-                    else {
-                        panic!("lwdg get_weights_updated : Something went wrong, weight is missing");
+                Edit::Delete(_weight) => {
+                    if self.weights.contains_key(&(from_index, to_index)) {
+                        return self
+                            .weights
+                            .get(&(from_index, to_index))
+                            .unwrap()
+                            .to_owned();
+                    } else {
+                        panic!(
+                            "lwdg get_weights_updated : Something went wrong, weight is missing"
+                        );
                     }
                 }
             }
         } else {
             panic!("lwdg get_weights_updated : Something went wrong,weight is missing")
         }
-
     }
 }
 impl<L, W> WTDirected<L> for LabeledWeightedWTDigraph<L, W>
@@ -257,8 +273,9 @@ where
     }
 }
 
-impl<L,W> WTLabeled<L> for LabeledWeightedWTDigraph<L,W>
-where L: Hash + Eq + Clone,
+impl<L, W> WTLabeled<L> for LabeledWeightedWTDigraph<L, W>
+where
+    L: Hash + Eq + Clone,
 {
     fn get_label_updated(&self, index: usize) -> Option<&L> {
         self.ldg.get_label_updated(index)

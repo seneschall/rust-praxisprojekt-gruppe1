@@ -15,10 +15,12 @@ where
 impl<L, W> LabeledWeightedUGraph<L, W>
 where
     L: Hash + Eq + Clone,
-    W : Clone,
+    W: Clone,
 {
-    pub fn new() -> Self{
-        LabeledWeightedUGraph{ lwdg: LabeledWeightedDigraph::new() }
+    pub fn new() -> Self {
+        LabeledWeightedUGraph {
+            lwdg: LabeledWeightedDigraph::new(),
+        }
     }
     pub fn from_adjacency_list() {
         todo!()
@@ -52,8 +54,8 @@ where
         let from_index = from_index.unwrap();
         let to_index = to_index.unwrap();
         //todo
-        if from_index <= to_index{
-            self.lwdg.delete_edge(from,to);
+        if from_index <= to_index {
+            self.lwdg.delete_edge(from, to);
         } else {
             self.lwdg.delete_edge(to, from);
         }
@@ -65,10 +67,6 @@ where
 
     fn vertex_exists(&self, vertex: L) -> bool {
         self.lwdg.vertex_exists(vertex)
-    }
-
-    fn shrink(&mut self) -> HashMap<usize, usize> {
-        todo!()
     }
 
     fn edge_exists(&self, from: L, to: L) -> bool {
@@ -84,7 +82,7 @@ where
         let to_index = to_index.unwrap();
 
         // todo
-        if from_index <= to_index{
+        if from_index <= to_index {
             return self.lwdg.edge_exists(from, to);
         } else {
             return self.lwdg.edge_exists(to, from);
@@ -141,8 +139,12 @@ where
         self.lwdg.get_label(vertex)
     }
 
-    fn get_index(&self, label: &L) -> Option<usize>{
+    fn get_index(&self, label: &L) -> Option<usize> {
         self.lwdg.get_index(label)
+    }
+    
+    fn shrink(&mut self) -> HashMap<L, Option<L>> {
+        todo!()
     }
 }
 impl<L, W> Weighted<L, W> for LabeledWeightedUGraph<L, W>

@@ -36,15 +36,28 @@ impl Digraph {
 }
 impl Graph<usize> for Digraph {
     fn add_vertex(&mut self, vertex: usize) -> usize {
-        if vertex >= self.adj_len {
-            for i in 0..vertex - self.adj_len + 1 {
-                self.adj.insert(self.adj_len + i, vec![]);
-            }
-            self.adj_len += vertex - self.adj_len + 1;
+        // case 1 vertex exist
+        // case 2 vertex does not exist, deleted_vertices contains vertex
+        // case 3 vertex does not exist, deleted_vertices does not contain vertex
+        // in this case check if vertex > adj_len
+
+        if self.vertex_exists(vertex) {
+            // case 1
+            self.delete_outgoing_edges(vertex);
+            self.delete_incoming_edges(vertex);
         } else {
-            self.adj.insert(vertex, vec![]);
+            if self.deleted_vertices.contains_key(&vertex) {
+                // case 2
+                self.deleted_vertices.remove(&vertex);
+            } else {
+                // case 3
+                for i in 0..vertex - self.adj_len + 1 {
+                    self.adj.push(vec![]);
+                }
+                self.adj_len += vertex - self.adj_len + 1;
+            }
         }
-        self.adj_len - 1
+        return vertex;
     }
 
     fn e_count(&self) -> usize {
@@ -97,10 +110,6 @@ impl Graph<usize> for Digraph {
         return false;
     }
 
-    fn shrink(&mut self) -> HashMap<usize, usize> {
-        todo!()
-    }
-
     fn edge_exists(&self, from: usize, to: usize) -> bool {
         if self.adj[from].contains(&to) {
             true
@@ -116,7 +125,7 @@ impl Directed<usize> for Digraph {
 
     fn incoming_edges(&self, vertex: usize) -> Vec<usize> {
         let mut incoming_edges: Vec<usize> = Vec::new();
-        for i in 0..self.adj_len {
+        for i in 0..self.adj.len() {
             if self.adj[i].contains(&vertex) {
                 incoming_edges.push(i);
             }
@@ -141,6 +150,10 @@ impl UnLabeled<usize> for Digraph {
         self.adj.push(vec![]);
         self.adj_len += 1;
         self.adj_len - 1
+    }
+    
+    fn shrink(&mut self) -> Vec<Option<usize>> {
+        todo!()
     }
 }
 impl Unweighted<usize> for Digraph {

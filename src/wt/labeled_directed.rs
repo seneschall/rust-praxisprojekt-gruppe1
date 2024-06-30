@@ -7,7 +7,7 @@ use crate::Edit;
 use std::collections::HashMap;
 use std::hash::Hash;
 
-/// A structure holding an immutable Wavelet-Tree-Representation of a graph with directed edges and labeled vertices, plus information on manual changes. 
+/// A structure holding an immutable Wavelet-Tree-Representation of a graph with directed edges and labeled vertices, plus information on manual changes.
 /// The greatest possible of number of edges or of vertices is usize. Labels can have any type and are referenced.
 pub struct LabeledWTDigraph<L>
 where
@@ -38,7 +38,7 @@ where
 {
     fn add_vertex(&mut self, vertex: L) -> usize {
         let vertex_index = self.get_index_updated(&vertex);
-        if vertex_index.is_some(){
+        if vertex_index.is_some() {
             panic!("ldg add_vertex : vertex is not none");
         }
         let index: usize = self.dg.append_vertex(); // this also updates v_count_updated
@@ -59,15 +59,13 @@ where
         return self.dg.v_count();
     }
 
-
-
     fn delete_edge(&mut self, from: L, to: L) {
         let from_index = self.get_index_updated(&from);
         let to_index = self.get_index_updated(&to);
-        if from_index.is_none(){
+        if from_index.is_none() {
             panic!("ldg edge_exists : from_index is none")
         }
-        if to_index.is_none(){
+        if to_index.is_none() {
             panic!("ldg edge_exists : to_index is none")
         }
         let from_index = from_index.unwrap();
@@ -77,37 +75,35 @@ where
 
     fn delete_vertex(&mut self, vertex: L) {
         let vertex_index = self.get_index_updated(&vertex);
-        if vertex_index.is_none(){
+        if vertex_index.is_none() {
             panic!("ldg delete_vertex : vertex_index is none");
         }
         let vertex_index = vertex_index.unwrap();
         self.dg.delete_vertex(vertex_index);
         // checkme
         // need extra checking or is insert enough?
-        self.index_label_uncommitted.insert(vertex_index, Edit::Delete(vertex.clone()));
-        self.label_index_uncommitted.insert(vertex, Edit::Delete(vertex_index));
+        self.index_label_uncommitted
+            .insert(vertex_index, Edit::Delete(vertex.clone()));
+        self.label_index_uncommitted
+            .insert(vertex, Edit::Delete(vertex_index));
     }
 
     fn vertex_exists(&self, vertex: L) -> bool {
         let vertex_index = self.get_index(&vertex);
-        if vertex_index.is_none(){
+        if vertex_index.is_none() {
             panic!("ldg vertex_exists : vertex_index is none");
         }
         let vertex_index = vertex_index.unwrap();
         return self.dg.vertex_exists(vertex_index);
     }
 
-    fn shrink(&mut self) -> HashMap<usize, usize> {
-        todo!()
-    }
-
     fn edge_exists(&self, from: L, to: L) -> bool {
         let from_index = self.get_index_updated(&from);
         let to_index = self.get_index_updated(&to);
-        if from_index.is_none(){
+        if from_index.is_none() {
             panic!("ldg edge_exists : from_index is none")
         }
-        if to_index.is_none(){
+        if to_index.is_none() {
             panic!("ldg edge_exists : to_index is none")
         }
         let from_index = from_index.unwrap();
@@ -121,13 +117,13 @@ where
 {
     fn outgoing_edges(&self, vertex: L) -> Vec<L> {
         let vertex_index = self.get_index(&vertex);
-        if vertex_index.is_none(){
+        if vertex_index.is_none() {
             panic!("ldg outgoing_edges : vertex_index is none");
         }
         let vertex_index = vertex_index.unwrap();
         let outgoing_edges = self.dg.outgoing_edges(vertex_index);
-        let mut outgoing_edges_labeled : Vec<L> = Vec::new();
-        for item in outgoing_edges{
+        let mut outgoing_edges_labeled: Vec<L> = Vec::new();
+        for item in outgoing_edges {
             outgoing_edges_labeled.push(self.get_label(item).unwrap().to_owned());
         }
         return outgoing_edges_labeled;
@@ -135,13 +131,13 @@ where
 
     fn incoming_edges(&self, vertex: L) -> Vec<L> {
         let vertex_index = self.get_index(&vertex);
-        if vertex_index.is_none(){
+        if vertex_index.is_none() {
             panic!("ldg incoming_edges : vertex_index is none");
         }
         let vertex_index = vertex_index.unwrap();
         let incoming_edges = self.dg.incoming_edges(vertex_index);
-        let mut incoming_edges_labeled : Vec<L> = Vec::new();
-        for item in incoming_edges{
+        let mut incoming_edges_labeled: Vec<L> = Vec::new();
+        for item in incoming_edges {
             incoming_edges_labeled.push(self.get_label(item).unwrap().to_owned());
         }
         return incoming_edges_labeled;
@@ -149,7 +145,7 @@ where
 
     fn delete_outgoing_edges(&mut self, vertex: L) {
         let vertex_index = self.get_index(&vertex);
-        if vertex_index.is_none(){
+        if vertex_index.is_none() {
             panic!("ldg delete_outgoing_edges : vertex_index is none");
         }
         let vertex_index = vertex_index.unwrap();
@@ -158,7 +154,7 @@ where
 
     fn delete_incoming_edges(&mut self, vertex: L) {
         let vertex_index = self.get_index(&vertex);
-        if vertex_index.is_none(){
+        if vertex_index.is_none() {
             panic!("ldg delete_incoming_edges : vertex_index is none");
         }
         let vertex_index = vertex_index.unwrap();
@@ -170,20 +166,20 @@ where
     L: Hash + Eq + Clone,
 {
     fn edit_label(&mut self, old_label: L, new_label: L) {
-        let old_label_index:Option<usize> = self.get_index_updated(&old_label);
-        let new_label_index:Option<usize> = self.get_index_updated(&new_label);
-        if old_label_index.is_none(){
+        let old_label_index: Option<usize> = self.get_index_updated(&old_label);
+        let new_label_index: Option<usize> = self.get_index_updated(&new_label);
+        if old_label_index.is_none() {
             panic!("ldg edit_label : old_label_index is none");
-        }        
-        if new_label_index.is_some(){
+        }
+        if new_label_index.is_some() {
             panic!("ldg edit_label : new_label_index is some");
         }
         let old_label_index = old_label_index.unwrap().to_owned();
         // old_label and new_label are valid
         // check in label_index_uncommitted;
-        if self.label_index_uncommitted.contains_key(&old_label){
+        if self.label_index_uncommitted.contains_key(&old_label) {
             // Label got an entry in label_index_uncommitted
-            match self.label_index_uncommitted.get(&old_label).unwrap(){
+            match self.label_index_uncommitted.get(&old_label).unwrap() {
                 Edit::Delete(index) => {
                     // Label was deleted from the index
                     // this case is not valid
@@ -192,24 +188,29 @@ where
                 Edit::Add(index) => {
                     // Label was added to an index
                     // this case is valid
-                    self.label_index_uncommitted.insert(new_label.clone(), Edit::Add(old_label_index));
+                    self.label_index_uncommitted
+                        .insert(new_label.clone(), Edit::Add(old_label_index));
                     // mark new_label as added
-                    self.label_index_uncommitted.insert(old_label, Edit::Delete(old_label_index));
+                    self.label_index_uncommitted
+                        .insert(old_label, Edit::Delete(old_label_index));
                     // mark old_label as deleted
 
                     // updated index_label_uncommitted
-                    self.index_label_uncommitted.insert(old_label_index, Edit::Add(new_label));
+                    self.index_label_uncommitted
+                        .insert(old_label_index, Edit::Add(new_label));
                     return;
                 }
             }
         } else {
-            if self.label_index.contains_key(&old_label){
+            if self.label_index.contains_key(&old_label) {
                 // label_index has a key for old_label
                 // this key is not in uncommitted, since it was checked first
-                let index  = self.label_index.get(&old_label).unwrap().to_owned();
+                let index = self.label_index.get(&old_label).unwrap().to_owned();
                 //update label_index_uncommitted and index_label_uncommitted
-                self.label_index_uncommitted.insert(new_label.clone(), Edit::Add(index));
-                self.index_label_uncommitted.insert(index, Edit::Add(new_label));
+                self.label_index_uncommitted
+                    .insert(new_label.clone(), Edit::Add(index));
+                self.index_label_uncommitted
+                    .insert(index, Edit::Add(new_label));
 
                 return;
             }
@@ -225,6 +226,10 @@ where
     fn get_index(&self, label: &L) -> Option<usize> {
         return self.label_index.get(&label).copied();
     }
+    
+    fn shrink(&mut self) -> HashMap<L, Option<L>> {
+        todo!()
+    }
 }
 impl<L> Unweighted<L> for LabeledWTDigraph<L>
 where
@@ -233,10 +238,10 @@ where
     fn add_edge(&mut self, from: L, to: L) {
         let from_index = self.get_index_updated(&from);
         let to_index = self.get_index_updated(&to);
-        if from_index.is_none(){
+        if from_index.is_none() {
             panic!("ldg edge_exists_updated : from_index is none")
         }
-        if to_index.is_none(){
+        if to_index.is_none() {
             panic!("ldg edge_exists_updated : to_index is none")
         }
         let from_index = from_index.unwrap();
@@ -254,11 +259,11 @@ where
         // increase Vec<L> to v_count_updated
         // checkme if this is correct
         let mut new_index_label: Vec<L> = Vec::new();
-        for i in 0..self.v_count_updated()-1{ 
-            if self.index_label_uncommitted.contains_key(&i){
+        for i in 0..self.v_count_updated() - 1 {
+            if self.index_label_uncommitted.contains_key(&i) {
                 // change of labels at index i
                 let change = self.index_label_uncommitted.get(&i).unwrap(); // save to unwrap here
-                match change{
+                match change {
                     Edit::Add(new_label) => {
                         // new label
                         new_index_label.push(new_label.to_owned());
@@ -272,7 +277,7 @@ where
                     }
                 }
             } else {
-                if i <= self.label_index.len(){
+                if i <= self.label_index.len() {
                     new_index_label.push(self.index_label.get(i).unwrap().clone());
                 }
             }
@@ -282,9 +287,10 @@ where
         self.label_index_uncommitted = HashMap::new();
         self.index_label = new_index_label;
         self.label_index = HashMap::new();
-        for i in 0..self.v_count_updated()-1{
-            if !self.dg.deleted_vertices.contains_key(&i){
-                self.label_index.insert(self.index_label.get(i).unwrap().clone(), i);
+        for i in 0..self.v_count_updated() - 1 {
+            if !self.dg.deleted_vertices.contains_key(&i) {
+                self.label_index
+                    .insert(self.index_label.get(i).unwrap().clone(), i);
             }
         }
         self.dg.commit_edits();
@@ -302,7 +308,7 @@ where
 
     fn vertex_exists_updated(&self, vertex: L) -> bool {
         let vertex_index = self.get_index_updated(&vertex);
-        if vertex_index.is_none(){
+        if vertex_index.is_none() {
             panic!("ldg vertex_exists_updated : vertex_index is none");
         }
         let vertex_index = vertex_index.unwrap();
@@ -312,17 +318,17 @@ where
     fn edge_exists_updated(&self, from: L, to: L) -> bool {
         let from_index = self.get_index_updated(&from);
         let to_index = self.get_index_updated(&to);
-        if from_index.is_none(){
+        if from_index.is_none() {
             panic!("ldg edge_exists_updated : from_index is none")
         }
-        if to_index.is_none(){
+        if to_index.is_none() {
             panic!("ldg edge_exists_updated : to_index is none")
         }
         let from_index = from_index.unwrap();
         let to_index = to_index.unwrap();
-        return self.dg.edge_exists_updated(from_index,to_index); 
+        return self.dg.edge_exists_updated(from_index, to_index);
     }
-    
+
     fn v_count_updated(&self) -> usize {
         return self.dg.v_count_updated();
     }
@@ -333,13 +339,13 @@ where
 {
     fn outgoing_edges_updated(&self, vertex: L) -> Vec<L> {
         let vertex_index = self.get_index_updated(&vertex);
-        if vertex_index.is_none(){
+        if vertex_index.is_none() {
             panic!("ldg outgoing_edges_updated : vertex_index is none");
         }
         let vertex_index = vertex_index.unwrap();
         let outgoing_edges_updated = self.dg.outgoing_edges_updated(vertex_index);
-        let mut outgoing_edges_updated_labeled : Vec<L> = Vec::new();
-        for item in outgoing_edges_updated{
+        let mut outgoing_edges_updated_labeled: Vec<L> = Vec::new();
+        for item in outgoing_edges_updated {
             outgoing_edges_updated_labeled.push(self.get_label_updated(item).unwrap().clone())
         }
         return outgoing_edges_updated_labeled;
@@ -347,13 +353,13 @@ where
 
     fn incoming_edges_updated(&self, vertex: L) -> Vec<L> {
         let vertex_index = self.get_index_updated(&vertex);
-        if vertex_index.is_none(){
+        if vertex_index.is_none() {
             panic!("ldg incoming_edges_updated : vertex_index is none");
         }
         let vertex_index = vertex_index.unwrap();
         let incoming_edges_updated = self.dg.incoming_edges_updated(vertex_index);
-        let mut incoming_edges_updated_labeled : Vec<L> = Vec::new();
-        for item in incoming_edges_updated{
+        let mut incoming_edges_updated_labeled: Vec<L> = Vec::new();
+        for item in incoming_edges_updated {
             incoming_edges_updated_labeled.push(self.get_label_updated(item).unwrap().clone());
         }
         return incoming_edges_updated_labeled;
