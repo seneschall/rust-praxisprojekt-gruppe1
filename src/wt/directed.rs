@@ -145,7 +145,6 @@ impl Graph<usize> for WTDigraph {
         if !self.edge_exists_updated(from, to) {
             panic!("Edge from {} to {} doesn't exist!", from, to);
         }
-        println!("test");
         match self.adj_uncommitted.get_mut(&from) {
             Some(adj) => {
                 let i: Option<usize> = adj.iter().position(|x| x == &Edit::Add(to)); // safe because we know it exists
