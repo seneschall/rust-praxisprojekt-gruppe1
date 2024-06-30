@@ -26,7 +26,7 @@ impl Graph<usize> for WTUGraph {
     fn v_count(&self) -> usize {
         self.wtd.v_count()
     }
-    
+
     fn delete_edge(&mut self, from: usize, to: usize) {
         if from <= to {
             self.wtd.delete_edge(from, to);
@@ -42,11 +42,7 @@ impl Graph<usize> for WTUGraph {
     fn vertex_exists(&self, vertex: usize) -> bool {
         self.wtd.vertex_exists(vertex)
     }
-
-    fn shrink(&mut self) -> HashMap<usize, usize> {
-        self.wtd.shrink()
-    }
-
+    
     fn edge_exists(&self, from: usize, to: usize) -> bool {
         todo!()
     }
@@ -70,6 +66,10 @@ impl Undirected<usize> for WTUGraph {
 impl UnLabeled<usize> for WTUGraph {
     fn append_vertex(&mut self) -> usize {
         self.wtd.append_vertex()
+    }
+    
+    fn shrink(&mut self) -> Vec<Option<usize>> {
+        todo!()
     }
 }
 impl Unweighted<usize> for WTUGraph {
@@ -101,7 +101,7 @@ impl WT<usize> for WTUGraph {
     fn edge_exists_updated(&self, from: usize, to: usize) -> bool {
         todo!()
     }
-    
+
     fn v_count_updated(&self) -> usize {
         todo!()
     }

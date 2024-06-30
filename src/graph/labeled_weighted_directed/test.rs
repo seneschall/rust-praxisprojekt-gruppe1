@@ -183,7 +183,10 @@ fn get_weight() {
         for to in from {
             test_weights_hashmap.insert((j, to), weights[j].get(u).unwrap().clone());
             assert_eq!(
-                lwdg.get_weight(lwdg.get_label(j).unwrap().clone(), lwdg.get_label(to).unwrap().clone()),
+                lwdg.get_weight(
+                    lwdg.get_label(j).unwrap().clone(),
+                    lwdg.get_label(to).unwrap().clone()
+                ),
                 test_weights_hashmap.get(&(j, to)).unwrap().clone()
             );
             u += 1;

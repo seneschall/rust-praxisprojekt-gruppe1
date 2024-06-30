@@ -93,10 +93,6 @@ impl<W> Graph<usize> for WeightedDigraph<W> {
         self.dg.vertex_exists(vertex)
     }
 
-    fn shrink(&mut self) -> HashMap<usize, usize> {
-        todo!()
-    }
-
     fn edge_exists(&self, from: usize, to: usize) -> bool {
         self.dg.edge_exists(from, to)
     }
@@ -125,6 +121,10 @@ impl<W> Directed<usize> for WeightedDigraph<W> {
 impl<W> UnLabeled<usize> for WeightedDigraph<W> {
     fn append_vertex(&mut self) -> usize {
         self.dg.append_vertex()
+    }
+    
+    fn shrink(&mut self) -> Vec<Option<usize>> {
+        todo!()
     }
 }
 impl<W> Weighted<usize, W> for WeightedDigraph<W>

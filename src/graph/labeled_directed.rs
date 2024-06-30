@@ -103,10 +103,6 @@ where
         self.dg.vertex_exists(vertex_index.unwrap().clone())
     }
 
-    fn shrink(&mut self) -> HashMap<usize, usize> {
-        todo!()
-    }
-
     fn edge_exists(&self, from: L, to: L) -> bool {
         let from_index = self.get_index(&from);
         let to_index = self.get_index(&to);
@@ -208,6 +204,10 @@ where
             return None;
         }
     }
+    
+    fn shrink(&mut self) -> HashMap<L, Option<L>> {
+        todo!()
+    }
 }
 impl<L> Unweighted<L> for LabeledDigraph<L>
 where
@@ -222,7 +222,6 @@ where
         if to_index.is_none() {
             panic!("ldg add_edge : to index is none");
         }
-        self.dg
-            .add_edge(from_index.unwrap(), to_index.unwrap());
+        self.dg.add_edge(from_index.unwrap(), to_index.unwrap());
     }
 }

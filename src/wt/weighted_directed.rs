@@ -31,10 +31,6 @@ impl<W> Graph<usize> for WeightedWTDigraph<W> {
         todo!()
     }
 
-    fn shrink(&mut self) -> std::collections::HashMap<usize, usize> {
-        todo!()
-    }
-
     fn edge_exists(&self, from: usize, to: usize) -> bool {
         todo!()
     }
@@ -58,6 +54,10 @@ impl<W> Directed<usize> for WeightedWTDigraph<W> {
 }
 impl<W> UnLabeled<usize> for WeightedWTDigraph<W> {
     fn append_vertex(&mut self) -> usize {
+        todo!()
+    }
+    
+    fn shrink(&mut self) -> Vec<Option<usize>> {
         todo!()
     }
 }
@@ -94,7 +94,7 @@ impl<W> WT<usize> for WeightedWTDigraph<W> {
     fn edge_exists_updated(&self, from: usize, to: usize) -> bool {
         todo!()
     }
-    
+
     fn v_count_updated(&self) -> usize {
         todo!()
     }

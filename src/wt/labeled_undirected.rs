@@ -36,7 +36,6 @@ where
         todo!()
     }
 
-
     fn delete_edge(&mut self, from: L, to: L) {
         todo!()
     }
@@ -49,9 +48,6 @@ where
         todo!()
     }
 
-    fn shrink(&mut self) -> std::collections::HashMap<usize, usize> {
-        todo!()
-    }
 
     fn edge_exists(&self, from: L, to: L) -> bool {
         todo!()
@@ -82,6 +78,10 @@ where
     }
 
     fn get_index(&self, label: &L) -> Option<usize> {
+        todo!()
+    }
+    
+    fn shrink(&mut self) -> std::collections::HashMap<L, Option<L>> {
         todo!()
     }
 }
@@ -116,7 +116,7 @@ where
     fn edge_exists_updated(&self, from: L, to: L) -> bool {
         todo!()
     }
-    
+
     fn v_count_updated(&self) -> usize {
         todo!()
     }

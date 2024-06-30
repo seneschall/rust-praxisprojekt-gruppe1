@@ -1,4 +1,6 @@
-use crate::traits::{Graph, Labeled, Undirected, WTLabeled, WTUndirected, WTWeighted, Weighted, WT};
+use crate::traits::{
+    Graph, Labeled, Undirected, WTLabeled, WTUndirected, WTWeighted, Weighted, WT,
+};
 use crate::wt::labeled_directed::LabeledWTDigraph;
 use std::hash::Hash;
 
@@ -38,9 +40,6 @@ where
         todo!()
     }
 
-    fn shrink(&mut self) -> std::collections::HashMap<usize, usize> {
-        todo!()
-    }
 
     fn edge_exists(&self, from: L, to: L) -> bool {
         todo!()
@@ -71,6 +70,10 @@ where
     }
 
     fn get_index(&self, label: &L) -> Option<usize> {
+        todo!()
+    }
+    
+    fn shrink(&mut self) -> std::collections::HashMap<L, Option<L>> {
         todo!()
     }
 }
@@ -113,7 +116,7 @@ where
     fn edge_exists_updated(&self, from: L, to: L) -> bool {
         todo!()
     }
-    
+
     fn v_count_updated(&self) -> usize {
         todo!()
     }
@@ -135,8 +138,9 @@ where
     }
 }
 
-impl<L,W> WTLabeled<L> for LabeledWeightedUGraph<L,W>
-where L : Clone + Hash + Eq,
+impl<L, W> WTLabeled<L> for LabeledWeightedUGraph<L, W>
+where
+    L: Clone + Hash + Eq,
 {
     fn get_label_updated(&self, index: usize) -> Option<&L> {
         todo!()

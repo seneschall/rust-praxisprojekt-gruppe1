@@ -50,10 +50,6 @@ impl<W> Graph<usize> for WeightedUGraph<W> {
         self.wdg.vertex_exists(vertex)
     }
 
-    fn shrink(&mut self) -> HashMap<usize, usize> {
-        todo!() // erstmal unwichtig
-    }
-
     fn edge_exists(&self, from: usize, to: usize) -> bool {
         self.wdg.edge_exists(from, to)
     }
@@ -70,6 +66,10 @@ impl<W> Undirected<usize> for WeightedUGraph<W> {
 impl<W> UnLabeled<usize> for WeightedUGraph<W> {
     fn append_vertex(&mut self) -> usize {
         self.wdg.append_vertex()
+    }
+    
+    fn shrink(&mut self) -> Vec<Option<usize>> {
+        todo!()
     }
 }
 impl<W> Weighted<usize, W> for WeightedUGraph<W>

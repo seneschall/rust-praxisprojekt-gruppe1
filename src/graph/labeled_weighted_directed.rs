@@ -10,7 +10,7 @@ pub struct LabeledWeightedDigraph<L, W>
 where
     L: Hash + Eq,
 {
-    pub(crate)ldg: LabeledDigraph<L>,
+    pub(crate) ldg: LabeledDigraph<L>,
     weights: HashMap<(usize, usize), W>,
 }
 
@@ -79,17 +79,17 @@ where
         }
         let from_index = from_index.unwrap();
         let to_index = to_index.unwrap();
-        
+
         self.ldg.dg.delete_edge(from_index, to_index);
         self.weights.remove(&(from_index, to_index));
     }
 
     fn delete_vertex(&mut self, vertex: L) {
         let vertex_index = self.get_index(&vertex);
-        if vertex_index.is_none(){
+        if vertex_index.is_none() {
             panic!("lwdg delete_vertex : vertex is none");
         }
-        if !self.vertex_exists(vertex.clone()){
+        if !self.vertex_exists(vertex.clone()) {
             panic!("lwdg delete_vertex : vertex does not exist");
         }
         self.delete_incoming_edges(vertex.clone());
@@ -101,9 +101,6 @@ where
         self.ldg.vertex_exists(vertex)
     }
 
-    fn shrink(&mut self) -> HashMap<usize, usize> {
-        todo!()
-    }
 
     fn edge_exists(&self, from: L, to: L) -> bool {
         self.ldg.edge_exists(from, to)
@@ -161,6 +158,10 @@ where
     fn get_index(&self, label: &L) -> Option<usize> {
         self.ldg.get_index(label)
     }
+    
+    fn shrink(&mut self) -> HashMap<L, Option<L>> {
+        todo!()
+    }
 }
 impl<L, W> Weighted<L, W> for LabeledWeightedDigraph<L, W>
 where
@@ -194,7 +195,7 @@ where
         }
         let from_index = from_index.unwrap();
         let to_index = to_index.unwrap();
-        if !self.edge_exists(from, to){
+        if !self.edge_exists(from, to) {
             panic!("edge doesn't exist");
         }
         self.weights.insert((from_index, to_index), weight);
