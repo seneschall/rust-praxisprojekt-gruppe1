@@ -2,7 +2,7 @@ use super::*;
 use graph::{directed::Digraph, labeled_directed::LabeledDigraph, labeled_undirected::LabeledUGraph, labeled_weighted_directed::LabeledWeightedDigraph, labeled_weighted_undirected::LabeledWeightedUGraph, undirected::UGraph, weighted_directed::WeightedDigraph, weighted_undirected::WeightedUGraph};
 use num::ToPrimitive;
 use vers_vecs::RsVec;
-use wt::{directed::WTDigraph, weighted_directed::WeightedWTDigraph};
+use wt::{directed::WTDigraph, labeled_directed::LabeledWTDigraph, labeled_undirected::LabeledWTUGraph, labeled_weighted_directed::LabeledWeightedWTDigraph, labeled_weighted_undirected::LabeledWeightedWTUGraph, undirected::WTUGraph, weighted_directed::WeightedWTDigraph, weighted_undirected::WeightedWTUGraph};
 use std::{collections::HashMap, fs};
 use vers_vecs::BitVec;
 
@@ -78,6 +78,25 @@ pub fn setup_wtwdg(filename: &str) -> WeightedWTDigraph<f32>{
     let (sequence, starting_indices) = create_sequence_and_bitmap(&adj);
     let wtwdg : WeightedWTDigraph<f32> = WeightedWTDigraph::from(sequence, RsVec::from_bit_vec(starting_indices), weights);
     return wtwdg;
+}
+pub fn setup_wtldg(filename: &str) -> LabeledWTDigraph<String>{
+    todo!()
+}
+pub fn setup_wtlwdg(filename: &str) -> LabeledWeightedWTDigraph<String, f32>{
+    todo!()
+}
+// WT Undirected Graphs
+pub fn setup_wtug(filename: &str) -> WTUGraph{
+    todo!()
+}
+pub fn setup_wtwug(filename: &str) -> WeightedWTUGraph<f32>{
+    todo!()
+}
+pub fn setup_wtlug(filename: &str) -> LabeledWTUGraph<String>{
+    todo!()
+}
+pub fn setup_wtlwug(filename: &str) -> LabeledWeightedWTUGraph<String, f32>{
+    todo!()
 }
 
 // use output from import_adjacency_list to create a sequence for qwt and a bitmap
