@@ -1,5 +1,5 @@
 use crate::graph::directed::Digraph;
-use crate::traits::{Directed, Graph, Labeled, UnLabeled, Unweighted};
+use crate::traits::{Directed, Graph, Labeled, Unlabeled, Unweighted};
 use std::collections::HashMap;
 use std::hash::Hash;
 

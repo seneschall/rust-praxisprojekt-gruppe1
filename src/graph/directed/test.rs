@@ -1,5 +1,5 @@
 use crate::graph::directed::Digraph;
-use crate::traits::{Directed, Graph, UnLabeled, Unweighted};
+use crate::traits::{Directed, Graph, Unlabeled, Unweighted};
 
 #[test]
 fn new() {

@@ -1,10 +1,11 @@
 use std::fs;
 use vers_vecs::BitVec;
 
-pub mod indexed;
-pub mod labeled;
-pub mod wt_indexed;
-pub mod wt_labeled;
+pub mod dg_ug;
+pub mod ldg_lug;
+pub mod wtd_wtu;
+pub mod L_wtd_L_stu;
+pub mod helper;
 
 
 // this function is for internal use only

@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use crate::graph::weighted_directed::WeightedDigraph;
-use crate::traits::{Graph, UnLabeled, Undirected, Weighted};
+use crate::traits::{Graph, Unlabeled, Undirected, Weighted};
 
 #[cfg(test)]
 mod test;
@@ -66,7 +66,7 @@ impl<W> Undirected<usize> for WeightedUGraph<W> {
         todo!()
     }
 }
-impl<W> UnLabeled<usize> for WeightedUGraph<W> {
+impl<W> Unlabeled<usize> for WeightedUGraph<W> {
     fn append_vertex(&mut self) -> usize {
         todo!()
     }

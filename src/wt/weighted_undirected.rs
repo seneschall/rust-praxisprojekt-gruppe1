@@ -1,4 +1,4 @@
-use crate::traits::{Graph, UnLabeled, Undirected, WTUndirected, WTWeighted, Weighted, WT};
+use crate::traits::{Graph, Unlabeled, Undirected, WTUndirected, WTWeighted, Weighted, WT};
 use crate::wt::undirected::WTUGraph;
 
 /// A structure holding an immutable Wavelet-Tree-Representation of an indexed graph with undirected edges, where each edge represents a weight, plus information on manual changes. 
@@ -54,7 +54,7 @@ impl<W> Undirected<usize> for WeightedWTUGraph<W> {
         todo!()
     }
 }
-impl<W> UnLabeled<usize> for WeightedWTUGraph<W> {
+impl<W> Unlabeled<usize> for WeightedWTUGraph<W> {
     fn append_vertex(&mut self) -> usize {
         todo!()
     }

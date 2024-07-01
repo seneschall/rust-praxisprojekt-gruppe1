@@ -1,7 +1,7 @@
 use vers_vecs::RsVec;
 
 use crate::graph::labeled_directed::LabeledDigraph;
-use crate::traits::{Directed, Graph, Labeled, UnLabeled, Unweighted, WTDirected, WTLabeled, WT};
+use crate::traits::{Directed, Graph, Labeled, Unlabeled, Unweighted, WTDirected, WTLabeled, WT};
 use crate::wt::directed::WTDigraph;
 use crate::Edit;
 use std::collections::HashMap;

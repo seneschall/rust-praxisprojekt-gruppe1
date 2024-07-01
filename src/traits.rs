@@ -43,7 +43,7 @@ pub trait Undirected<T> {
     fn delete_edges_from(&mut self, vertex: &T);
     //deletes all edges from vertex
 }
-pub trait UnLabeled<T> {
+pub trait Unlabeled<T> {
     fn append_vertex(&mut self) -> usize; //fn append_vertex(&mut self) -> usize; // adds vertex at position wt_adj.len() or at index of lowest deleted vertex (if that change hasn't been committed)
                                           // can't use append for labeled Graphs, since add_vertex works as an append for labeled graphs
 }

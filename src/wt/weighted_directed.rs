@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use crate::traits::{Directed, Graph, UnLabeled, Unweighted, WTDirected, WTWeighted, Weighted, WT};
+use crate::traits::{Directed, Graph, Unlabeled, Unweighted, WTDirected, WTWeighted, Weighted, WT};
 use crate::wt::directed::WTDigraph;
 use crate::Edit;
 use core::clone::Clone;
@@ -78,7 +78,7 @@ impl<W> Directed<usize> for WeightedWTDigraph<W> {
     }
 }
 
-impl<W> UnLabeled<usize> for WeightedWTDigraph<W> {
+impl<W> Unlabeled<usize> for WeightedWTDigraph<W> {
     fn append_vertex(&mut self) -> usize {
         return self.dg.append_vertex();
     }
