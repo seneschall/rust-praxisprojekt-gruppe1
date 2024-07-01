@@ -214,7 +214,7 @@ pub fn import_adjacency_list_lwdg(filename: &str) -> (Vec<Vec<(usize, f32)>>, Ve
     todo!()
 }
 
-
+// these fn just need to make sure, that adj list is for undirected graphs
 pub fn import_adjacency_list_ug(filename: &str) -> Vec<Vec<usize>> {
     todo!()
 }
