@@ -11,7 +11,7 @@ where
     L: Hash + Eq,
 {
     pub(crate) ldg: LabeledDigraph<L>,
-    weights: HashMap<(usize, usize), W>,
+    pub(crate) weights: HashMap<(usize, usize), W>,
 }
 
 impl<L, W> LabeledWeightedDigraph<L, W>

@@ -1,3 +1,5 @@
+use vers_vecs::RsVec;
+
 use crate::graph::labeled_weighted_directed::LabeledWeightedDigraph;
 use crate::traits::{
     Directed, Graph, Labeled, Unweighted, WTDirected, WTLabeled, WTWeighted, Weighted, WT,
@@ -20,11 +22,19 @@ where
     L: Hash + Clone + Eq,
 {
     pub fn from_labeled_weighted_digraph(lwdg : LabeledWeightedDigraph<L,W>) -> Self {
-        todo!()
+        return LabeledWeightedWTDigraph{
+            ldg: LabeledWTDigraph::from_labeled_digraph(lwdg.ldg),
+            weights_uncommitted: HashMap::new(),
+            weights : lwdg.weights,
+        }
     }
 
-    pub fn from() -> Self {
-        todo!()
+    pub fn from(sequence: Vec<usize>, starting_indices: RsVec, labels : Vec<L>, weights : HashMap<(usize,usize), W>) -> Self {
+        return LabeledWeightedWTDigraph{
+            ldg: LabeledWTDigraph::from(sequence, starting_indices, labels),
+            weights_uncommitted: HashMap::new(),
+            weights,
+        }
     }
 }
 
