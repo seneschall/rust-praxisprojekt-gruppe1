@@ -1,11 +1,32 @@
+use std::collections::HashMap;
+
+use vers_vecs::RsVec;
+
+use crate::graph::weighted_undirected::WeightedUGraph;
 use crate::traits::{Graph, UnLabeled, Undirected, WTUndirected, WTWeighted, Weighted, WT};
 use crate::wt::undirected::WTUGraph;
 
-pub struct WeightedWTUGraph<W> {
-    dg: WTUGraph,
-    weights: W, // TODO so we have no compiler error
-}
+use super::weighted_directed::WeightedWTDigraph;
 
+pub struct WeightedWTUGraph<W> {
+    wug : WeightedWTDigraph<W>,
+}
+impl<W> WeightedWTUGraph<W>{
+    pub fn from_weighted_ugraph(wug: WeightedUGraph<W>) -> Self{
+        return WeightedWTUGraph{
+            wug: WeightedWTDigraph::from_weighted_digraph(wug.wdg),
+        }
+    }
+    pub fn from(
+        sequence: Vec<usize>,
+        starting_indices: RsVec,
+        weights: HashMap<(usize, usize), W>,
+    ) -> Self {
+        return WeightedWTUGraph{
+            wug: WeightedWTDigraph::from(sequence, starting_indices, weights),
+        }
+    }
+}
 impl<W> Graph<usize> for WeightedWTUGraph<W> {
     fn add_vertex(&mut self, vertex: usize) -> usize {
         todo!()
