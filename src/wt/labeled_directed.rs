@@ -1,4 +1,5 @@
-use vers_vecs::RsVec;
+use qwt::QWT256;
+use vers_vecs::{BitVec, RsVec};
 
 use crate::graph::labeled_directed::LabeledDigraph;
 use crate::traits::{Directed, Graph, Labeled, UnLabeled, Unweighted, WTDirected, WTLabeled, WT};
@@ -24,12 +25,28 @@ impl<L> LabeledWTDigraph<L>
 where
     L: Hash + Clone + Eq,
 {
-    pub fn from_digraph(dg: LabeledDigraph<L>) -> Self {
-        todo!()
+    pub fn from_labeled_digraph(ldg: LabeledDigraph<L>) -> Self {
+        return LabeledWTDigraph{
+            index_label : ldg.vec_vertex_labels,
+            index_label_uncommitted : HashMap::new(),
+            label_index : ldg.hashmap_labels_vertex,
+            label_index_uncommitted : HashMap::new(),
+            dg : WTDigraph::from_digraph(ldg.dg),
+        }
     }
-
-    pub fn from(sequence: Vec<usize>, starting_indices: RsVec) -> Self {
-        todo!()
+    pub fn from(sequence: Vec<usize>, starting_indices: RsVec, labels : Vec<L>) -> Self {
+        let mut label_index : HashMap<L, usize> = HashMap::new();
+        for i in 0..labels.len(){
+            label_index.insert(labels[i].clone(), i);
+        }
+        
+        return LabeledWTDigraph {
+            dg: WTDigraph::from(sequence, starting_indices),
+            index_label: labels,
+            index_label_uncommitted: HashMap::new(),
+            label_index: label_index,
+            label_index_uncommitted: HashMap::new(),
+        };
     }
 }
 impl<L> Graph<L> for LabeledWTDigraph<L>

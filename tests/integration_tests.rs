@@ -9,7 +9,10 @@ mod test {
     use wt::directed::WTDigraph;
 
     use super::*;
-
+    #[test]
+    fn labeled_graph_digraph_and_labeled_wt_digraph(){
+        
+    }
     #[test]
     fn graph_digraph_and_wt_digraph() {
         let mut dg = Digraph::new();
