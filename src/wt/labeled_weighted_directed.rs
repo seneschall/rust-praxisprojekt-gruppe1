@@ -1,3 +1,4 @@
+use crate::graph::labeled_weighted_directed::LabeledWeightedDigraph;
 use crate::traits::{
     Directed, Graph, Labeled, Unweighted, WTDirected, WTLabeled, WTWeighted, Weighted, WT,
 };
@@ -18,7 +19,7 @@ impl<L, W> LabeledWeightedWTDigraph<L, W>
 where
     L: Hash + Clone + Eq,
 {
-    pub fn from_digraph() -> Self {
+    pub fn from_labeled_weighted_digraph(lwdg : LabeledWeightedDigraph<L,W>) -> Self {
         todo!()
     }
 

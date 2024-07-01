@@ -6,8 +6,8 @@ use std::collections::HashMap;
 mod test;
 
 pub struct WeightedDigraph<W> {
-    dg: Digraph,
-    weights: HashMap<(usize, usize), W>,
+    pub(crate) dg: Digraph,
+    pub(crate) weights: HashMap<(usize, usize), W>,
 }
 
 impl<W> WeightedDigraph<W>
