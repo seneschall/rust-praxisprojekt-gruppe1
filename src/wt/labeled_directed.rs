@@ -108,7 +108,8 @@ where
     fn vertex_exists(&self, vertex: L) -> bool {
         let vertex_index = self.get_index(&vertex);
         if vertex_index.is_none() {
-            panic!("ldg vertex_exists : vertex_index is none");
+            return false;
+            // panic!("ldg vertex_exists : vertex_index is none");
         }
         let vertex_index = vertex_index.unwrap();
         return self.dg.vertex_exists(vertex_index);
@@ -326,7 +327,8 @@ where
     fn vertex_exists_updated(&self, vertex: L) -> bool {
         let vertex_index = self.get_index_updated(&vertex);
         if vertex_index.is_none() {
-            panic!("ldg vertex_exists_updated : vertex_index is none");
+            return false;
+            // panic!("ldg vertex_exists_updated : vertex_index is none");
         }
         let vertex_index = vertex_index.unwrap();
         return self.dg.vertex_exists_updated(vertex_index);

@@ -98,7 +98,8 @@ where
     fn vertex_exists(&self, vertex: L) -> bool {
         let vertex_index = self.get_index(&vertex);
         if vertex_index.is_none() {
-            panic!("ldg vertex_exists : vertex index is none");
+            return false;
+            // panic!("ldg vertex_exists : vertex index is none");
         }
         self.dg.vertex_exists(vertex_index.unwrap().clone())
     }

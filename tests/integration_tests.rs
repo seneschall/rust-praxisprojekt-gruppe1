@@ -6,12 +6,39 @@ use wt_graphs::*;
 mod test {
 
     use graph::{directed::Digraph, labeled_directed::LabeledDigraph};
-    use wt::directed::WTDigraph;
+    use wt::{directed::WTDigraph, labeled_directed::LabeledWTDigraph};
 
     use super::*;
     #[test]
     fn labeled_graph_digraph_and_labeled_wt_digraph(){
-        
+        let mut ldg : LabeledDigraph<String> = LabeledDigraph::new();
+        let mut wtldg : LabeledWTDigraph<String> = LabeledWTDigraph::from_labeled_digraph(LabeledDigraph::new());
+        assert_eq!(ldg.v_count(), wtldg.v_count());
+        assert_eq!(ldg.e_count(), wtldg.e_count());
+        for i in 0..10{
+            ldg.add_vertex(i.to_string());
+            wtldg.add_vertex(i.to_string());
+            assert_eq!(ldg.vertex_exists(i.to_string()), wtldg.vertex_exists_updated(i.to_string()));
+            assert_eq!(ldg.v_count(), wtldg.v_count_updated());
+        }
+        for i in 0..10{
+            ldg.delete_vertex(i.to_string());
+            wtldg.delete_vertex(i.to_string());
+            assert_eq!(ldg.vertex_exists(i.to_string()), wtldg.vertex_exists_updated(i.to_string()));
+            assert_eq!(ldg.v_count(), wtldg.v_count_updated());
+        }
+        for i in 0..10{
+            ldg.add_vertex(i.to_string());
+            wtldg.add_vertex(i.to_string());
+            assert_eq!(ldg.vertex_exists(i.to_string()), wtldg.vertex_exists_updated(i.to_string()));
+            assert_eq!(ldg.v_count(), wtldg.v_count_updated());
+        }
+        for i in 20..30{
+            ldg.edit_label((i-20).to_string(), i.to_string());
+            wtldg.edit_label((i-20).to_string(), i.to_string());
+            assert_eq!(ldg.vertex_exists(i.to_string()), wtldg.vertex_exists_updated(i.to_string()));
+            assert_eq!(ldg.v_count(), wtldg.v_count_updated());
+        }
     }
     #[test]
     fn graph_digraph_and_wt_digraph() {
