@@ -1,3 +1,6 @@
+use vers_vecs::RsVec;
+
+use crate::graph::labeled_undirected::LabeledUGraph;
 use crate::traits::{Graph, Labeled, Undirected, Unweighted, WTLabeled, WTUndirected, WT};
 use crate::wt::labeled_directed::LabeledWTDigraph;
 use std::hash::Hash;
@@ -13,11 +16,15 @@ impl<L> LabeledWTUGraph<L>
 where
     L: Hash + Eq + Clone,
 {
-    pub fn from_digraph() {
-        todo!()
+    pub fn from_labeled_ugraph(lug : LabeledUGraph<L>) -> Self{
+        return LabeledWTUGraph{
+            ldg: LabeledWTDigraph::from_labeled_digraph(lug.ldg),
+        }
     }
-    pub fn from() {
-        todo!()
+    pub fn from(sequence: Vec<usize>, starting_indices: RsVec, labels: Vec<L>) -> Self {
+        return LabeledWTUGraph{
+            ldg: LabeledWTDigraph::from(sequence, starting_indices, labels),
+        }
     }
 }
 impl<L> Graph<L> for LabeledWTUGraph<L>

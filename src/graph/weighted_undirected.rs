@@ -6,7 +6,7 @@ use crate::traits::{Graph, UnLabeled, Undirected, Weighted};
 #[cfg(test)]
 mod test;
 pub struct WeightedUGraph<W> {
-    wdg: WeightedDigraph<W>,
+    pub(crate) wdg: WeightedDigraph<W>,
 }
 impl<W> WeightedUGraph<W>
 where
