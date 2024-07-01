@@ -22,8 +22,15 @@ where
             lwdg: LabeledWeightedDigraph::new(),
         }
     }
-    pub fn from_adjacency_list() {
-        todo!()
+    pub fn from_adjacency_list(
+        v_count: usize,
+        e_count: usize,
+        adj: Vec<Vec<(usize, W)>>,
+        labels: Vec<L>,
+    ) -> Self {
+        return LabeledWeightedUGraph{
+            lwdg: LabeledWeightedDigraph::from_adjacency_list(v_count, e_count, adj, labels),
+        }
     }
 }
 impl<L, W> Graph<L> for LabeledWeightedUGraph<L, W>
