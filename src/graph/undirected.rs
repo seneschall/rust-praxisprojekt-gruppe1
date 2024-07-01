@@ -5,7 +5,7 @@ use std::collections::HashMap;
 #[cfg(test)]
 mod test;
 pub struct UGraph {
-    dg: Digraph,
+    pub(crate) dg: Digraph,
 }
 
 impl UGraph {

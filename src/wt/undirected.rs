@@ -1,5 +1,8 @@
 use std::collections::HashMap;
 
+use vers_vecs::RsVec;
+
+use crate::graph::undirected::UGraph;
 use crate::traits::{Directed, WTDirected};
 use crate::traits::{Graph, UnLabeled, Undirected, Unweighted, WTUndirected, WT};
 use crate::wt::directed::WTDigraph; // needed because of WTDigraph
@@ -7,11 +10,15 @@ pub struct WTUGraph {
     wtd: WTDigraph,
 }
 impl WTUGraph {
-    pub fn new() {
-        todo!()
+    pub fn from_ugraph(ugraph : UGraph) -> Self{
+        return WTUGraph{
+            wtd: WTDigraph::from_digraph(ugraph.dg),
+        }
     }
-    pub fn from_ugraph() {
-        todo!()
+    pub fn from(sequence: Vec<usize>, starting_indices: RsVec) -> Self {
+        return WTUGraph{
+            wtd: WTDigraph::from(sequence, starting_indices),
+        }
     }
 }
 impl Graph<usize> for WTUGraph {
