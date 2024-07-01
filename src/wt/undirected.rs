@@ -10,15 +10,15 @@ pub struct WTUGraph {
     wtd: WTDigraph,
 }
 impl WTUGraph {
-    pub fn from_ugraph(ugraph : UGraph) -> Self{
-        return WTUGraph{
+    pub fn from_ugraph(ugraph: UGraph) -> Self {
+        return WTUGraph {
             wtd: WTDigraph::from_digraph(ugraph.dg),
-        }
+        };
     }
     pub fn from(sequence: Vec<usize>, starting_indices: RsVec) -> Self {
-        return WTUGraph{
+        return WTUGraph {
             wtd: WTDigraph::from(sequence, starting_indices),
-        }
+        };
     }
 }
 impl Graph<usize> for WTUGraph {

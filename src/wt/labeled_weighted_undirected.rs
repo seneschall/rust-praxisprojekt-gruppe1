@@ -1,11 +1,10 @@
 use vers_vecs::RsVec;
 
-
 use crate::graph::labeled_weighted_undirected::LabeledWeightedUGraph;
-use crate::wt::labeled_weighted_directed::LabeledWeightedWTDigraph;
 use crate::traits::{
     Graph, Labeled, Undirected, WTLabeled, WTUndirected, WTWeighted, Weighted, WT,
 };
+use crate::wt::labeled_weighted_directed::LabeledWeightedWTDigraph;
 
 use std::collections::HashMap;
 use std::hash::Hash;
@@ -14,15 +13,16 @@ pub struct LabeledWeightedWTUGraph<L, W>
 where
     L: Hash + Clone + Eq,
 {
-    lwdg : LabeledWeightedWTDigraph<L,W>,
+    lwdg: LabeledWeightedWTDigraph<L, W>,
 }
-impl<L,W> LabeledWeightedWTUGraph<L,W>
-where L : Hash + Clone + Eq,
+impl<L, W> LabeledWeightedWTUGraph<L, W>
+where
+    L: Hash + Clone + Eq,
 {
     pub fn from_labeled_weighted_ugraph(lwug: LabeledWeightedUGraph<L, W>) -> Self {
-        return LabeledWeightedWTUGraph{
+        return LabeledWeightedWTUGraph {
             lwdg: LabeledWeightedWTDigraph::from_labeled_weighted_digraph(lwug.lwdg),
-        }
+        };
     }
     pub fn from(
         sequence: Vec<usize>,
@@ -30,7 +30,7 @@ where L : Hash + Clone + Eq,
         labels: Vec<L>,
         weights: HashMap<(usize, usize), W>,
     ) -> Self {
-        LabeledWeightedWTUGraph{
+        LabeledWeightedWTUGraph {
             lwdg: LabeledWeightedWTDigraph::from(sequence, starting_indices, labels, weights),
         }
     }

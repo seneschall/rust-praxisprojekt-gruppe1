@@ -9,22 +9,22 @@ use crate::wt::undirected::WTUGraph;
 use super::weighted_directed::WeightedWTDigraph;
 
 pub struct WeightedWTUGraph<W> {
-    wug : WeightedWTDigraph<W>,
+    wug: WeightedWTDigraph<W>,
 }
-impl<W> WeightedWTUGraph<W>{
-    pub fn from_weighted_ugraph(wug: WeightedUGraph<W>) -> Self{
-        return WeightedWTUGraph{
+impl<W> WeightedWTUGraph<W> {
+    pub fn from_weighted_ugraph(wug: WeightedUGraph<W>) -> Self {
+        return WeightedWTUGraph {
             wug: WeightedWTDigraph::from_weighted_digraph(wug.wdg),
-        }
+        };
     }
     pub fn from(
         sequence: Vec<usize>,
         starting_indices: RsVec,
         weights: HashMap<(usize, usize), W>,
     ) -> Self {
-        return WeightedWTUGraph{
+        return WeightedWTUGraph {
             wug: WeightedWTDigraph::from(sequence, starting_indices, weights),
-        }
+        };
     }
 }
 impl<W> Graph<usize> for WeightedWTUGraph<W> {
