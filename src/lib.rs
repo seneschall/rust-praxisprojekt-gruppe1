@@ -1,4 +1,3 @@
-
 pub mod traits;
 
 pub mod graph;
@@ -10,4 +9,3 @@ pub enum Edit<T> {
     Add(T),
     Delete(T),
 }
-

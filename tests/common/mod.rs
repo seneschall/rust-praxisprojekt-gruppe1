@@ -1,10 +1,20 @@
 use super::*;
-use graph::{directed::Digraph, labeled_directed::LabeledDigraph, labeled_undirected::LabeledUGraph, labeled_weighted_directed::LabeledWeightedDigraph, labeled_weighted_undirected::LabeledWeightedUGraph, undirected::UGraph, weighted_directed::WeightedDigraph, weighted_undirected::WeightedUGraph};
-use num::ToPrimitive;
-use vers_vecs::RsVec;
-use wt::{directed::WTDigraph, labeled_directed::LabeledWTDigraph, labeled_undirected::LabeledWTUGraph, labeled_weighted_directed::LabeledWeightedWTDigraph, labeled_weighted_undirected::LabeledWeightedWTUGraph, undirected::WTUGraph, weighted_directed::WeightedWTDigraph, weighted_undirected::WeightedWTUGraph};
+use graph::{
+    directed::Digraph, labeled_directed::LabeledDigraph, labeled_undirected::LabeledUGraph,
+    labeled_weighted_directed::LabeledWeightedDigraph,
+    labeled_weighted_undirected::LabeledWeightedUGraph, undirected::UGraph,
+    weighted_directed::WeightedDigraph, weighted_undirected::WeightedUGraph,
+};
+use num::{traits::float, Float, ToPrimitive};
 use std::{collections::HashMap, fs};
 use vers_vecs::BitVec;
+use vers_vecs::RsVec;
+use wt::{
+    directed::WTDigraph, labeled_directed::LabeledWTDigraph, labeled_undirected::LabeledWTUGraph,
+    labeled_weighted_directed::LabeledWeightedWTDigraph,
+    labeled_weighted_undirected::LabeledWeightedWTUGraph, undirected::WTUGraph,
+    weighted_directed::WeightedWTDigraph, weighted_undirected::WeightedWTUGraph,
+};
 
 // Directed Graphs
 pub fn setup_dg(filename: &str) -> Digraph {
@@ -13,22 +23,24 @@ pub fn setup_dg(filename: &str) -> Digraph {
     let digraph: Digraph = Digraph::from_adjacency_list(v_count, e_count, adj);
     return digraph;
 }
-pub fn setup_wdg(filename: &str) -> WeightedDigraph<f32>{
+pub fn setup_wdg(filename: &str) -> WeightedDigraph<f32> {
     let (v_count, e_count) = import_graph_properties(filename);
-    let adj : Vec<Vec<(usize, f32)>> = import_adjacency_list_wdg(filename);
-    let wdg : WeightedDigraph<f32> = WeightedDigraph::from_adjacency_list(v_count, e_count, adj);
+    let adj: Vec<Vec<(usize, f32)>> = import_adjacency_list_wdg(filename);
+    let wdg: WeightedDigraph<f32> = WeightedDigraph::from_adjacency_list(v_count, e_count, adj);
     return wdg;
 }
-pub fn setup_ldg(filename: &str) -> LabeledDigraph<String>{
+pub fn setup_ldg(filename: &str) -> LabeledDigraph<String> {
     let (v_count, e_count) = import_graph_properties(filename);
-    let (adj , labels) = import_adjacency_list_ldg(filename);
-    let ldg : LabeledDigraph<String> = LabeledDigraph::from_adjacency_list(v_count, e_count, adj, labels);
+    let (adj, labels) = import_adjacency_list_ldg(filename);
+    let ldg: LabeledDigraph<String> =
+        LabeledDigraph::from_adjacency_list(v_count, e_count, adj, labels);
     return ldg;
 }
-pub fn setup_lwdg(filename: &str) -> LabeledWeightedDigraph<String, f32>{
+pub fn setup_lwdg(filename: &str) -> LabeledWeightedDigraph<String, f32> {
     let (v_count, e_count) = import_graph_properties(filename);
-    let (adj , labels) = import_adjacency_list_lwdg(filename);
-    let lwdg : LabeledWeightedDigraph<String, f32> = LabeledWeightedDigraph::from_adjacency_list(v_count, e_count, adj, labels);
+    let (adj, labels) = import_adjacency_list_lwdg(filename);
+    let lwdg: LabeledWeightedDigraph<String, f32> =
+        LabeledWeightedDigraph::from_adjacency_list(v_count, e_count, adj, labels);
     return lwdg;
 }
 // Undirected Graphs
@@ -38,22 +50,24 @@ pub fn setup_ug(filename: &str) -> UGraph {
     let ug: UGraph = UGraph::from_adjacency_list(v_count, e_count, adj);
     return ug;
 }
-pub fn setup_wug(filename: &str) -> WeightedUGraph<f32>{
+pub fn setup_wug(filename: &str) -> WeightedUGraph<f32> {
     let (v_count, e_count) = import_graph_properties(filename);
-    let adj : Vec<Vec<(usize, f32)>> = import_adjacency_list_wug(filename);
-    let wug : WeightedUGraph<f32> = WeightedUGraph::from_adjacency_list(v_count, e_count, adj);
+    let adj: Vec<Vec<(usize, f32)>> = import_adjacency_list_wug(filename);
+    let wug: WeightedUGraph<f32> = WeightedUGraph::from_adjacency_list(v_count, e_count, adj);
     return wug;
 }
-pub fn setup_lug(filename: &str) -> LabeledUGraph<String>{
+pub fn setup_lug(filename: &str) -> LabeledUGraph<String> {
     let (v_count, e_count) = import_graph_properties(filename);
-    let (adj , labels) = import_adjacency_list_lug(filename);
-    let lug : LabeledUGraph<String> = LabeledUGraph::from_adjacency_list(v_count, e_count, adj, labels);
+    let (adj, labels) = import_adjacency_list_lug(filename);
+    let lug: LabeledUGraph<String> =
+        LabeledUGraph::from_adjacency_list(v_count, e_count, adj, labels);
     return lug;
 }
-pub fn setup_lwug(filename: &str) -> LabeledWeightedUGraph<String, f32>{
+pub fn setup_lwug(filename: &str) -> LabeledWeightedUGraph<String, f32> {
     let (v_count, e_count) = import_graph_properties(filename);
-    let (adj , labels) = import_adjacency_list_lwdg(filename);
-    let lwug : LabeledWeightedUGraph<String, f32> = LabeledWeightedUGraph::from_adjacency_list(v_count, e_count, adj, labels);
+    let (adj, labels) = import_adjacency_list_lwdg(filename);
+    let lwug: LabeledWeightedUGraph<String, f32> =
+        LabeledWeightedUGraph::from_adjacency_list(v_count, e_count, adj, labels);
     return lwug;
 }
 
@@ -64,38 +78,39 @@ pub fn setup_wtdg(filename: &str) -> WTDigraph {
     let wtdigraph: WTDigraph = WTDigraph::from(sequence, RsVec::from_bit_vec(starting_indices)); // create WTDigraph using from(sequence, starting_indices)
     return wtdigraph;
 }
-pub fn setup_wtwdg(filename: &str) -> WeightedWTDigraph<f32>{
+pub fn setup_wtwdg(filename: &str) -> WeightedWTDigraph<f32> {
     let adj_weight = import_adjacency_list_wdg(filename);
-    let mut weights : HashMap<(usize,usize), f32> = HashMap::new();
+    let mut weights: HashMap<(usize, usize), f32> = HashMap::new();
     let mut adj: Vec<Vec<usize>> = Vec::new();
-    for from in 0..adj_weight.len(){
+    for from in 0..adj_weight.len() {
         adj.insert(from, vec![]);
-        for (to, weight) in adj_weight[from].clone(){
+        for (to, weight) in adj_weight[from].clone() {
             adj[from].push(to);
-            weights.insert((from,to), weight);
+            weights.insert((from, to), weight);
         }
     }
     let (sequence, starting_indices) = create_sequence_and_bitmap(&adj);
-    let wtwdg : WeightedWTDigraph<f32> = WeightedWTDigraph::from(sequence, RsVec::from_bit_vec(starting_indices), weights);
+    let wtwdg: WeightedWTDigraph<f32> =
+        WeightedWTDigraph::from(sequence, RsVec::from_bit_vec(starting_indices), weights);
     return wtwdg;
 }
-pub fn setup_wtldg(filename: &str) -> LabeledWTDigraph<String>{
+pub fn setup_wtldg(filename: &str) -> LabeledWTDigraph<String> {
     todo!()
 }
-pub fn setup_wtlwdg(filename: &str) -> LabeledWeightedWTDigraph<String, f32>{
+pub fn setup_wtlwdg(filename: &str) -> LabeledWeightedWTDigraph<String, f32> {
     todo!()
 }
 // WT Undirected Graphs
-pub fn setup_wtug(filename: &str) -> WTUGraph{
+pub fn setup_wtug(filename: &str) -> WTUGraph {
     todo!()
 }
-pub fn setup_wtwug(filename: &str) -> WeightedWTUGraph<f32>{
+pub fn setup_wtwug(filename: &str) -> WeightedWTUGraph<f32> {
     todo!()
 }
-pub fn setup_wtlug(filename: &str) -> LabeledWTUGraph<String>{
+pub fn setup_wtlug(filename: &str) -> LabeledWTUGraph<String> {
     todo!()
 }
-pub fn setup_wtlwug(filename: &str) -> LabeledWeightedWTUGraph<String, f32>{
+pub fn setup_wtlwug(filename: &str) -> LabeledWeightedWTUGraph<String, f32> {
     todo!()
 }
 
@@ -114,7 +129,6 @@ pub fn create_sequence_and_bitmap(map: &Vec<Vec<usize>>) -> (Vec<usize>, BitVec)
     }
     (sequence, bitmap)
 }
-
 
 // Funktionen zum Einlesen vom Graphen aus einer Input-Datei
 pub fn import_graph_properties(filename: &str) -> (usize, usize) {
@@ -168,15 +182,35 @@ pub fn import_adjacency_list_dg(filename: &str) -> Vec<Vec<usize>> {
     adjacency_list
 }
 
-
-
 pub fn import_adjacency_list_wdg(filename: &str) -> Vec<Vec<(usize, f32)>> {
-    todo!()
+    // opens the file
+    let content = fs::read_to_string(filename).expect("Unable to open file");
+    // read the file in lines
+    let mut lines = content.lines();
+    // read v_count
+    let v_count = lines.next().expect("-.-").parse::<usize>().expect("-.-");
+    // read e_count
+    let e_count = lines.next().expect("-.-").parse::<usize>().expect("-.-");
+    // create Vec<Vec<T>> in the size of v_count
+    let mut adjacency_list: Vec<Vec<(usize, f32)>> = vec![vec![]; v_count];
+    // loops over all lines
+    for line in lines {
+        // remove possible whitespaces and delimiters
+        let line = line.trim();
+        let elements: Vec<&str> = line.split(' ').collect();
+        let vertex = elements[0].parse::<usize>().expect("need error handling");
+        let adjacent = elements[1].parse::<usize>().expect("need error handling");
+        let weight = elements[3].parse::<f32>().ok().unwrap();
+        adjacency_list[vertex].push((adjacent, weight));
+        // need error handling
+    }
+    assert_eq!(v_count, adjacency_list.len());
+    (adjacency_list)
 }
 pub fn import_adjacency_list_ldg(filename: &str) -> (Vec<Vec<usize>>, Vec<String>) {
     todo!()
 }
-pub fn import_adjacency_list_lwdg(filename: &str) -> (Vec<Vec<(usize,f32)>>, Vec<String>) {
+pub fn import_adjacency_list_lwdg(filename: &str) -> (Vec<Vec<(usize, f32)>>, Vec<String>) {
     todo!()
 }
 
@@ -190,6 +224,6 @@ pub fn import_adjacency_list_wug(filename: &str) -> Vec<Vec<(usize, f32)>> {
 pub fn import_adjacency_list_lug(filename: &str) -> (Vec<Vec<usize>>, Vec<String>) {
     todo!()
 }
-pub fn import_adjacency_list_lwug(filename: &str) -> (Vec<Vec<(usize,f32)>>, Vec<String>) {
+pub fn import_adjacency_list_lwug(filename: &str) -> (Vec<Vec<(usize, f32)>>, Vec<String>) {
     todo!()
 }
