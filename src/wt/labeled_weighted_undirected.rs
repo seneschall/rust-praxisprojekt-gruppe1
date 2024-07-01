@@ -1,18 +1,42 @@
+use vers_vecs::RsVec;
+
+
+use crate::graph::labeled_weighted_undirected::LabeledWeightedUGraph;
+use crate::wt::labeled_weighted_directed::LabeledWeightedWTDigraph;
 use crate::traits::{
     Graph, Labeled, Undirected, WTLabeled, WTUndirected, WTWeighted, Weighted, WT,
 };
-use crate::wt::labeled_directed::LabeledWTDigraph;
+
+use std::collections::HashMap;
 use std::hash::Hash;
 
-pub struct LabeledWeightedUGraph<L, W>
+pub struct LabeledWeightedWTUGraph<L, W>
 where
     L: Hash + Clone + Eq,
 {
-    dg: LabeledWTDigraph<L>,
-    weights: W, // TODO so we have no compiler error
+    lwdg : LabeledWeightedWTDigraph<L,W>,
+}
+impl<L,W> LabeledWeightedWTUGraph<L,W>
+where L : Hash + Clone + Eq,
+{
+    pub fn from_labeled_weighted_ugraph(lwug: LabeledWeightedUGraph<L, W>) -> Self {
+        return LabeledWeightedWTUGraph{
+            lwdg: LabeledWeightedWTDigraph::from_labeled_weighted_digraph(lwug.lwdg),
+        }
+    }
+    pub fn from(
+        sequence: Vec<usize>,
+        starting_indices: RsVec,
+        labels: Vec<L>,
+        weights: HashMap<(usize, usize), W>,
+    ) -> Self {
+        LabeledWeightedWTUGraph{
+            lwdg: LabeledWeightedWTDigraph::from(sequence, starting_indices, labels, weights),
+        }
+    }
 }
 
-impl<L, W> Graph<L> for LabeledWeightedUGraph<L, W>
+impl<L, W> Graph<L> for LabeledWeightedWTUGraph<L, W>
 where
     L: Hash + Clone + Eq,
 {
@@ -44,7 +68,7 @@ where
         todo!()
     }
 }
-impl<L, W> Undirected<L> for LabeledWeightedUGraph<L, W>
+impl<L, W> Undirected<L> for LabeledWeightedWTUGraph<L, W>
 where
     L: Hash + Clone + Eq,
 {
@@ -56,7 +80,7 @@ where
         todo!()
     }
 }
-impl<L, W> Labeled<L> for LabeledWeightedUGraph<L, W>
+impl<L, W> Labeled<L> for LabeledWeightedWTUGraph<L, W>
 where
     L: Hash + Clone + Eq,
 {
@@ -76,7 +100,7 @@ where
         todo!()
     }
 }
-impl<L, W> Weighted<L, W> for LabeledWeightedUGraph<L, W>
+impl<L, W> Weighted<L, W> for LabeledWeightedWTUGraph<L, W>
 where
     L: Hash + Clone + Eq,
 {
@@ -92,7 +116,7 @@ where
         todo!()
     }
 }
-impl<L, W> WT<L> for LabeledWeightedUGraph<L, W>
+impl<L, W> WT<L> for LabeledWeightedWTUGraph<L, W>
 where
     L: Hash + Clone + Eq,
 {
@@ -120,7 +144,7 @@ where
         todo!()
     }
 }
-impl<L, W> WTWeighted<L, W> for LabeledWeightedUGraph<L, W>
+impl<L, W> WTWeighted<L, W> for LabeledWeightedWTUGraph<L, W>
 where
     L: Hash + Clone + Eq,
 {
@@ -128,7 +152,7 @@ where
         todo!()
     }
 }
-impl<L, W> WTUndirected<L> for LabeledWeightedUGraph<L, W>
+impl<L, W> WTUndirected<L> for LabeledWeightedWTUGraph<L, W>
 where
     L: Hash + Clone + Eq,
 {
@@ -137,7 +161,7 @@ where
     }
 }
 
-impl<L, W> WTLabeled<L> for LabeledWeightedUGraph<L, W>
+impl<L, W> WTLabeled<L> for LabeledWeightedWTUGraph<L, W>
 where
     L: Clone + Hash + Eq,
 {
