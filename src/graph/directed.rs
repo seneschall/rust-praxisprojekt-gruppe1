@@ -151,7 +151,7 @@ impl UnLabeled<usize> for Digraph {
         self.adj_len += 1;
         self.adj_len - 1
     }
-    
+
     fn shrink(&mut self) -> Vec<Option<usize>> {
         todo!()
     }

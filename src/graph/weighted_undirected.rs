@@ -67,7 +67,7 @@ impl<W> UnLabeled<usize> for WeightedUGraph<W> {
     fn append_vertex(&mut self) -> usize {
         self.wdg.append_vertex()
     }
-    
+
     fn shrink(&mut self) -> Vec<Option<usize>> {
         todo!()
     }

@@ -21,20 +21,25 @@ impl<L, W> LabeledWeightedWTDigraph<L, W>
 where
     L: Hash + Clone + Eq,
 {
-    pub fn from_labeled_weighted_digraph(lwdg : LabeledWeightedDigraph<L,W>) -> Self {
-        return LabeledWeightedWTDigraph{
+    pub fn from_labeled_weighted_digraph(lwdg: LabeledWeightedDigraph<L, W>) -> Self {
+        return LabeledWeightedWTDigraph {
             ldg: LabeledWTDigraph::from_labeled_digraph(lwdg.ldg),
             weights_uncommitted: HashMap::new(),
-            weights : lwdg.weights,
-        }
+            weights: lwdg.weights,
+        };
     }
 
-    pub fn from(sequence: Vec<usize>, starting_indices: RsVec, labels : Vec<L>, weights : HashMap<(usize,usize), W>) -> Self {
-        return LabeledWeightedWTDigraph{
+    pub fn from(
+        sequence: Vec<usize>,
+        starting_indices: RsVec,
+        labels: Vec<L>,
+        weights: HashMap<(usize, usize), W>,
+    ) -> Self {
+        return LabeledWeightedWTDigraph {
             ldg: LabeledWTDigraph::from(sequence, starting_indices, labels),
             weights_uncommitted: HashMap::new(),
             weights,
-        }
+        };
     }
 }
 
@@ -90,7 +95,6 @@ where
         self.ldg.vertex_exists(vertex)
     }
 
-
     fn edge_exists(&self, from: L, to: L) -> bool {
         self.ldg.edge_exists(from, to)
     }
@@ -135,7 +139,7 @@ where
     fn get_index(&self, label: &L) -> Option<usize> {
         self.ldg.get_index(label)
     }
-    
+
     fn shrink(&mut self) -> HashMap<L, Option<L>> {
         todo!()
     }

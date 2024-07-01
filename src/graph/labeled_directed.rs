@@ -205,7 +205,7 @@ where
             return None;
         }
     }
-    
+
     fn shrink(&mut self) -> HashMap<L, Option<L>> {
         todo!()
     }

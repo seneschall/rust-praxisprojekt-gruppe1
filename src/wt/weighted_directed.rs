@@ -33,8 +33,9 @@ impl<W> WeightedWTDigraph<W> {
         };
     }
 }
-impl<W> Graph<usize> for WeightedWTDigraph<W> 
-where W: Clone,
+impl<W> Graph<usize> for WeightedWTDigraph<W>
+where
+    W: Clone,
 {
     fn add_vertex(&mut self, vertex: usize) -> usize {
         self.dg.add_vertex(vertex)
@@ -67,8 +68,9 @@ where W: Clone,
         self.dg.edge_exists(from, to)
     }
 }
-impl<W> Directed<usize> for WeightedWTDigraph<W> 
-where W : Clone,
+impl<W> Directed<usize> for WeightedWTDigraph<W>
+where
+    W: Clone,
 {
     fn outgoing_edges(&self, vertex: usize) -> Vec<usize> {
         self.dg.outgoing_edges(vertex)
@@ -179,29 +181,32 @@ impl<W> WTDirected<usize> for WeightedWTDigraph<W> {
         self.dg.incoming_edges_updated(vertex)
     }
 }
-impl<W> WTWeighted<usize, W> for WeightedWTDigraph<W> 
-where W : Clone,
+impl<W> WTWeighted<usize, W> for WeightedWTDigraph<W>
+where
+    W: Clone,
 {
     fn get_weight_updated(&mut self, from: usize, to: usize) -> W {
         if !self.vertex_exists_updated(from) {
             panic!("wdg get_weight_updated : vertex from does not exist");
         }
-        if !self.vertex_exists_updated(to){
+        if !self.vertex_exists_updated(to) {
             panic!("wdg get_weight_updated : vertex to does not exist");
         }
-        if !self.edge_exists_updated(from, to){
+        if !self.edge_exists_updated(from, to) {
             panic!("wdg get_weight_updated : edge from {from} to {to} does not exist");
         }
         // check if weight was editted
-        if self.weights_uncommitted.contains_key(&(from,to)){
-            let test = self.weights_uncommitted.get(&(from,to)).unwrap();
-            match self.weights_uncommitted.get(&(from,to)).unwrap(){
-                Edit::Add(weight) =>{
+        if self.weights_uncommitted.contains_key(&(from, to)) {
+            let test = self.weights_uncommitted.get(&(from, to)).unwrap();
+            match self.weights_uncommitted.get(&(from, to)).unwrap() {
+                Edit::Add(weight) => {
                     return weight.clone();
-                },
+                }
                 Edit::Delete(_) => {
-                    panic!("wdg get_weight_updated : edge_exists_updated=true but weight is deleted");
-                },
+                    panic!(
+                        "wdg get_weight_updated : edge_exists_updated=true but weight is deleted"
+                    );
+                }
             }
         } else {
             return self.get_weight(from, to);

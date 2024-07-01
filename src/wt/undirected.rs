@@ -42,7 +42,7 @@ impl Graph<usize> for WTUGraph {
     fn vertex_exists(&self, vertex: usize) -> bool {
         self.wtd.vertex_exists(vertex)
     }
-    
+
     fn edge_exists(&self, from: usize, to: usize) -> bool {
         todo!()
     }
@@ -67,7 +67,7 @@ impl UnLabeled<usize> for WTUGraph {
     fn append_vertex(&mut self) -> usize {
         self.wtd.append_vertex()
     }
-    
+
     fn shrink(&mut self) -> Vec<Option<usize>> {
         todo!()
     }

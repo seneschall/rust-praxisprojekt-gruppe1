@@ -48,7 +48,6 @@ where
         todo!()
     }
 
-
     fn edge_exists(&self, from: L, to: L) -> bool {
         todo!()
     }
@@ -80,7 +79,7 @@ where
     fn get_index(&self, label: &L) -> Option<usize> {
         todo!()
     }
-    
+
     fn shrink(&mut self) -> std::collections::HashMap<L, Option<L>> {
         todo!()
     }

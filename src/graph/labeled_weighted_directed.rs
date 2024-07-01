@@ -101,7 +101,6 @@ where
         self.ldg.vertex_exists(vertex)
     }
 
-
     fn edge_exists(&self, from: L, to: L) -> bool {
         self.ldg.edge_exists(from, to)
     }
@@ -158,7 +157,7 @@ where
     fn get_index(&self, label: &L) -> Option<usize> {
         self.ldg.get_index(label)
     }
-    
+
     fn shrink(&mut self) -> HashMap<L, Option<L>> {
         todo!()
     }

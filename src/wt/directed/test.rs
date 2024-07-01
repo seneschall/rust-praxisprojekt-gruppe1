@@ -32,7 +32,7 @@ fn delete_edge() {
 fn delete_vertex() {
     let mut dg = Digraph::new();
     dg.add_vertex(5);
-    let mut testhm : HashMap<usize, bool> = HashMap::new();
+    let mut testhm: HashMap<usize, bool> = HashMap::new();
     let mut wtdg = WTDigraph::from_digraph(dg.clone());
     for i in 0..5 {
         println!("{:?}", wtdg.deleted_vertices_uncommitted);
@@ -150,7 +150,7 @@ fn append_vertex() {
     dg.add_vertex(5);
     let mut wtdg = WTDigraph::from_digraph(dg);
     let test = wtdg.append_vertex();
-    assert_eq!(wtdg.v_count_updated(), test+1);
+    assert_eq!(wtdg.v_count_updated(), test + 1);
 }
 #[test]
 fn add_edge() {

@@ -142,7 +142,7 @@ where
     fn get_index(&self, label: &L) -> Option<usize> {
         self.lwdg.get_index(label)
     }
-    
+
     fn shrink(&mut self) -> HashMap<L, Option<L>> {
         todo!()
     }

@@ -21,7 +21,6 @@ pub trait Graph<T> {
                                             // for unlabeled : vertex = index; deletes a vertex at index
                                             // for labeled : vertex = label, convert label to index, then use delete_vertex of non label parent
     fn vertex_exists(&self, vertex: T) -> bool;
-
 }
 pub trait Directed<T> {
     fn outgoing_edges(&self, vertex: T) -> Vec<T>; // should probably be changed to return an iterator instead
@@ -52,9 +51,9 @@ pub trait Labeled<L> {
     fn get_index(&self, label: &L) -> Option<usize>; // returns the index of the vertex with the given label
                                                      //input:Label, output Option<&usize>; check in hashmaps value
     fn shrink(&mut self) -> HashMap<L, Option<L>>; // removes all unconnected vertices from bitmap; only allowed, if has_uncommitted_edits == false; returns a Hashmap with old indices as keys and new indices as values
-    // can only be used after commit_edits; all deleted vertices will be removed ( index will shift )
-    // returns hashmap with deleted indices
-    // bitmap changes
+                                                   // can only be used after commit_edits; all deleted vertices will be removed ( index will shift )
+                                                   // returns hashmap with deleted indices
+                                                   // bitmap changes
 }
 pub trait Unweighted<T> {
     fn add_edge(&mut self, from: T, to: T);

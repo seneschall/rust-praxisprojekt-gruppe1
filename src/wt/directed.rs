@@ -26,7 +26,7 @@ pub struct WTDigraph {
     pub(crate) deleted_vertices_uncommitted: HashMap<usize, bool>, // saves only changes to deleted_vertices; true means vertex is deleted, false means it got readded
     // todo: change every function that uses this
     adj_uncommitted: HashMap<usize, Vec<Edit<usize>>>, // changes to outgoing edges
-    has_uncommitted_edits: bool,
+    pub(crate) has_uncommitted_edits: bool,
 }
 
 impl WTDigraph {
@@ -193,9 +193,6 @@ impl Graph<usize> for WTDigraph {
 
     /// this function needs documentation
 
-
-
-
     fn edge_exists(&self, from: usize, to: usize) -> bool {
         if !(self.vertex_exists(from) && self.vertex_exists(to)) {
             return false;
@@ -236,7 +233,7 @@ impl Directed<usize> for WTDigraph {
         if !self.vertex_exists(vertex) {
             panic!("incoming_edges: Vertex {} doesn't exist.", vertex);
         }
-        if self.e_count == 0{
+        if self.e_count == 0 {
             return Vec::new(); // if e_count is 0, number will result in subtract overflow
         }
         let mut incoming: Vec<usize> = Vec::new();
@@ -295,9 +292,8 @@ impl UnLabeled<usize> for WTDigraph {
         // self.has_uncommitted_edits = true;
         // return index; // changed to index-1; that's a bug! I've changed it back! -Simon
     }
-    
+
     fn shrink(&mut self) -> Vec<Option<usize>> {
-            
         // somebody else should check this. -Simon
         let mut sequence: Vec<usize> = Vec::new();
         let mut bv = BitVec::new();
@@ -353,7 +349,7 @@ impl UnLabeled<usize> for WTDigraph {
         self.deleted_vertices = HashMap::new();
         self.discard_edits(); // reset all uncommitted changes
         return old_and_new_indices;
-        }
+    }
 }
 impl Unweighted<usize> for WTDigraph {
     /// this function needs documentation

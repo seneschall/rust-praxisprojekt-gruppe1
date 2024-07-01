@@ -48,7 +48,7 @@ impl<W> UnLabeled<usize> for WeightedWTUGraph<W> {
     fn append_vertex(&mut self) -> usize {
         todo!()
     }
-    
+
     fn shrink(&mut self) -> Vec<Option<usize>> {
         todo!()
     }

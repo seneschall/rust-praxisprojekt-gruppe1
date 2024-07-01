@@ -26,20 +26,20 @@ where
     L: Hash + Clone + Eq,
 {
     pub fn from_labeled_digraph(ldg: LabeledDigraph<L>) -> Self {
-        return LabeledWTDigraph{
-            index_label : ldg.vec_vertex_labels,
-            index_label_uncommitted : HashMap::new(),
-            label_index : ldg.hashmap_labels_vertex,
-            label_index_uncommitted : HashMap::new(),
-            dg : WTDigraph::from_digraph(ldg.dg),
-        }
+        return LabeledWTDigraph {
+            index_label: ldg.vec_vertex_labels,
+            index_label_uncommitted: HashMap::new(),
+            label_index: ldg.hashmap_labels_vertex,
+            label_index_uncommitted: HashMap::new(),
+            dg: WTDigraph::from_digraph(ldg.dg),
+        };
     }
-    pub fn from(sequence: Vec<usize>, starting_indices: RsVec, labels : Vec<L>) -> Self {
-        let mut label_index : HashMap<L, usize> = HashMap::new();
-        for i in 0..labels.len(){
+    pub fn from(sequence: Vec<usize>, starting_indices: RsVec, labels: Vec<L>) -> Self {
+        let mut label_index: HashMap<L, usize> = HashMap::new();
+        for i in 0..labels.len() {
             label_index.insert(labels[i].clone(), i);
         }
-        
+
         return LabeledWTDigraph {
             dg: WTDigraph::from(sequence, starting_indices),
             index_label: labels,
@@ -244,7 +244,7 @@ where
     fn get_index(&self, label: &L) -> Option<usize> {
         return self.label_index.get(&label).copied();
     }
-    
+
     fn shrink(&mut self) -> HashMap<L, Option<L>> {
         todo!()
     }

@@ -10,33 +10,46 @@ mod test {
 
     use super::*;
     #[test]
-    fn labeled_graph_digraph_and_labeled_wt_digraph(){
-        let mut ldg : LabeledDigraph<String> = LabeledDigraph::new();
-        let mut wtldg : LabeledWTDigraph<String> = LabeledWTDigraph::from_labeled_digraph(LabeledDigraph::new());
+    fn labeled_graph_digraph_and_labeled_wt_digraph() {
+        let mut ldg: LabeledDigraph<String> = LabeledDigraph::new();
+        let mut wtldg: LabeledWTDigraph<String> =
+            LabeledWTDigraph::from_labeled_digraph(LabeledDigraph::new());
         assert_eq!(ldg.v_count(), wtldg.v_count());
         assert_eq!(ldg.e_count(), wtldg.e_count());
-        for i in 0..10{
+        for i in 0..10 {
             ldg.add_vertex(i.to_string());
             wtldg.add_vertex(i.to_string());
-            assert_eq!(ldg.vertex_exists(i.to_string()), wtldg.vertex_exists_updated(i.to_string()));
+            assert_eq!(
+                ldg.vertex_exists(i.to_string()),
+                wtldg.vertex_exists_updated(i.to_string())
+            );
             assert_eq!(ldg.v_count(), wtldg.v_count_updated());
         }
-        for i in 0..10{
+        for i in 0..10 {
             ldg.delete_vertex(i.to_string());
             wtldg.delete_vertex(i.to_string());
-            assert_eq!(ldg.vertex_exists(i.to_string()), wtldg.vertex_exists_updated(i.to_string()));
+            assert_eq!(
+                ldg.vertex_exists(i.to_string()),
+                wtldg.vertex_exists_updated(i.to_string())
+            );
             assert_eq!(ldg.v_count(), wtldg.v_count_updated());
         }
-        for i in 0..10{
+        for i in 0..10 {
             ldg.add_vertex(i.to_string());
             wtldg.add_vertex(i.to_string());
-            assert_eq!(ldg.vertex_exists(i.to_string()), wtldg.vertex_exists_updated(i.to_string()));
+            assert_eq!(
+                ldg.vertex_exists(i.to_string()),
+                wtldg.vertex_exists_updated(i.to_string())
+            );
             assert_eq!(ldg.v_count(), wtldg.v_count_updated());
         }
-        for i in 20..30{
-            ldg.edit_label((i-20).to_string(), i.to_string());
-            wtldg.edit_label((i-20).to_string(), i.to_string());
-            assert_eq!(ldg.vertex_exists(i.to_string()), wtldg.vertex_exists_updated(i.to_string()));
+        for i in 20..30 {
+            ldg.edit_label((i - 20).to_string(), i.to_string());
+            wtldg.edit_label((i - 20).to_string(), i.to_string());
+            assert_eq!(
+                ldg.vertex_exists(i.to_string()),
+                wtldg.vertex_exists_updated(i.to_string())
+            );
             assert_eq!(ldg.v_count(), wtldg.v_count_updated());
         }
     }
@@ -109,17 +122,23 @@ mod test {
         assert_eq!(dg.v_count(), wtdg.v_count_updated());
         assert_eq!(dg.append_vertex(), wtdg.append_vertex());
         assert_eq!(dg.v_count(), wtdg.v_count_updated());
-        for i in 0..10{
-            for j in 0..10{
+        for i in 0..10 {
+            for j in 0..10 {
                 dg.add_edge(i, j);
                 wtdg.add_edge(i, j);
             }
-            assert_eq!(dg.outgoing_edges(i).len(), wtdg.outgoing_edges_updated(i).len());
-            for item in dg.outgoing_edges(i){
+            assert_eq!(
+                dg.outgoing_edges(i).len(),
+                wtdg.outgoing_edges_updated(i).len()
+            );
+            for item in dg.outgoing_edges(i) {
                 assert!(wtdg.outgoing_edges_updated(i).contains(&item));
             }
-            assert_eq!(dg.incoming_edges(i).len(), wtdg.incoming_edges_updated(i).len());
-            for item in dg.incoming_edges(i){
+            assert_eq!(
+                dg.incoming_edges(i).len(),
+                wtdg.incoming_edges_updated(i).len()
+            );
+            for item in dg.incoming_edges(i) {
                 assert!(wtdg.incoming_edges_updated(i).contains(&item));
             }
         }
@@ -127,30 +146,48 @@ mod test {
         wtdg.commit_edits();
         assert_eq!(dg.v_count(), wtdg.v_count());
         assert_eq!(dg.v_count(), wtdg.v_count_updated(), "after commit");
-        for i in 0..10{
-            assert_eq!(dg.outgoing_edges(i).len(), wtdg.outgoing_edges_updated(i).len());
+        for i in 0..10 {
+            assert_eq!(
+                dg.outgoing_edges(i).len(),
+                wtdg.outgoing_edges_updated(i).len()
+            );
             assert_eq!(dg.outgoing_edges(i).len(), wtdg.outgoing_edges(i).len());
-            for item in dg.outgoing_edges(i){
+            for item in dg.outgoing_edges(i) {
                 assert!(wtdg.outgoing_edges(i).contains(&item));
                 assert!(wtdg.outgoing_edges_updated(i).contains(&item));
             }
-            assert_eq!(dg.incoming_edges(i).len(), wtdg.incoming_edges_updated(i).len());
+            assert_eq!(
+                dg.incoming_edges(i).len(),
+                wtdg.incoming_edges_updated(i).len()
+            );
             assert_eq!(dg.incoming_edges(i).len(), wtdg.incoming_edges(i).len());
-            for item in dg.incoming_edges(i){
+            for item in dg.incoming_edges(i) {
                 assert!(wtdg.incoming_edges(i).contains(&item));
                 assert!(wtdg.incoming_edges_updated(i).contains(&item));
             }
         }
-        for i in 0..10{            
-            assert_eq!(dg.incoming_edges(i).len(), wtdg.incoming_edges_updated(i).len());
-            assert_eq!(dg.outgoing_edges(i).len(), wtdg.outgoing_edges_updated(i).len());
+        for i in 0..10 {
+            assert_eq!(
+                dg.incoming_edges(i).len(),
+                wtdg.incoming_edges_updated(i).len()
+            );
+            assert_eq!(
+                dg.outgoing_edges(i).len(),
+                wtdg.outgoing_edges_updated(i).len()
+            );
             dg.delete_incoming_edges(i);
             wtdg.delete_incoming_edges(i);
-            assert_eq!(dg.incoming_edges(i).len(), wtdg.incoming_edges_updated(i).len());
-            assert_eq!(dg.outgoing_edges(i).len(), wtdg.outgoing_edges_updated(i).len());
+            assert_eq!(
+                dg.incoming_edges(i).len(),
+                wtdg.incoming_edges_updated(i).len()
+            );
+            assert_eq!(
+                dg.outgoing_edges(i).len(),
+                wtdg.outgoing_edges_updated(i).len()
+            );
         }
         assert_eq!(dg.v_count(), wtdg.v_count_updated());
-        for i in 0..500{
+        for i in 0..500 {
             dg.delete_vertex(i);
             wtdg.delete_vertex(i);
             assert_eq!(dg.v_count(), wtdg.v_count_updated());

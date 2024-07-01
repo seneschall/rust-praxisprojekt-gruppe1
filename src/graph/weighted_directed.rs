@@ -122,7 +122,7 @@ impl<W> UnLabeled<usize> for WeightedDigraph<W> {
     fn append_vertex(&mut self) -> usize {
         self.dg.append_vertex()
     }
-    
+
     fn shrink(&mut self) -> Vec<Option<usize>> {
         todo!()
     }
