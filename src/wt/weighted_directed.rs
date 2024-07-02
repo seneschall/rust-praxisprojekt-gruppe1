@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use vers_vecs::RsVec;
 
 use crate::graph::weighted_directed::WeightedDigraph;
-use crate::traits::{Directed, Graph, UnLabeled, Unweighted, WTDirected, WTWeighted, Weighted, WT};
+use crate::traits::{Directed, Graph, Unlabeled, Unweighted, WTDirected, WTWeighted, Weighted, WT};
 use crate::wt::directed::WTDigraph;
 use crate::Edit;
 

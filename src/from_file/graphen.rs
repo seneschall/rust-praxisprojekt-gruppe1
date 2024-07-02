@@ -10,15 +10,15 @@ use crate::graph::
 
 
 /// read in a digraph from file
-pub fn create_digraph(filepath: &str) -> Digraph {
-    let (v_count, e_count, adj) = read_adj_unlabeled_unweighted_directed(filepath);
-    Digraph {
-        deleted_vertices : vec![],
-        v_count,
-        e_count,
-        adj,
-    }
-}
+// pub fn create_digraph(filepath: &str) -> Digraph {
+//     let (v_count, e_count, adj) = read_adj_unlabeled_unweighted_directed(filepath);
+//     Digraph {
+//         deleted_vertices : vec![],
+//         v_count,
+//         e_count,
+//         adj,
+//     }
+// }
 
 // helper for digraph
 fn read_adj_unlabeled_unweighted_directed(filename: &str) -> (usize,usize,Vec<Vec<usize>>) {
@@ -56,17 +56,17 @@ fn read_adj_unlabeled_unweighted_directed(filename: &str) -> (usize,usize,Vec<Ve
 }
 
 /// read in an ugraph from file
-pub fn create_ugraph(filepath: &str) -> UGraph {
-    let (v_count, e_count, adj) = read_adj_unlabeled_unweighted_undirected(filepath);
-    UGraph {
-        dg : Digraph {
-            deleted_vertices : vec![],
-            v_count,
-            e_count,
-            adj,
-        }
-    }
-}
+// pub fn create_ugraph(filepath: &str) -> UGraph {
+//     let (v_count, e_count, adj) = read_adj_unlabeled_unweighted_undirected(filepath);
+//     UGraph {
+//         dg : Digraph {
+//             deleted_vertices : vec![],
+//             v_count,
+//             e_count,
+//             adj,
+//         }
+//     }
+// }
 
 // helper for ugraph
 fn read_adj_unlabeled_unweighted_undirected(filename: &str) -> (usize, usize, Vec<Vec<usize>>) {
@@ -111,19 +111,19 @@ fn read_adj_unlabeled_unweighted_undirected(filename: &str) -> (usize, usize, Ve
 
 
 /// read in a weighted digraph from file
-pub fn create_weighted_digraph<W>(filepath: &str) -> WeightedDigraph<W>
-where W: FromStr, W: Debug, {
-    let (v_count, e_count, adj, weights) = read_adj_unlabeled_weighted_directed(filepath);
-    WeightedDigraph {
-        dg : Digraph {
-            deleted_vertices : vec![],
-            v_count,
-            e_count,
-            adj,
-        },
-        weights, 
-    }
-}
+// pub fn create_weighted_digraph<W>(filepath: &str) -> WeightedDigraph<W>
+// where W: FromStr, W: Debug, {
+//     let (v_count, e_count, adj, weights) = read_adj_unlabeled_weighted_directed(filepath);
+//     WeightedDigraph {
+//         dg : Digraph {
+//             deleted_vertices : vec![],
+//             v_count,
+//             e_count,
+//             adj,
+//         },
+//         weights, 
+//     }
+// }
 
 // helper for W-digraph
 fn read_adj_unlabeled_weighted_directed<W>(filename: &str) -> (usize, usize, Vec<Vec<usize>>,HashMap<(usize,usize),W>)
@@ -160,18 +160,18 @@ where W: FromStr, W: Debug {
 }
 
 /// read in a weighted ugraph from file (W-ugraph)
-pub fn create_weighted_ugraph<W>(filepath: &str) -> WeightedUGraph<W> 
-where W: Debug, W : FromStr, W: Copy
-{
-    let (e_count, v_count, adj, weights) = read_adj_unlabeled_weighted_undirected(filepath);
-    let wdg = WeightedDigraph {
-        dg : Digraph::from_adjacency_list(v_count, e_count, adj),
-        weights,
-    };
-    WeightedUGraph {
-        wdg,
-    }
-}
+// pub fn create_weighted_ugraph<W>(filepath: &str) -> WeightedUGraph<W> 
+// where W: Debug, W : FromStr, W: Copy
+// {
+//     let (e_count, v_count, adj, weights) = read_adj_unlabeled_weighted_undirected(filepath);
+//     let wdg = WeightedDigraph {
+//         dg : Digraph::from_adjacency_list(v_count, e_count, adj),
+//         weights,
+//     };
+//     WeightedUGraph {
+//         wdg,
+//     }
+// }
 
 // helper for W-ugraph
 fn read_adj_unlabeled_weighted_undirected<W>(filename: &str) -> (usize, usize, Vec<Vec<usize>>,HashMap<(usize,usize),W>)
@@ -219,21 +219,21 @@ where W: FromStr, W: Debug {
 
 
 /// read in an directed labeled graph from file
-pub fn create_labeled_digraph<L>(filepath: &str) -> LabeledDigraph<L> 
-where L: Eq + Clone + Hash + FromStr
-{
-    let (v_count, e_count, adj, labels, indices) = read_adj_labeled_unweighted_directed(filepath);
-    LabeledDigraph {
-        dg : Digraph {
-            deleted_vertices : vec![],
-            v_count,
-            e_count,
-            adj,
-        },
-        vec_vertex_labels : labels,
-        hashmap_labels_vertex : indices,
-    }
-}
+// pub fn create_labeled_digraph<L>(filepath: &str) -> LabeledDigraph<L> 
+// where L: Eq + Clone + Hash + FromStr
+// {
+//     let (v_count, e_count, adj, labels, indices) = read_adj_labeled_unweighted_directed(filepath);
+//     LabeledDigraph {
+//         dg : Digraph {
+//             deleted_vertices : vec![],
+//             v_count,
+//             e_count,
+//             adj,
+//         },
+//         vec_vertex_labels : labels,
+//         hashmap_labels_vertex : indices,
+//     }
+// }
 
 // helper for L-digraph
 fn read_adj_labeled_unweighted_directed<L>(filepath: &str) -> (usize, usize, Vec<Vec<usize>>, Vec<L>, HashMap<L,usize>) 
@@ -284,29 +284,30 @@ where L: Eq + Hash + Clone + FromStr {
     }
     (v_count, e_count,adjacency_list, vec_vetrex_labels, hashmap_labels_vertex)
     
-} assert_eq!(v_count, adjacency_list.len());
+} 
+// assert_eq!(v_count, adjacency_list.len());
 
 /// read in a labeled ugraph from file (L-ugraph)
-pub fn create_labeled_ugraph<L>(filepath: &str) -> LabeledUGraph<L> 
-where L: Eq + Clone + Hash + FromStr + Ord{
+// pub fn create_labeled_ugraph<L>(filepath: &str) -> LabeledUGraph<L> 
+// where L: Eq + Clone + Hash + FromStr + Ord{
 
-    let (v_count, e_count, adj, labels, indices) = read_adj_labeled_unweighted_undirected(filepath);
-    LabeledUGraph {
-        ldg: LabeledDigraph {
-            dg : Digraph {
-                deleted_vertices : vec![],
-                v_count,
-                e_count,
-                adj,
-            },
-            vec_vertex_labels : labels.clone(),            // ATTENTION ! Thats the problem, LabeledUGraph HOLDS a LabeledDigraph AND its own vector and hashmap!
-            hashmap_labels_vertex : indices.clone(),       // i suggest to let LabeledUGraph not hold vec_vertex_labels and hashmap_labels_vertex
-        },
-        vec_vertex_labels : labels,
-        hashmap_labels_vertex : indices,
-    }
+//     let (v_count, e_count, adj, labels, indices) = read_adj_labeled_unweighted_undirected(filepath);
+//     LabeledUGraph {
+//         ldg: LabeledDigraph {
+//             dg : Digraph {
+//                 deleted_vertices : vec![],
+//                 v_count,
+//                 e_count,
+//                 adj,
+//             },
+//             vec_vertex_labels : labels.clone(),            // ATTENTION ! Thats the problem, LabeledUGraph HOLDS a LabeledDigraph AND its own vector and hashmap!
+//             hashmap_labels_vertex : indices.clone(),       // i suggest to let LabeledUGraph not hold vec_vertex_labels and hashmap_labels_vertex
+//         },
+//         vec_vertex_labels : labels,
+//         hashmap_labels_vertex : indices,
+//     }
 
-}
+// }
 
 // helper for L-ugraph
 fn read_adj_labeled_unweighted_undirected<L>(filepath: &str) -> (usize, usize, Vec<Vec<usize>>, Vec<L>, HashMap<L,usize>) 
@@ -364,7 +365,8 @@ where L: Eq + Clone + Hash + FromStr + Ord
     }
     (v_count, e_count,adjacency_list, vec_vetrex_labels, hashmap_labels_vertex)
 
-} assert_eq!(v_count, adjacency_list.len());
+}
+//  assert_eq!(v_count, adjacency_list.len());
     
 
 
@@ -443,26 +445,26 @@ where W: FromStr + Debug, L : Hash + Clone + FromStr + Debug + FromStr + Eq {
 }
 
 /// read in a weighted labeled ugraph from file (W-L-ugraph)
-pub fn create_weighted_labeled_ugraph<L,W>(filepath: &str) -> LabeledWeightedUGraph<W,L> 
-where W: FromStr + Debug + Hash + Eq + Clone  ,L : Hash + Eq + Clone + Debug + FromStr {
-    let (v_count, e_count, adj, weights, labels, indices) = read_adj_labeled_weighted_directed(filepath);
-    LabeledWeightedUGraph {
-        lwdg : LabeledWeightedDigraph {
-            ldg : LabeledDigraph {
-                dg : Digraph {
-                    deleted_vertices : vec![],
-                    v_count,
-                    e_count,
-                    adj,
-                },
-            vec_vertex_labels : labels,
-            hashmap_labels_vertex : indices,
-            },
-        weights,
-        },
-    }
+// pub fn create_weighted_labeled_ugraph<L,W>(filepath: &str) -> LabeledWeightedUGraph<W,L> 
+// where W: FromStr + Debug + Hash + Eq + Clone  ,L : Hash + Eq + Clone + Debug + FromStr {
+//     let (v_count, e_count, adj, weights, labels, indices) = read_adj_labeled_weighted_directed(filepath);
+//     LabeledWeightedUGraph {
+//         lwdg : LabeledWeightedDigraph {
+//             ldg : LabeledDigraph {
+//                 dg : Digraph {
+//                     deleted_vertices : vec![],
+//                     v_count,
+//                     e_count,
+//                     adj,
+//                 },
+//             vec_vertex_labels : labels,
+//             hashmap_labels_vertex : indices,
+//             },
+//         weights,
+//         },
+//     }
 
-}
+// }
 
 // helper for W-L-ugraph
 fn read_adj_labeled_weighted_undirected<L,W>(filename: &str) -> (usize, usize, Vec<Vec<usize>>,HashMap<(usize,usize),W>, Vec<L>, HashMap<L,usize>)

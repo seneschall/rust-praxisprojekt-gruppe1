@@ -84,7 +84,6 @@ impl Graph<usize> for Digraph {
         self.adj_len - self.deleted_vertices.len()
     }
     
-}
 
 
     /// deletes the given edge by deleting the entry by looking up 'from's vector in the adj-list, then search for the index of 'to' in it. 

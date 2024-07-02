@@ -214,64 +214,6 @@ impl Graph<usize> for WTDigraph {
         return false;
     }
 
-
-    fn shrink(&mut self) -> Vec<Option<usize>> {
-        // somebody else should check this. -Simon
-        let mut sequence: Vec<usize> = Vec::new();
-        let mut bv = BitVec::new();
-
-        let mut current_index: usize = 0;
-        let mut old_and_new_indices: Vec<Option<usize>> = Vec::new();
-        // I've decided to change to output to Vec<Option<usize>>, where the index represents the old indices of the vector
-        // and the values are the new indices after the shrink
-        // A value of `None` means that the old Index was deleted.
-
-        for v in 0..self.wt_adj_len_updated {
-            if !self.vertex_exists_updated(v) {
-                old_and_new_indices.push(None);
-                continue;
-            }
-
-            if v != 0 {
-                // ugly but I can't think of a better solution right now
-                current_index += 1; // only increase current index, if current vertex still exists
-            }
-
-            old_and_new_indices.push(Some(current_index));
-
-            bv.append(true); // appends a 1 to mark the beginning of a new vertex; we only do this, if the vertex still exists
-
-            let adj: Vec<usize> = self.outgoing_edges_updated(v);
-
-            for i in 0..adj.len() - 1 {
-                bv.append(false); // appends a 0 to bitmap for every element in adj
-                sequence.push(adj[i]); // moves all elements of adj into sequence
-            }
-        }
-
-        // apply all other changes
-        self.wt_adj_len = self.wt_adj_len_updated;
-
-        // update deleted_vertices
-        for (vertex, change) in self.deleted_vertices_uncommitted.iter() {
-            if change {
-                // i.e. if it was deleted
-                self.deleted_vertices.insert(vertex, true);
-            } else {
-                // i.e. if it was readded
-                self.deleted_vertices.remove(vertex);
-            }
-        }
-
-        self.adj_uncommitted = HashMap::new(); // reset adj_uncommitted
-
-        self.wt_adj = QWT256::new(&mut sequence);
-        self.starting_indices = bv;
-
-        self.deleted_vertices = HashMap::new();
-        self.discard_edits(); // reset all uncommitted changes
-    }
-
     /// returns if there is an edge from `from` to `to`
     fn edge_exists(&self, from: usize, to: usize) -> bool {
         if !(self.vertex_exists(from) && self.vertex_exists(to)) {
@@ -482,6 +424,42 @@ impl WT<usize> for WTDigraph {
     /// some changes like deleted vertices are conserved
     fn commit_edits(&mut self) {
         // build new sequence and bitvec
+
+        let mut sequence: Vec<usize> = Vec::new();
+        let mut bv = BitVec::new();
+
+        for v in 0..self.wt_adj_len_updated {
+            bv.append(true); // appends a 1 to mark the beginning of a new vertex
+
+            if !self.vertex_exists_updated(v) {
+                continue;
+            }
+
+            let adj: Vec<usize> = self.outgoing_edges_updated(v);
+            for i in 0..adj.len() {
+                bv.append(false); // appends a 0 to bitmap for every element in adj
+                sequence.push(adj[i]); // moves all elements of adj into sequence
+            }
+        }
+        // apply all other changes
+        self.wt_adj_len = self.wt_adj_len_updated;
+        self.e_count = self.e_count_updated;
+        // update deleted_vertices
+        for (vertex, change) in self.deleted_vertices_uncommitted.iter() {
+            if *change {
+                // i.e. if it was deleted
+                self.deleted_vertices.insert(*vertex, true);
+            } else {
+                // i.e. if it was readded
+                self.deleted_vertices.remove(vertex);
+            }
+        }
+        self.adj_uncommitted = HashMap::new(); // reset adj_uncommitted
+        self.wt_adj = QWT256::new(&mut sequence);
+        self.starting_indices = RsVec::from_bit_vec(bv);
+
+        self.discard_edits(); // reset all uncommitted changes
+    }
 
     /// this function needs documentation
     fn discard_edits(&mut self) {

@@ -2,7 +2,7 @@ use std::fs;
 use vers_vecs::BitVec;
 
 pub mod graphen;
-pub mod wt_graph;
+pub mod wt_graphen;
 
 
 // this function is for internal use only
