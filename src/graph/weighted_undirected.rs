@@ -89,7 +89,12 @@ where
     }
 
     fn edit_weight(&mut self, from: usize, to: usize, weight: W) {
-        self.wdg.edit_weight(from, to, weight);
+        if from <= to {
+            self.wdg.edit_weight(from, to, weight);
+        } else {
+            self.wdg.edit_weight(to, from, weight);
+        }
+
     }
 
     fn get_weight(&mut self, from: usize, to: usize) -> W {
