@@ -2,18 +2,7 @@ use crate::graph::directed::Digraph;
 use crate::wt::directed::WTDigraph;
 
 use super::*;
-#[test]
-fn from_digraph() {
-    let dg = Digraph::new();
-    let wtdg = WTDigraph::from_digraph(dg.clone());
-    assert_eq!(dg.v_count(), wtdg.wt_adj_len);
-    assert_eq!(dg.e_count(), wtdg.e_count);
-    // todo
-}
-#[test]
-fn from() {
-    todo!()
-}
+
 #[test]
 fn add_vertex() {
     // todo for committed changes; these tests only test uncommitted changes
@@ -29,59 +18,39 @@ fn add_vertex() {
     assert_eq!(wtdg.wt_adj_len_updated + wtdg.deleted_vertices.len(), 11);
 }
 #[test]
-fn vertex_deleted() {
-    let mut dg = Digraph::new();
-    dg.add_vertex(5);
-    let mut wtdg = WTDigraph::from_digraph(dg.clone());
-    wtdg.deleted_vertices.push(0);
-    assert_eq!(
-        wtdg.vertex_deleted(0),
-        true,
-        "Vertex 0 should be deleted but is not"
-    );
-    wtdg.deleted_vertices.push(4);
-    assert_eq!(
-        wtdg.vertex_deleted(4),
-        true,
-        "Vertex 4 should be deleted but is not"
-    );
-}
-#[test]
 fn delete_edge() {
     let mut dg = Digraph::new();
     dg.add_vertex(5);
     dg.add_edge(0, 1);
     let mut wtdg = WTDigraph::from_digraph(dg.clone());
     wtdg.delete_edge(0, 1);
-    assert_eq!(wtdg.adj_uncommitted.get(&0), Some(&vec![Edit::Add(1)]));
+    assert_eq!(wtdg.edge_exists_updated(0, 1), false);
+    assert_eq!(wtdg.e_count_updated, 0);
     // wtdg.delete_edge(1,0); //will result in subtract with overflow
 }
 #[test]
 fn delete_vertex() {
     let mut dg = Digraph::new();
     dg.add_vertex(5);
+    let mut testhm: HashMap<usize, bool> = HashMap::new();
     let mut wtdg = WTDigraph::from_digraph(dg.clone());
     for i in 0..5 {
         println!("{:?}", wtdg.deleted_vertices_uncommitted);
         wtdg.delete_vertex(i);
+        testhm.insert(i, true);
     }
-    assert_eq!(
-        wtdg.deleted_vertices_uncommitted,
-        vec![
-            Edit::Add(0),
-            Edit::Add(1),
-            Edit::Add(2),
-            Edit::Add(3),
-            Edit::Add(4)
-        ]
-    );
+    assert_eq!(wtdg.deleted_vertices_uncommitted, testhm);
 }
 #[test]
 fn vertex_exists() {
     let mut dg = Digraph::new();
     dg.add_vertex(5);
     let mut wtdg = WTDigraph::from_digraph(dg.clone());
-    wtdg.deleted_vertices = vec![0, 1, 2, 3, 4];
+    wtdg.deleted_vertices.insert(0, true);
+    wtdg.deleted_vertices.insert(1, true);
+    wtdg.deleted_vertices.insert(2, true);
+    wtdg.deleted_vertices.insert(3, true);
+    wtdg.deleted_vertices.insert(4, true);
     for i in 0..5 {
         assert_eq!(
             wtdg.vertex_exists(i),
@@ -145,7 +114,9 @@ fn delete_outgoing_edges() {
         }
     }
     let mut wtdg = WTDigraph::from_digraph(dg);
+
     for i in 0..10 {
+        println!("{:?}", wtdg.e_count_updated);
         wtdg.delete_outgoing_edges(i);
     }
     assert_eq!(wtdg.e_count_updated, 0);
@@ -179,20 +150,7 @@ fn append_vertex() {
     dg.add_vertex(5);
     let mut wtdg = WTDigraph::from_digraph(dg);
     let test = wtdg.append_vertex();
-    assert_eq!(
-        wtdg.has_uncommitted_edits, true,
-        "has_uncommitted_edits should be true, but is false"
-    );
-    assert_eq!(
-        wtdg.deleted_vertices_uncommitted.is_empty(),
-        true,
-        "has_uncommitted_deleted_vertices should be true, but is false"
-    );
-    assert_eq!(
-        wtdg.vertex_exists_updated(test),
-        true,
-        "vertex_exists(value) ; value = append_vertex return value"
-    );
+    assert_eq!(wtdg.v_count_updated(), test + 1);
 }
 #[test]
 fn add_edge() {
@@ -223,14 +181,6 @@ fn add_edge() {
         wtdg.adj_uncommitted, test,
         "HashMap uncommitted_adj is wrong"
     );
-}
-#[test]
-fn commit_edits() {
-    todo!()
-}
-#[test]
-fn get_uncommitted_edits() {
-    todo!()
 }
 #[test]
 fn discard_edits() {
@@ -294,7 +244,6 @@ fn updated_outgoing_edges() {
 fn updated_incoming_edges() {
     let mut dg = Digraph::new();
     dg.add_vertex(4);
-    dg.add_edge(0, 1);
     let mut wtdg = WTDigraph::from_digraph(dg.clone());
     for i in 0..5 {
         for j in 0..5 {

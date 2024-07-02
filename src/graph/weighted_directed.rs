@@ -29,17 +29,17 @@ where
             panic!("v_count != adj.len()")
         }
         let mut j = 0;
-        let mut adjlist: Vec<Vec<usize>> = vec![vec![]; v_count];
+        let mut adj_list: Vec<Vec<usize>> = vec![vec![]; v_count];
         for item in adj {
             for i in 0..item.len() {
                 let (to, weight): (usize, W) = item[i].clone();
                 hashmap_weights.insert((j, to), weight);
-                adjlist[j].push(to);
+                adj_list[j].push(to);
             }
             j += 1;
         }
         WeightedDigraph {
-            dg: Digraph::from_adjacency_list(v_count, e_count, adjlist),
+            dg: Digraph::from_adjacency_list(v_count, e_count, adj_list),
             weights: hashmap_weights,
         }
     }
@@ -55,11 +55,7 @@ impl<W> Graph<usize> for WeightedDigraph<W> {
     }
 
     fn v_count(&self) -> usize {
-        self.dg.v_count
-    }
-
-    fn vertex_deleted(&self, vertex: usize) -> bool {
-        self.dg.vertex_deleted(vertex)
+        self.dg.adj_len
     }
 
     fn delete_edge(&mut self, from: usize, to: usize) {
@@ -86,11 +82,11 @@ impl<W> Graph<usize> for WeightedDigraph<W> {
     }
 
     fn delete_vertex(&mut self, vertex: usize) {
-        if vertex < self.dg.v_count {
-            self.dg.deleted_vertices.push(vertex);
+        if vertex < self.dg.adj_len {
             self.delete_incoming_edges(vertex);
             self.delete_outgoing_edges(vertex);
-            self.dg.v_count -= 1;
+            self.dg.delete_vertex(vertex);
+            self.dg.adj_len -= 1;
         } else {
             panic!("delete_vertex : Can't delete Vertex : vertex >= self.v_count")
         }
@@ -100,12 +96,8 @@ impl<W> Graph<usize> for WeightedDigraph<W> {
         self.dg.vertex_exists(vertex)
     }
 
-    fn shrink(&mut self) -> HashMap<usize, usize> {
-        todo!()
-    }
-
     fn edge_exists(&self, from: usize, to: usize) -> bool {
-        todo!()
+        self.dg.edge_exists(from, to)
     }
 }
 impl<W> Directed<usize> for WeightedDigraph<W> {
@@ -132,6 +124,10 @@ impl<W> Directed<usize> for WeightedDigraph<W> {
 impl<W> Unlabeled<usize> for WeightedDigraph<W> {
     fn append_vertex(&mut self) -> usize {
         self.dg.append_vertex()
+    }
+
+    fn shrink(&mut self) -> Vec<Option<usize>> {
+        todo!()
     }
 }
 impl<W> Weighted<usize, W> for WeightedDigraph<W>

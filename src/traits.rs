@@ -20,12 +20,7 @@ pub trait Graph<T> {
     fn delete_vertex(&mut self, vertex: &T); // should eventually be changed to return a Result type
                                             // for unlabeled : vertex = index; deletes a vertex at index
                                             // for labeled : vertex = label, convert label to index, then use delete_vertex of non label parent
-    fn vertex_exists(&self, vertex: &T) -> bool;
-
-    fn shrink(&mut self) -> Vec<Option<usize>>; // removes all unconnected vertices from bitmap; only allowed, if has_uncommitted_edits == false; returns a Hashmap with old indices as keys and new indices as values
-                                                // can only be used after commit_edits; all deleted vertices will be removed ( index will shift )
-                                                // returns hashmap with deleted indices
-                                                // bitmap changes
+    fn vertex_exists(&self, vertex: T) -> bool;
 }
 pub trait Directed<T> {
     fn outgoing_edges(&self, vertex: &T) -> Vec<&T>; // should probably be changed to return an iterator instead
@@ -46,14 +41,19 @@ pub trait Undirected<T> {
 pub trait Unlabeled<T> {
     fn append_vertex(&mut self) -> usize; //fn append_vertex(&mut self) -> usize; // adds vertex at position wt_adj.len() or at index of lowest deleted vertex (if that change hasn't been committed)
                                           // can't use append for labeled Graphs, since add_vertex works as an append for labeled graphs
+    fn shrink(&mut self) -> Vec<Option<usize>>;
 }
 pub trait Labeled<L> {
     fn edit_label(&mut self, old_label: L, new_label: L); // true if last item in uncommitted edits for v is Edit::DeleteSelf; should return a Result
                                                           //changes old_Label to new_label
     fn get_label(&self, vertex: usize) -> Option<&L>;
     //input:index, output Option<&L>; check in vec[vertex] for label
-    fn get_index(&self, label: L) -> Option<&usize>; // returns the index of the vertex with the given label
+    fn get_index(&self, label: &L) -> Option<usize>; // returns the index of the vertex with the given label
                                                      //input:Label, output Option<&usize>; check in hashmaps value
+    fn shrink(&mut self) -> HashMap<L, Option<L>>; // removes all unconnected vertices from bitmap; only allowed, if has_uncommitted_edits == false; returns a Hashmap with old indices as keys and new indices as values
+                                                   // can only be used after commit_edits; all deleted vertices will be removed ( index will shift )
+                                                   // returns hashmap with deleted indices
+                                                   // bitmap changes
 }
 pub trait Unweighted<T> {
     fn add_edge(&mut self, from: &T, to: &T);
@@ -100,7 +100,7 @@ pub trait WTWeighted<T, W> {
 }
 pub trait WTLabeled<L> {
     fn get_label_updated(&self, index: usize) -> Option<&L>;
-    fn get_index_updated(&self, label: &L) -> Option<&usize>;
+    fn get_index_updated(&self, label: &L) -> Option<usize>;
 }
 
 // additional graph functionality

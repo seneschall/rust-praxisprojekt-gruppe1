@@ -1,5 +1,12 @@
-use crate::traits::{Graph, Labeled, Undirected, WTUndirected, WTWeighted, Weighted, WT};
-use crate::wt::labeled_directed::LabeledWTDigraph;
+use vers_vecs::RsVec;
+
+use crate::graph::labeled_weighted_undirected::LabeledWeightedUGraph;
+use crate::traits::{
+    Graph, Labeled, Undirected, WTLabeled, WTUndirected, WTWeighted, Weighted, WT,
+};
+use crate::wt::labeled_weighted_directed::LabeledWeightedWTDigraph;
+
+use std::collections::HashMap;
 use std::hash::Hash;
 
 /// A structure holding an immutable Wavelet-Tree-Representation of a graph with directed edges and labeled vertices, where each edge represents a weight, plus information on manual changes. 
@@ -8,11 +15,30 @@ pub struct LabeledWeightedUGraph<L, W>
 where
     L: Hash + Clone + Eq,
 {
-    dg: LabeledWTDigraph<L>,
-    weights: W, // TODO so we have no compiler error
+    lwdg: LabeledWeightedWTDigraph<L, W>,
+}
+impl<L, W> LabeledWeightedWTUGraph<L, W>
+where
+    L: Hash + Clone + Eq,
+{
+    pub fn from_labeled_weighted_ugraph(lwug: LabeledWeightedUGraph<L, W>) -> Self {
+        return LabeledWeightedWTUGraph {
+            lwdg: LabeledWeightedWTDigraph::from_labeled_weighted_digraph(lwug.lwdg),
+        };
+    }
+    pub fn from(
+        sequence: Vec<usize>,
+        starting_indices: RsVec,
+        labels: Vec<L>,
+        weights: HashMap<(usize, usize), W>,
+    ) -> Self {
+        LabeledWeightedWTUGraph {
+            lwdg: LabeledWeightedWTDigraph::from(sequence, starting_indices, labels, weights),
+        }
+    }
 }
 
-impl<L, W> Graph<L> for LabeledWeightedDigraph<L, W>
+impl<L, W> Graph<L> for LabeledWeightedWTUGraph<L, W>
 where
     L: Hash + Clone + Eq,
 {
@@ -28,10 +54,6 @@ where
         todo!()
     }
 
-    fn vertex_deleted(&self, vertex: L) -> bool {
-        todo!()
-    }
-
     fn delete_edge(&mut self, from: L, to: L) {
         todo!()
     }
@@ -44,15 +66,11 @@ where
         todo!()
     }
 
-    fn shrink(&mut self) -> std::collections::HashMap<usize, usize> {
-        todo!()
-    }
-
     fn edge_exists(&self, from: L, to: L) -> bool {
         todo!()
     }
 }
-impl<L, W> Undirected<L> for LabeledWeightedDigraph<L, W>
+impl<L, W> Undirected<L> for LabeledWeightedWTUGraph<L, W>
 where
     L: Hash + Clone + Eq,
 {
@@ -64,7 +82,7 @@ where
         todo!()
     }
 }
-impl<L, W> Labeled<L> for LabeledWeightedDigraph<L, W>
+impl<L, W> Labeled<L> for LabeledWeightedWTUGraph<L, W>
 where
     L: Hash + Clone + Eq,
 {
@@ -76,11 +94,15 @@ where
         todo!()
     }
 
-    fn get_index(&self, label: L) -> Option<&usize> {
+    fn get_index(&self, label: &L) -> Option<usize> {
+        todo!()
+    }
+
+    fn shrink(&mut self) -> std::collections::HashMap<L, Option<L>> {
         todo!()
     }
 }
-impl<L, W> Weighted<L, W> for LabeledWeightedDigraph<L, W>
+impl<L, W> Weighted<L, W> for LabeledWeightedWTUGraph<L, W>
 where
     L: Hash + Clone + Eq,
 {
@@ -96,7 +118,7 @@ where
         todo!()
     }
 }
-impl<L, W> WT<L> for LabeledWeightedDigraph<L, W>
+impl<L, W> WT<L> for LabeledWeightedWTUGraph<L, W>
 where
     L: Hash + Clone + Eq,
 {
@@ -119,8 +141,12 @@ where
     fn edge_exists_updated(&self, from: L, to: L) -> bool {
         todo!()
     }
+
+    fn v_count_updated(&self) -> usize {
+        todo!()
+    }
 }
-impl<L, W> WTWeighted<L, W> for LabeledWeightedDigraph<L, W>
+impl<L, W> WTWeighted<L, W> for LabeledWeightedWTUGraph<L, W>
 where
     L: Hash + Clone + Eq,
 {
@@ -128,11 +154,24 @@ where
         todo!()
     }
 }
-impl<L, W> WTUndirected<L> for LabeledWeightedDigraph<L, W>
+impl<L, W> WTUndirected<L> for LabeledWeightedWTUGraph<L, W>
 where
     L: Hash + Clone + Eq,
 {
     fn edges_updated(&self, vertex: usize) -> Vec<L> {
+        todo!()
+    }
+}
+
+impl<L, W> WTLabeled<L> for LabeledWeightedWTUGraph<L, W>
+where
+    L: Clone + Hash + Eq,
+{
+    fn get_label_updated(&self, index: usize) -> Option<&L> {
+        todo!()
+    }
+
+    fn get_index_updated(&self, label: &L) -> Option<usize> {
         todo!()
     }
 }

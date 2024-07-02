@@ -1,13 +1,32 @@
-use crate::traits::{Graph, Unlabeled, Undirected, WTUndirected, WTWeighted, Weighted, WT};
+use std::collections::HashMap;
+
+use vers_vecs::RsVec;
+
+use crate::graph::weighted_undirected::WeightedUGraph;
+use crate::traits::{Graph, UnLabeled, Undirected, WTUndirected, WTWeighted, Weighted, WT};
 use crate::wt::undirected::WTUGraph;
 
-/// A structure holding an immutable Wavelet-Tree-Representation of an indexed graph with undirected edges, where each edge represents a weight, plus information on manual changes. 
-/// The greatest possible of number of edges or of vertices is usize vertices, vertex-indices are also usize-data-type. Weights can have any type.
-pub struct WeightedWTUGraph<W> {
-    dg: WTUGraph,
-    weights: W, // TODO so we have no compiler error
-}
+use super::weighted_directed::WeightedWTDigraph;
 
+pub struct WeightedWTUGraph<W> {
+    wug: WeightedWTDigraph<W>,
+}
+impl<W> WeightedWTUGraph<W> {
+    pub fn from_weighted_ugraph(wug: WeightedUGraph<W>) -> Self {
+        return WeightedWTUGraph {
+            wug: WeightedWTDigraph::from_weighted_digraph(wug.wdg),
+        };
+    }
+    pub fn from(
+        sequence: Vec<usize>,
+        starting_indices: RsVec,
+        weights: HashMap<(usize, usize), W>,
+    ) -> Self {
+        return WeightedWTUGraph {
+            wug: WeightedWTDigraph::from(sequence, starting_indices, weights),
+        };
+    }
+}
 impl<W> Graph<usize> for WeightedWTUGraph<W> {
     fn add_vertex(&mut self, vertex: usize) -> usize {
         todo!()
@@ -21,10 +40,6 @@ impl<W> Graph<usize> for WeightedWTUGraph<W> {
         todo!()
     }
 
-    fn vertex_deleted(&self, vertex: usize) -> bool {
-        todo!()
-    }
-
     fn delete_edge(&mut self, from: usize, to: usize) {
         todo!()
     }
@@ -34,10 +49,6 @@ impl<W> Graph<usize> for WeightedWTUGraph<W> {
     }
 
     fn vertex_exists(&self, vertex: usize) -> bool {
-        todo!()
-    }
-
-    fn shrink(&mut self) -> std::collections::HashMap<usize, usize> {
         todo!()
     }
 
@@ -56,6 +67,10 @@ impl<W> Undirected<usize> for WeightedWTUGraph<W> {
 }
 impl<W> Unlabeled<usize> for WeightedWTUGraph<W> {
     fn append_vertex(&mut self) -> usize {
+        todo!()
+    }
+
+    fn shrink(&mut self) -> Vec<Option<usize>> {
         todo!()
     }
 }
@@ -90,6 +105,10 @@ impl<W> WT<usize> for WeightedWTUGraph<W> {
     }
 
     fn edge_exists_updated(&self, from: usize, to: usize) -> bool {
+        todo!()
+    }
+
+    fn v_count_updated(&self) -> usize {
         todo!()
     }
 }

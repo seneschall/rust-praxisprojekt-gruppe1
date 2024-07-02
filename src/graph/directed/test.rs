@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use crate::graph::directed::Digraph;
 use crate::traits::{Directed, Graph, Unlabeled, Unweighted};
 
@@ -5,7 +7,7 @@ use crate::traits::{Directed, Graph, Unlabeled, Unweighted};
 fn new() {
     let digraph = Digraph::new();
     assert!(digraph.adj.is_empty());
-    assert_eq!(digraph.v_count, 0);
+    assert_eq!(digraph.adj_len, 0);
     assert_eq!(digraph.e_count, 0);
     assert!(digraph.deleted_vertices.is_empty());
 }
@@ -50,32 +52,22 @@ fn add_vertex() {
 #[test]
 fn vertex_exists() {
     let mut digraph = Digraph::new();
-    digraph.v_count = 2;
+    digraph.adj_len = 2;
     digraph.adj = vec![vec![]; 2];
-    digraph.deleted_vertices = vec![0];
+    digraph.deleted_vertices.insert(0, true);
     assert_eq!(digraph.vertex_exists(0), false);
     assert_eq!(digraph.vertex_exists(1), true);
-    digraph.deleted_vertices = vec![];
+    digraph.deleted_vertices = HashMap::new();
     assert_eq!(digraph.vertex_exists(0), true);
-    digraph.v_count = 0;
+    digraph.adj_len = 0;
     assert_eq!(digraph.vertex_exists(1), false);
 }
 #[test]
 fn delete_vertex() {
     let mut digraph = Digraph::from_adjacency_list(5, 0, vec![vec![]; 5]);
     digraph.delete_vertex(0);
-    assert_eq!(digraph.deleted_vertices, vec![0]);
+    assert_eq!(digraph.deleted_vertices.contains_key(&0), true);
     assert_eq!(digraph.v_count(), 4);
-}
-#[test]
-fn vertex_deleted() {
-    let mut digraph = Digraph::from_adjacency_list(5, 0, vec![vec![]; 5]);
-    assert_eq!(digraph.vertex_deleted(0), false);
-    digraph.deleted_vertices = vec![0];
-    assert_eq!(digraph.vertex_deleted(0), true);
-    assert_eq!(digraph.vertex_deleted(1), false);
-    digraph.deleted_vertices = vec![0, 1];
-    assert_eq!(digraph.vertex_deleted(1), true);
 }
 #[test]
 fn delete_edge() {

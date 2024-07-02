@@ -7,7 +7,7 @@ mod test;
 /// An indexed, mutable graph with undirected edges. (ugraph, ug)
 /// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type.
 pub struct UGraph {
-    dg: Digraph,
+    pub(crate) dg: Digraph,
 }
 
 impl UGraph {
@@ -123,6 +123,10 @@ impl Unlabeled<usize> for UGraph {
     /// returns the index of the new vertex
     fn append_vertex(&mut self) -> usize {
         self.dg.append_vertex()
+    }
+
+    fn shrink(&mut self) -> Vec<Option<usize>> {
+        todo!()
     }
 }
 

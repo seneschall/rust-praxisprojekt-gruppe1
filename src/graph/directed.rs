@@ -6,15 +6,10 @@ mod test;
 
 #[derive(Debug, Clone)]
 pub struct Digraph {
-
-    // vector of all vertice's whom had been deleted
-    pub(crate) deleted_vertices: Vec<usize>,
-    // the recent number of vertices, deleted_vertices + v_count == adj.len()
-    pub(crate) v_count: usize,
-    // number of edges              
-    pub(crate) e_count: usize,       
-    // adjacency list of indices
-    pub(crate) adj: Vec<Vec<usize>>,  
+    pub(crate) deleted_vertices: HashMap<usize, bool>,
+    pub(crate) adj_len: usize,       // number of vertices
+    pub(crate) e_count: usize,       // number of edges
+    pub(crate) adj: Vec<Vec<usize>>, // adjacency list of indices -- note from group: should we set this to pub(crate)?
 }
 
 /// An indexed, mutable graph with directed edges. 
@@ -24,8 +19,8 @@ impl Digraph {
     /// this function instantiiates a new empty digraph, that must be manually filled with vertices and edges
     pub fn new() -> Self {
         Digraph {
-            deleted_vertices: Vec::new(),
-            v_count: 0,
+            deleted_vertices: HashMap::new(),
+            adj_len: 0,
             e_count: 0,
             adj: vec![vec![]; 0],
         }
@@ -36,8 +31,8 @@ impl Digraph {
         // doesn't check valid input
         if v_count == adj.len() {
             Digraph {
-                deleted_vertices: Vec::new(),
-                v_count,
+                deleted_vertices: HashMap::new(),
+                adj_len: v_count,
                 e_count,
                 adj,
             }
@@ -55,18 +50,28 @@ impl Graph<usize> for Digraph {
     /// returns the index of the new vertex
     // todo ! why does this return a usize?
     fn add_vertex(&mut self, vertex: usize) -> usize {
+        // case 1 vertex exist
+        // case 2 vertex does not exist, deleted_vertices contains vertex
+        // case 3 vertex does not exist, deleted_vertices does not contain vertex
+        // in this case check if vertex > adj_len
 
-        
-        if vertex >= self.v_count {
-            for i in 0..vertex - self.v_count + 1 {
-                self.adj.insert(self.v_count + i, vec![]);
-            }
-            self.v_count += vertex - self.v_count + 1;
+        if self.vertex_exists(vertex) {
+            // case 1
+            self.delete_outgoing_edges(vertex);
+            self.delete_incoming_edges(vertex);
         } else {
-            self.adj.insert(vertex, vec![]);
-            // self.v_count += 1; // this line is wrong
+            if self.deleted_vertices.contains_key(&vertex) {
+                // case 2
+                self.deleted_vertices.remove(&vertex);
+            } else {
+                // case 3
+                for i in 0..vertex - self.adj_len + 1 {
+                    self.adj.push(vec![]);
+                }
+                self.adj_len += vertex - self.adj_len + 1;
+            }
         }
-        self.v_count - 1
+        return vertex;
     }
 
     /// return the recent number of edges in the graph
@@ -83,6 +88,9 @@ impl Graph<usize> for Digraph {
     /// stores that index in i_of_w, and then removes the entry at that index in 'from's vector.
     /// changes the indices of the edges in the vertex-vertices, but doesn't change the indices of the vertex-vectors, thus preserves indexing.
     /// panics if vertex 'from' or edge 'from'->'to' doens't exists. decreases e_count
+        self.adj_len - self.deleted_vertices.len()
+    }
+
     fn delete_edge(&mut self, from: usize, to: usize) {
         let i_of_w: usize;
         match self.adj.get(from) {
@@ -110,11 +118,10 @@ impl Graph<usize> for Digraph {
     /// panics if the vertex doesn't exist - should eventually return a Result type
     /// if the vertex exists, we mark it in the deletec-vertices-Vector, then delete all it's incoming and all it's outgoing mentions.
     fn delete_vertex(&mut self, vertex: usize) {
-        if vertex < self.v_count {
-            self.deleted_vertices.push(vertex);
+        if vertex < self.adj_len {
+            self.deleted_vertices.insert(vertex, true);
             self.delete_incoming_edges(vertex);
             self.delete_outgoing_edges(vertex);
-            self.v_count -= 1;
         } else {
             panic!("delete_vertex : Can't delete Vertex : vertex >= self.v_count")
         }
@@ -122,13 +129,13 @@ impl Graph<usize> for Digraph {
 
     /// checks if the vertex at the given index exists, by checking if it is smaller than the first unused index in the adj-list.
     fn vertex_exists(&self, vertex: usize) -> bool {
-        if !self.deleted_vertices.contains(&vertex) && vertex < self.v_count + self.deleted_vertices.len()
-    }
-
-    /// it removes all vertices in deleted_vertices from the graph, thus altering the adj-list and changing indexing.
-    /// this lowers adj.len() and resets it to v_count. returns a list comparing the new and old indices.
-    fn shrink(&mut self) -> HashMap<usize, usize> {
-        todo!()
+        if self.deleted_vertices.contains_key(&vertex) {
+            return false;
+        }
+        if vertex < self.adj_len {
+            return true;
+        }
+        return false;
     }
 
     /// returns if there is an edge between index `from` and index `to` 
@@ -155,7 +162,7 @@ impl Directed<usize> for Digraph {
     // todo ! catch non-existing vertice as input
     fn incoming_edges(&self, vertex: usize) -> Vec<usize> {
         let mut incoming_edges: Vec<usize> = Vec::new();
-        for i in 0..self.v_count {
+        for i in 0..self.adj.len() {
             if self.adj[i].contains(&vertex) {
                 incoming_edges.push(i);
             }
@@ -186,8 +193,12 @@ impl Unlabeled<usize> for Digraph {
     /// returns the index of the new vertex
     fn append_vertex(&mut self) -> usize {
         self.adj.push(vec![]);
-        self.v_count += 1;
-        self.v_count - 1
+        self.adj_len += 1;
+        self.adj_len - 1
+    }
+
+    fn shrink(&mut self) -> Vec<Option<usize>> {
+        todo!()
     }
 }
 impl Unweighted<usize> for Digraph {

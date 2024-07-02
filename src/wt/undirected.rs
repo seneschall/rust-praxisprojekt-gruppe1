@@ -1,5 +1,8 @@
 use std::collections::HashMap;
 
+use vers_vecs::RsVec;
+
+use crate::graph::undirected::UGraph;
 use crate::traits::{Directed, WTDirected};
 use crate::traits::{Graph, Unlabeled, Undirected, Unweighted, WTUndirected, WT};
 use crate::wt::directed::WTDigraph; // needed because of WTDigraph
@@ -17,17 +20,15 @@ pub struct WTUGraph {
 }
 
 impl WTUGraph {
-
-    
-    /// this function instantiiates a wt-ugraph from a given ugraph
-    pub fn new() {
-        todo!()
+    pub fn from_ugraph(ugraph: UGraph) -> Self {
+        return WTUGraph {
+            wtd: WTDigraph::from_digraph(ugraph.dg),
+        };
     }
-
-    /// this function builds a WT-ugraph from a vector sequence of bits, where each 1 represents a vertex, and each 0 another vertex adjacent to the first one (they are connected though an edge)
-    /// and a usize-vector representing the id's (indices) of the adjacent vertices.
-    pub fn from_ugraph() {
-        todo!()
+    pub fn from(sequence: Vec<usize>, starting_indices: RsVec) -> Self {
+        return WTUGraph {
+            wtd: WTDigraph::from(sequence, starting_indices),
+        };
     }
 }
 
@@ -119,6 +120,10 @@ impl Unlabeled<usize> for WTUGraph {
     /// returns the index of the new vertex
     fn append_vertex(&mut self) -> usize {
         self.wtd.append_vertex()
+    }
+
+    fn shrink(&mut self) -> Vec<Option<usize>> {
+        todo!()
     }
 }
 impl Unweighted<usize> for WTUGraph {
