@@ -9,8 +9,8 @@ mod test;
 /// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type. 
 /// Weights can have any type.
 pub struct WeightedDigraph<W> {
-    dg: Digraph,
-    weights: HashMap<(usize, usize), W>,
+    pub(crate) dg: Digraph,
+    pub(crate) weights: HashMap<(usize, usize), W>,
 }
 
 impl<W> WeightedDigraph<W>

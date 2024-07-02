@@ -1,11 +1,8 @@
 use std::fs;
 use vers_vecs::BitVec;
 
-pub mod dg_ug;
-pub mod ldg_lug;
-pub mod wtd_wtu;
-pub mod L_wtd_L_stu;
-pub mod helper;
+pub mod graphen;
+pub mod wt_graph;
 
 
 // this function is for internal use only

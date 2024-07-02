@@ -12,9 +12,9 @@ pub struct LabeledUGraph<L>
 where
     L: Hash + Eq,
 {
-    ldg: LabeledDigraph<L>,
-    vec_vertex_labels: Vec<L>,
-    hashmap_labels_vertex: HashMap<L, usize>,
+    pub(crate) ldg: LabeledDigraph<L>,
+    pub(crate) vec_vertex_labels: Vec<L>,
+    pub(crate) hashmap_labels_vertex: HashMap<L, usize>,
 }
 
 impl<L> LabeledUGraph<L>

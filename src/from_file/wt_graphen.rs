@@ -10,15 +10,7 @@ use super::sequence_and_bitmap;
 
 
 
-/// read in an undirected wt-graph encoded in a file 
-pub fn create_wt_ugraph(filepath: &str) -> WTUGraph {
-    let wtd = create_wt_digraph(filepath);
-    WTUGraph {
-        wtd,
-    }
-}
-
-/// read in a directed wt-graph encoded in a file
+/// read in a directed wt-graph from file (wtd) from file
 pub fn create_wt_digraph(filepath: &str) -> WTDigraph {
     let (v_count, e_count) = v_e_count(filepath);
     let adj = read_adj_directed(filepath);
@@ -39,29 +31,40 @@ pub fn create_wt_digraph(filepath: &str) -> WTDigraph {
     }
 }
 
-
-// read in an undirected wt-graph with weighted edges from a file
-
-
-// read in a directed wt-graph with weighted edges from a file
-
-
-/// read in a undirected labeled wt-graph from file
-pub fn create_wt_ugraph<L>(filepath: &str) { // -> WTUGraph<L> 
+// read in a directed labeled wt-graph (lwtd) from file
+pub fn create_wt_digraph<L>(filepath: &str) { //-> LabeledWTDigraph<L> 
     todo!()
 }
 
-// read in a directed labeled wt-graph from file
-pub fn create_wt_digraph<L>(filepath: &str) { //-> WTDigraph<L> 
+/// read in an undirected wt-graph (wtu) from file  
+pub fn create_wt_ugraph(filepath: &str) -> WTUGraph {
+    let wtd = create_wt_digraph(filepath);
+    WTUGraph {
+        wtd,
+    }
+}
+
+/// read in an undirected labeled wt-graph (lwtu) from file 
+pub fn create_wt_ugraph<L>(filepath: &str) { // -> LabeledWTUGraph<L> 
     todo!()
 }
 
-/// read in a undirected labeled wt-graph with weighted edges from file
-pub fn create_wt_weighted_ugraph<L,W>(filepath: &str) { // -> WTWeightedUGraph<W,L> 
+
+
+
+
+
+
+
+
+
+/// read in an directed labeled graph with weighted edges (wlwtd) from file
+pub fn create_wt_weighted_digraph<L,W>(filepath: &str) { // -> WeightedLabeledWTDigraph<L,W>
     todo!()
 }
 
-/// read in an directed labeled graph with weighted edges from file
-pub fn create_wt_weighted_digraph<L,W>(filepath: &str) { // -> WTWeightedDigraph<W,L>
+/// read in an undirected labeled wt-graph with weighted edges from file
+pub fn create_wt_weighted_ugraph<L,W>(filepath: &str) { // -> LabeledWeightedWTUGraph<L,W> 
     todo!()
 }
+

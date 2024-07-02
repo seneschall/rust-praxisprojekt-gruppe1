@@ -9,7 +9,7 @@ mod test;
 /// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type. 
 /// Weights can have any type.
 pub struct WeightedUGraph<W> {
-    wdg: WeightedDigraph<W>,
+    pub(crate) wdg: WeightedDigraph<W>,
 }
 impl<W> WeightedUGraph<W> {
     pub fn new() {

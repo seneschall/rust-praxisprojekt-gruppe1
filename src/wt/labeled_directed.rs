@@ -7,8 +7,12 @@ use crate::Edit;
 use std::collections::HashMap;
 use std::hash::Hash;
 
-/// A structure holding an immutable Wavelet-Tree-Representation of a graph with directed edges and labeled vertices, plus information on manual changes. 
-/// The greatest possible of number of edges or of vertices is usize. Labels can have any type and are referenced.
+/// An labeled wavelet-tree-graph with directed edges. (L-wt-digraph)
+/// The L-wt-digraph holds a wt-digraph and data encoding the digraph's vertice-labels, at the last commit and in the recent, uncommited stage.
+/// Users can perfom fast operations on the original graph and slower operations on the recent state of the graph.
+/// Users can integrate the recent state of the graph into the QW-Tree by rebuilding it using the commit_edits-function.
+/// See module wt::directed for the WT-digraph struct definition. See more documentation on function-level and in the crate introduction.
+/// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type. Labels can have any type and are referenced.
 pub struct LabeledWTDigraph<L>
 where
     L: Hash + Clone + Eq,

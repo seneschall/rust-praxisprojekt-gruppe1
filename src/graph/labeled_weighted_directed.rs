@@ -12,8 +12,8 @@ pub struct LabeledWeightedDigraph<L, W>
 where
     L: Hash + Eq,
 {
-    dg: LabeledDigraph<L>,
-    weights: HashMap<(usize, usize), W>,
+    pub(crate) ldg: LabeledDigraph<L>,
+    pub(crate) weights: HashMap<(usize, usize), W>,
 }
 
 impl<L, W> LabeledWeightedDigraph<L, W>

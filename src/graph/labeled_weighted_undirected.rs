@@ -13,7 +13,7 @@ pub struct LabeledWeightedUGraph<L, W>
 where
     L: Hash + Eq,
 {
-    lwdg: LabeledWeightedDigraph<L, W>,
+    pub(crate) lwdg: LabeledWeightedDigraph<L, W>,
 }
 
 impl<L, W> LabeledWeightedUGraph<L, W>
