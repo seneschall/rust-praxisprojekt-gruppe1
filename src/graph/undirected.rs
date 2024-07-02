@@ -68,12 +68,6 @@ impl Graph<usize> for UGraph {
         self.dg.vertex_exists(vertex)
     }
 
-    /// it removes all vertices in deleted_vertices from the graph, thus altering the adj-list and changing indexing.
-    /// this lowers adj.len() and resets it to v_count. returns a list comparing the new and old indices.
-    fn shrink(&mut self) -> HashMap<usize, usize> {
-        todo!()
-    }
-
     /// returns if there is an edge between index `from` and index `to`, by searching for an edge between the smaller and the bigger in dg.
     fn edge_exists(&self, from: usize, to: usize) -> bool {
         if from <= to {
@@ -125,6 +119,8 @@ impl Unlabeled<usize> for UGraph {
         self.dg.append_vertex()
     }
 
+    /// it removes all vertices in deleted_vertices from the graph, thus altering the adj-list and changing indexing.
+    /// this lowers adj.len() and resets it to v_count. returns a list comparing the new and old indices.
     fn shrink(&mut self) -> Vec<Option<usize>> {
         todo!()
     }

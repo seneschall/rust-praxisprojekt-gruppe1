@@ -5,15 +5,15 @@ use std::collections::HashMap;
 mod test;
 
 #[derive(Debug, Clone)]
+/// An indexed, mutable graph with directed edges. (digraph, dg)
+/// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type.
 pub struct Digraph {
     pub(crate) deleted_vertices: HashMap<usize, bool>,
-    pub(crate) adj_len: usize,       // number of vertices
+    pub(crate) adj_len: usize,       // number of vertices, deleted_vertices + v_count() == adj.len()
     pub(crate) e_count: usize,       // number of edges
     pub(crate) adj: Vec<Vec<usize>>, // adjacency list of indices -- note from group: should we set this to pub(crate)?
 }
 
-/// An indexed, mutable graph with directed edges. 
-/// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type.
 impl Digraph {
 
     /// this function instantiiates a new empty digraph, that must be manually filled with vertices and edges
@@ -81,16 +81,16 @@ impl Graph<usize> for Digraph {
 
     /// return the recent number of vertices in the graph
     fn v_count(&self) -> usize {
-        self.v_count
+        self.adj_len - self.deleted_vertices.len()
     }
+    
+}
+
 
     /// deletes the given edge by deleting the entry by looking up 'from's vector in the adj-list, then search for the index of 'to' in it. 
     /// stores that index in i_of_w, and then removes the entry at that index in 'from's vector.
     /// changes the indices of the edges in the vertex-vertices, but doesn't change the indices of the vertex-vectors, thus preserves indexing.
     /// panics if vertex 'from' or edge 'from'->'to' doens't exists. decreases e_count
-        self.adj_len - self.deleted_vertices.len()
-    }
-
     fn delete_edge(&mut self, from: usize, to: usize) {
         let i_of_w: usize;
         match self.adj.get(from) {
@@ -197,6 +197,8 @@ impl Unlabeled<usize> for Digraph {
         self.adj_len - 1
     }
 
+    /// it removes all vertices in deleted_vertices from the graph, thus altering the adj-list and changing indexing.
+    /// this lowers adj.len() and resets it to v_count. returns a list comparing the new and old indices.
     fn shrink(&mut self) -> Vec<Option<usize>> {
         todo!()
     }

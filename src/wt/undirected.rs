@@ -20,11 +20,16 @@ pub struct WTUGraph {
 }
 
 impl WTUGraph {
+
+    /// this function instantiiates a wt-ugraph from a given ugraph
     pub fn from_ugraph(ugraph: UGraph) -> Self {
         return WTUGraph {
             wtd: WTDigraph::from_digraph(ugraph.dg),
         };
     }
+
+    /// this function builds a WT-ugraph from a vector sequence of bits, where each 1 represents a vertex, and each 0 another vertex adjacent to the first one (they are connected though an edge)
+    /// and a usize-vector representing the id's (indices) of the adjacent vertices.
     pub fn from(sequence: Vec<usize>, starting_indices: RsVec) -> Self {
         return WTUGraph {
             wtd: WTDigraph::from(sequence, starting_indices),
@@ -75,14 +80,6 @@ impl Graph<usize> for WTUGraph {
         self.wtd.vertex_exists(vertex)
     }
 
-    /// it removes all vertices in deleted_vertices from the graph, resets deleted_vertices, thus shrinking
-    /// wt_adj_len, the updated v_count AND the v_count at last commit. does not commit changes other than vertex deletion. 
-    /// does commit vertex-deletion and rebuild QW-tree. (expensive!)
-    /// return a list containing the deleted vertices?
-    fn shrink(&mut self) -> Vec<Option<usize>> {
-        self.wtd.shrink()
-    }
-
     
     /// returns if there is an edge between `from` and `to`
     fn edge_exists(&self, from: usize, to: usize) -> bool {
@@ -122,6 +119,10 @@ impl Unlabeled<usize> for WTUGraph {
         self.wtd.append_vertex()
     }
 
+    /// it removes all vertices in deleted_vertices from the graph, resets deleted_vertices, thus shrinking
+    /// wt_adj_len, the updated v_count AND the v_count at last commit. does not commit changes other than vertex deletion. 
+    /// does commit vertex-deletion and rebuild QW-tree. (expensive!)
+    /// return a list containing the deleted vertices?
     fn shrink(&mut self) -> Vec<Option<usize>> {
         todo!()
     }

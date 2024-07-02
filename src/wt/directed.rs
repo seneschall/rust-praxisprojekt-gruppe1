@@ -11,8 +11,13 @@ use vers_vecs::{BitVec, RsVec};
 #[cfg(test)]
 mod test;
 
-/// A structure holding an immutable Wavelet-Tree-Representation of an indexed graph with directed edges, plus information on manual changes.
-/// The greatest possible of number of edges or of vertices is usize vertices, vertex-indices are also usize-data-type.
+/// An indexed Wavelet-Tree-digraph with directed edges. (wt-digraph)
+/// The wt-digraph holds data encoding an indexed, mutable digraph, from which we can build a QW-Tree (from QWT-crate), which is the core of the QT-graph.
+/// The QW-Tree is immutable and enables us to perform traditional graph algorithms very fast.
+/// Users can perform changes on the digraph, which will be recorded in the graph. Users can perfom fast operations on the original graph and slower operations on the recent state of the graph.
+/// Users can integrate the recent state of the graph into the QW-Tree by rebuilding it using the commit_edits-function.
+/// See more documentation on function-level and in the crate introduction.
+/// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type.
 pub struct WTDigraph {
     pub(crate) wt_adj_len: usize,                      // last index + 1
     e_count: usize,                                    // number of edges
@@ -93,7 +98,13 @@ impl WTDigraph {
 }
 
 impl Graph<usize> for WTDigraph {
-    /// this function needs documentation
+
+    /// use at own risk!
+    /// adds a new empty vertex to the graph,
+    /// by adding an empty vector at the given index, or overwriting the entry with the same key if existant.  
+    /// adds several new empty Vertices if the given index exceeds the current v_count.
+    /// returns the index of the new vertex
+    // todo ! why does this return a usize?
     fn add_vertex(&mut self, vertex: usize) -> usize {
         // use at own risk
         self.has_uncommitted_edits = true;
@@ -203,10 +214,7 @@ impl Graph<usize> for WTDigraph {
         return false;
     }
 
-    /// it removes all vertices in deleted_vertices from the graph, resets deleted_vertices, thus shrinking
-    /// wt_adj_len, the updated v_count AND the v_count at last commit. does not commit changes other than vertex deletion. 
-    /// does commit vertex-deletion and rebuild QW-tree. (expensive!)
-    /// return a list containing the deleted vertices?
+
     fn shrink(&mut self) -> Vec<Option<usize>> {
         // somebody else should check this. -Simon
         let mut sequence: Vec<usize> = Vec::new();
@@ -376,7 +384,11 @@ impl Unlabeled<usize> for WTDigraph {
         // self.has_uncommitted_edits = true;
         // return index; // changed to index-1; that's a bug! I've changed it back! -Simon
     }
-
+    
+    /// it removes all vertices in deleted_vertices from the graph, resets deleted_vertices, thus shrinking
+    /// wt_adj_len, the updated v_count AND the v_count at last commit. does not commit changes other than vertex deletion. 
+    /// does commit vertex-deletion and rebuild QW-tree. (expensive!)
+    /// return a list containing the deleted vertices?
     fn shrink(&mut self) -> Vec<Option<usize>> {
         // somebody else should check this. -Simon
         let mut sequence: Vec<usize> = Vec::new();
