@@ -38,8 +38,11 @@ impl<W> Graph<usize> for WeightedUGraph<W> {
     }
 
     fn delete_edge(&mut self, from: usize, to: usize) {
-        //todo
-        self.wdg.delete_edge(from, to);
+        if from <= to {
+            self.wdg.delete_edge(from, to);
+        } else {
+            self.wdg.delete_edge(to, from);
+        }
     }
 
     fn delete_vertex(&mut self, vertex: usize) {
@@ -77,8 +80,12 @@ where
     W: Copy,
 {
     fn add_edge(&mut self, from: usize, to: usize, weight: W) {
-        //todo
-        self.wdg.add_edge(from, to, weight);
+        if from <= to {
+            self.wdg.add_edge(from, to, weight);
+        } else {
+            self.wdg.add_edge(to, from, weight);
+        }
+        
     }
 
     fn edit_weight(&mut self, from: usize, to: usize, weight: W) {
@@ -86,7 +93,11 @@ where
     }
 
     fn get_weight(&mut self, from: usize, to: usize) -> W {
-        //todo
-        return self.wdg.get_weight(from, to);
+        if from <= to {
+            return self.wdg.get_weight(from, to);
+        } else {
+            return self.wdg.get_weight(to, from);
+        }
+        
     }
 }

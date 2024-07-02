@@ -160,17 +160,26 @@ where
     W: Clone,
 {
     fn add_edge(&mut self, from: L, to: L, weight: W) {
-        //todo
-        self.lwdg.add_edge(from, to, weight);
+        if self.get_index(&from) <= self.get_index(&to) {
+            self.lwdg.add_edge(from, to, weight);
+        } else {
+            self.lwdg.add_edge(to, from, weight);
+        }
     }
 
     fn edit_weight(&mut self, from: L, to: L, weight: W) {
-        //todo
-        self.lwdg.edit_weight(from, to, weight);
+        if self.get_index(&from) <= self.get_index(&to) {
+            self.lwdg.edit_weight(from, to, weight);
+        } else {
+            self.lwdg.edit_weight(to, from, weight);
+        }
     }
 
     fn get_weight(&mut self, from: L, to: L) -> W {
-        //todo
-        self.lwdg.get_weight(from, to)
+        if self.get_index(&from) <= self.get_index(&to) {
+            self.lwdg.get_weight(from, to)
+        } else {
+            self.lwdg.get_weight(to, from)
+        }
     }
 }
