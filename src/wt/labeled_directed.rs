@@ -279,9 +279,10 @@ where
     fn commit_edits(&mut self) {
         // first append new indices to the
         // increase Vec<L> to v_count_updated
-        // checkme if this is correct
+        // todo: checkme if this is correct
         let mut new_index_label: Vec<L> = Vec::new();
-        for i in 0..self.v_count_updated() - 1 {
+        let mut new_label_index: HashMap<L, usize> = HashMap::new();
+        for i in 0..self.dg.wt_adj_len_updated {
             if self.index_label_uncommitted.contains_key(&i) {
                 // change of labels at index i
                 let change = self.index_label_uncommitted.get(&i).unwrap(); // save to unwrap here
@@ -289,6 +290,7 @@ where
                     Edit::Add(new_label) => {
                         // new label
                         new_index_label.push(new_label.to_owned());
+                        new_label_index.insert(new_label.to_owned(), i);
                     }
                     Edit::Delete(new_label) => {
                         //this index is marked as deleted
@@ -296,11 +298,15 @@ where
                         //checkme fixme todo
                         //we have to check in deleted_vertices if this entry is valid
                         new_index_label.push(new_label.to_owned());
+                        new_label_index.remove(new_label);
                     }
                 }
             } else {
+                // pushes index/label pairs that weren't changed since last commit
                 if i <= self.label_index.len() {
-                    new_index_label.push(self.index_label.get(i).unwrap().clone());
+                    let label: &L = self.index_label.get(i).unwrap();
+                    new_index_label.push(label.clone());
+                    new_label_index.insert(label.clone(), i);
                 }
             }
         }
@@ -308,13 +314,7 @@ where
         self.index_label_uncommitted = HashMap::new();
         self.label_index_uncommitted = HashMap::new();
         self.index_label = new_index_label;
-        self.label_index = HashMap::new();
-        for i in 0..self.v_count_updated() - 1 {
-            if !self.dg.deleted_vertices.contains_key(&i) {
-                self.label_index
-                    .insert(self.index_label.get(i).unwrap().clone(), i);
-            }
-        }
+        self.label_index = new_label_index;
         self.dg.commit_edits();
     }
 
