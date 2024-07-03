@@ -1,5 +1,4 @@
-use qwt::QWT256;
-use vers_vecs::{BitVec, RsVec};
+use vers_vecs::RsVec;
 
 use crate::graph::labeled_directed::LabeledDigraph;
 use crate::traits::{Directed, Graph, Labeled, Unlabeled, Unweighted, WTDirected, WTLabeled, WT};
@@ -202,12 +201,12 @@ where
         if self.label_index_uncommitted.contains_key(&old_label) {
             // Label got an entry in label_index_uncommitted
             match self.label_index_uncommitted.get(&old_label).unwrap() {
-                Edit::Delete(index) => {
+                Edit::Delete(_) => {
                     // Label was deleted from the index
                     // this case is not valid
                     panic!("ldg edit_label : old_label was deleted.");
                 }
-                Edit::Add(index) => {
+                Edit::Add(_) => {
                     // Label was added to an index
                     // this case is valid
                     self.label_index_uncommitted
@@ -421,7 +420,7 @@ where
                 Edit::Add(label) => {
                     return Some(label.to_owned()); // to_owned() since its label is from type &usize
                 }
-                Edit::Delete(label) => {
+                Edit::Delete(_) => {
                     return None;
                 }
             }

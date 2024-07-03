@@ -1,3 +1,6 @@
+pub mod from_file; 
+
+
 use super::*;
 use graph::{
     directed::Digraph, labeled_directed::LabeledDigraph, labeled_undirected::LabeledUGraph,

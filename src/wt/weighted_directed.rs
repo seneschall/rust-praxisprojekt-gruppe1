@@ -67,9 +67,17 @@ where
     }
 
     fn edge_exists(&self, from: usize, to: usize) -> bool {
-        self.dg.edge_exists(from, to)
+        if from <= to {
+            self.dg.edge_exists(from, to)
+        }
+        else {
+            self.dg.edge_exists(to, from)
+        }
     }
+
+
 }
+
 impl<W> Directed<usize> for WeightedWTDigraph<W>
 where
     W: Clone,
@@ -197,7 +205,6 @@ where
         }
         // check if weight was editted
         if self.weights_uncommitted.contains_key(&(from, to)) {
-            let test = self.weights_uncommitted.get(&(from, to)).unwrap();
             match self.weights_uncommitted.get(&(from, to)).unwrap() {
                 Edit::Add(weight) => {
                     return weight.clone();

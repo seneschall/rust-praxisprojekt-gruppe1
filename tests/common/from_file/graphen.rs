@@ -53,9 +53,7 @@ fn read_adj_unlabeled_unweighted_directed(filename: &str) -> (usize,usize,Vec<Ve
 /// read in an ugraph from file
 pub fn create_ugraph(filepath: &str) -> UGraph {
     let (v_count, e_count, adj) = read_adj_unlabeled_unweighted_undirected(filepath);
-    UGraph {
-        dg : Digraph::from_adjacency_list(v_count, e_count, adj),
-        }
+    UGraph::from_adjacency_list(v_count, e_count, adj)
 }
 
 
@@ -103,12 +101,19 @@ fn read_adj_unlabeled_unweighted_undirected(filename: &str) -> (usize, usize, Ve
 
 /// read in a weighted digraph from file
 pub fn create_weighted_digraph<W>(filepath: &str) -> WeightedDigraph<W>
-where W: FromStr, W: Debug, {
-    let (v_count, e_count, adj, weights) = read_adj_unlabeled_weighted_directed(filepath);
-    WeightedDigraph {
-        dg : Digraph::from_adjacency_list(v_count, e_count, adj),
-        weights, 
+where W: FromStr + Debug + Clone, {
+    let (v_count, e_count, adj, weights) = read_adj_unlabeled_weighted_directed::<W>(filepath);
+    let mut i: usize = 0;
+    let mut adj_with_weights : Vec<Vec<(usize,W)>> = Vec::new();
+    for vertex in adj {
+        let mut myvec = Vec::new();
+        for edge in vertex{
+            myvec.push((edge, weights.get(&(i,edge)).unwrap().clone()))
+        }
+        adj_with_weights.push(myvec);
+        i += 1;
     }
+    WeightedDigraph::from_adjacency_list(v_count, e_count, adj_with_weights)
 }
 
 // helper for W-digraph
@@ -149,14 +154,18 @@ where W: FromStr, W: Debug {
 pub fn create_weighted_ugraph<W>(filepath: &str) -> WeightedUGraph<W> 
 where W: Debug, W : FromStr, W: Copy
 {
-    let (e_count, v_count, adj, weights) = read_adj_unlabeled_weighted_undirected(filepath);
-    let wdg = WeightedDigraph {
-        dg : Digraph::from_adjacency_list(v_count, e_count, adj),
-        weights,
-    };
-    WeightedUGraph {
-        wdg,
+    let (e_count, v_count, adj, weights) = read_adj_unlabeled_weighted_undirected::<W>(filepath);
+    let mut i: usize = 0;
+    let mut adj_with_weights : Vec<Vec<(usize,W)>> = Vec::new();
+    for vertex in adj {
+        let mut myvec = Vec::new();
+        for edge in vertex{
+            myvec.push((edge, weights.get(&(i,edge)).unwrap().clone()))
+        }
+        adj_with_weights.push(myvec);
+        i += 1;
     }
+    WeightedUGraph::from_adjacency_list(v_count, e_count, adj_with_weights)
 }
 
 // helper for W-ugraph
@@ -209,11 +218,7 @@ pub fn create_labeled_digraph<L>(filepath: &str) -> LabeledDigraph<L>
 where L: Eq + Clone + Hash + FromStr
 {
     let (v_count, e_count, adj, labels, indices) = read_adj_labeled_unweighted_directed(filepath);
-    LabeledDigraph {
-        dg : Digraph::from_adjacency_list(v_count, e_count, adj),
-        vec_vertex_labels : labels,
-        hashmap_labels_vertex : indices,
-    }
+    LabeledDigraph::from_adjacency_list(v_count, e_count, adj, labels) 
 }
 
 // helper for L-digraph
@@ -273,15 +278,8 @@ pub fn create_labeled_ugraph<L>(filepath: &str) -> LabeledUGraph<L>
 where L: Eq + Clone + Hash + FromStr + Ord{
 
     let (v_count, e_count, adj, labels, indices) = read_adj_labeled_unweighted_undirected(filepath);
-    LabeledUGraph {
-        ldg: LabeledDigraph {
-            dg : Digraph::from_adjacency_list(v_count, e_count, adj),
-            vec_vertex_labels : labels.clone(),            
-            hashmap_labels_vertex : indices.clone(),      
-        },
+    LabeledUGraph::from_adjacency_list(v_count, e_count, adj, labels)
     }
-
-}
 
 // helper for L-ugraph
 fn read_adj_labeled_unweighted_undirected<L>(filepath: &str) -> (usize, usize, Vec<Vec<usize>>, Vec<L>, HashMap<L,usize>) 
@@ -345,17 +343,20 @@ where L: Eq + Clone + Hash + FromStr + Ord
 
 
 /// read in a weighted labeled digraph from file (W-L-digraph)
-pub fn create_labeled_weighted_digraph<L,W>(filepath: &str) -> LabeledWeightedDigraph<W,L> 
+pub fn create_labeled_weighted_digraph<L,W>(filepath: &str) -> LabeledWeightedDigraph<L,W> 
 where W: FromStr + Debug + Hash + Clone + Eq ,L : Hash + Eq + Clone + Debug + FromStr {
-    let (v_count, e_count, adj, weights, labels, indices) = read_adj_labeled_weighted_directed(filepath);
-    LabeledWeightedDigraph {
-        ldg : LabeledDigraph {
-            dg : Digraph::from_adjacency_list(v_count, e_count, adj),
-            vec_vertex_labels : labels,
-            hashmap_labels_vertex : indices,
-        },
-        weights,
+    let (v_count, e_count, adj, weights, labels, indices) = read_adj_labeled_weighted_directed::<L,W>(filepath);
+    let mut i: usize = 0;
+    let mut adj_with_weights : Vec<Vec<(usize,W)>> = Vec::new();
+    for vertex in adj {
+        let mut myvec = Vec::new();
+        for edge in vertex {
+            myvec.push((edge, weights.get(&(i,edge)).unwrap().clone()))
+        }
+        adj_with_weights.push(myvec);
+        i += 1;
     }
+    LabeledWeightedDigraph::from_adjacency_list(v_count, e_count, adj_with_weights, labels)
 }
 
 // helper for W-L-digraph
@@ -419,19 +420,20 @@ where W: FromStr + Debug, L : Hash + Clone + FromStr + Debug + FromStr + Eq {
 }
 
 /// read in a weighted labeled ugraph from file (W-L-ugraph)
-pub fn create_weighted_labeled_ugraph<L,W>(filepath: &str) -> LabeledWeightedUGraph<W,L> 
-where W: FromStr + Debug + Hash + Eq + Clone  ,L : Hash + Eq + Clone + Debug + FromStr {
-    let (v_count, e_count, adj, weights, labels, indices) = read_adj_labeled_weighted_directed(filepath);
-    LabeledWeightedUGraph {
-        lwdg : LabeledWeightedDigraph {
-            ldg : LabeledDigraph {
-                dg : Digraph::from_adjacency_list(v_count, e_count, adj),
-                vec_vertex_labels : labels,
-                hashmap_labels_vertex : indices,
-                },
-            weights,
-            },
+pub fn create_weighted_labeled_ugraph<L,W>(filepath: &str) -> LabeledWeightedUGraph<L,W> 
+where W: FromStr + Debug + Hash + Eq + Clone  , L : Hash + Eq + Clone + Debug + FromStr {
+    let (v_count, e_count, adj, weights, labels, indices) = read_adj_labeled_weighted_directed::<L,W>(filepath);
+    let mut i: usize = 0;
+    let mut adj_with_weights : Vec<Vec<(usize,W)>> = Vec::new();
+    for vertex in adj {
+        let mut myvec : Vec<(usize,W)>= Vec::new();
+        for edge in vertex {
+            myvec.push((edge, weights.get(&(i,edge)).unwrap().clone()))
         }
+        adj_with_weights.push(myvec);
+        i += 1;
+    }
+    LabeledWeightedUGraph::from_adjacency_list(v_count, e_count, adj_with_weights, labels)
 }
 
 // helper for W-L-ugraph

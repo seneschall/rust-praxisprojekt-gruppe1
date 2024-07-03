@@ -2,9 +2,8 @@ use crate::graph::directed::Digraph;
 use crate::traits::{Directed, Graph, Unlabeled, Unweighted, WTDirected, WT};
 use crate::Edit;
 use core::panic;
-use num::Zero; //todo: brauchen wir das noch?
 use qwt::{AccessUnsigned, RankUnsigned, SelectUnsigned, QWT256};
-use std::collections::{HashMap, VecDeque};
+use std::collections::HashMap;
 use vers_vecs::{BitVec, RsVec};
 // 1 MAJOR if WTGraph has no edges, subtract overflow in qwt crate
 
@@ -42,7 +41,7 @@ impl WTDigraph {
         let v_count = dg.adj.len();
         let mut sequence: Vec<usize> = Vec::new();
 
-        for (v, v_adj) in dg.adj.iter().enumerate() {
+        for (_v, v_adj) in dg.adj.iter().enumerate() {
             // iterate over all vertices (v) in adj
             bv.append(true);
             for val in v_adj.iter() {
