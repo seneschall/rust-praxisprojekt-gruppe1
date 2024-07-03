@@ -33,7 +33,6 @@ pub struct WTDigraph {
 }
 
 impl WTDigraph {
-    
     /// this function instantiiates a wt-digraph from a given digraph   
     pub fn from_digraph(dg: Digraph) -> Self {
         let mut bv = BitVec::new();
@@ -94,10 +93,33 @@ impl WTDigraph {
             has_uncommitted_edits: false,
         };
     }
+
+    pub fn iter(&self) -> WTDigraphIterator {
+        WTDigraphIterator {
+            dg: &self,
+            index: 0,
+            max: self.wt_adj_len - 1,
+        }
+    }
+
+    pub fn iter_edges(&self) -> WTDigraphEdgeIterator {
+        WTDigraphEdgeIterator {
+            dg: &self,
+            from_index: 0,
+            from_index_wt: 0,
+            to_index: 0,
+            max_from: self.wt_adj_len - 1,
+            current_max_to: self.get_starting_index(1),
+        }
+    }
+
+    // calculates the index of the first element of the adjacency list of a given vertex in the wavelet tree using the bitvector
+    pub(crate) fn get_starting_index(&self, vertex: usize) -> usize {
+        return self.starting_indices.select1(vertex) - vertex;
+    }
 }
 
 impl Graph<usize> for WTDigraph {
-
     /// use at own risk!
     /// adds a new empty vertex to the graph,
     /// by adding an empty vector at the given index, or overwriting the entry with the same key if existant.  
@@ -154,8 +176,7 @@ impl Graph<usize> for WTDigraph {
         return self.wt_adj_len - self.deleted_vertices.len();
     }
 
-
-    /// deletes the edge from 'from' to 'to'. panics if edge doens't exist. 
+    /// deletes the edge from 'from' to 'to'. panics if edge doens't exist.
     /// iterates over 'from's enty in 'adj_uncommited' and deletes entries who match Add(to).
     /// if not present, enters a new entry with 'from's key and Delete(to) in 'adj_uncommited'.
     fn delete_edge(&mut self, from: usize, to: usize) {
@@ -199,7 +220,6 @@ impl Graph<usize> for WTDigraph {
         self.has_uncommitted_edits = true;
     }
 
-
     /// checks if the given vertex exists
     fn vertex_exists(&self, vertex: usize) -> bool {
         if self.deleted_vertices.contains_key(&vertex) {
@@ -227,7 +247,6 @@ impl Graph<usize> for WTDigraph {
     }
 }
 impl Directed<usize> for WTDigraph {
-
     /// return all outgoing edges of the given vertex in a vector
     /// should probably be changed to return an iterator instea
     fn outgoing_edges(&self, vertex: usize) -> Vec<usize> {
@@ -250,7 +269,7 @@ impl Directed<usize> for WTDigraph {
 
         return outgoing;
     }
-    
+
     /// return all outgoing edges of the given vertex in a vector
     /// should probably be changed to return an iterator instead
     fn incoming_edges(&self, vertex: usize) -> Vec<usize> {
@@ -308,7 +327,6 @@ impl Directed<usize> for WTDigraph {
 }
 
 impl Unlabeled<usize> for WTDigraph {
-    
     /// adds a new empty vertex at either the index following the last or at (the lowest available) previously freed index.
     /// preserves indexing and never overwrites vertices
     /// append_vertex() is not defined for labeled graphs
@@ -325,9 +343,9 @@ impl Unlabeled<usize> for WTDigraph {
         // self.has_uncommitted_edits = true;
         // return index; // changed to index-1; that's a bug! I've changed it back! -Simon
     }
-    
+
     /// it removes all vertices in deleted_vertices from the graph, resets deleted_vertices, thus shrinking
-    /// wt_adj_len, the updated v_count AND the v_count at last commit. does not commit changes other than vertex deletion. 
+    /// wt_adj_len, the updated v_count AND the v_count at last commit. does not commit changes other than vertex deletion.
     /// does commit vertex-deletion and rebuild QW-tree. (expensive!)
     /// return a list containing the deleted vertices?
     fn shrink(&mut self) -> Vec<Option<usize>> {
@@ -389,7 +407,6 @@ impl Unlabeled<usize> for WTDigraph {
     }
 }
 impl Unweighted<usize> for WTDigraph {
-    
     /// adds an edge between the vertices 'from' and 'to', by adding an edge from the smaller to the bigger indice in the dg.
     fn add_edge(&mut self, from: usize, to: usize) {
         // only adds to uncommitted edits
@@ -417,7 +434,6 @@ impl Unweighted<usize> for WTDigraph {
 }
 
 impl WT<usize> for WTDigraph {
-
     /// collect and apply all changes in adj_uncommited. rebuild QW-tree. expensive!
     /// set v_count to v_count_updated, e_count to e_count_updated, if present change labels, weights [...].
     /// some changes like deleted vertices are conserved
@@ -524,10 +540,13 @@ impl WT<usize> for WTDigraph {
         }
         return v_count_updated;
     }
+
+    fn e_count_updated(&self) -> usize {
+        return self.e_count_updated;
+    }
 }
 
 impl WTDirected<usize> for WTDigraph {
-
     /// return all outgoing edges of the given vertex in a vector, which exist and weren't deleted, or were created since since last commit.
     /// should probably be changed to return an iterator instead
     fn outgoing_edges_updated(&self, vertex: usize) -> Vec<usize> {
@@ -560,7 +579,7 @@ impl WTDirected<usize> for WTDigraph {
 
         return outgoing;
     }
-    
+
     /// return all incoming edges of the given vertex in a vector, which exist and weren't deleted, or were created since since last commit.
     /// should probably be changed to return an iterator instead
     fn incoming_edges_updated(&self, vertex: usize) -> Vec<usize> {
@@ -616,6 +635,91 @@ impl WTDirected<usize> for WTDigraph {
         }
 
         return incoming;
+    }
+}
+
+// Iterators; for now, I think it's fine to limit them to committed edits
+
+pub struct WTDigraphIterator<'a> {
+    /// Struct that stores the data for creating an Iterator of a WTDigraph
+    dg: &'a WTDigraph,
+    index: usize,
+    max: usize, // the largest index the iterator is going to reach
+}
+
+impl Iterator for WTDigraphIterator {
+    type Item: Vec<usize>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.index >= max {
+            return None;
+        }
+
+        if self.dg.vertex_exists(self.index) {
+            let result = self.dg.outgoing_edges(self.index);
+            self.index += 1;
+            return Some(result);
+        } else {
+            self.index += 1;
+            let result = self.next(); // using recursion with side effects might be a bit dangerous but it should work -Simon
+            return result;
+        }
+    }
+}
+
+/// Iterator that yields all edges of the given digraph as a tuple (from, to).
+pub struct WTDigraphEdgeIterator<'a> {
+    dg: &'a WTDigraph,
+    from_index: usize, // the index of the of the vertex whose outgoing edges are currently being iterated over
+    from_index_wt: usize, // the wt index of the vertex whose outgoing edges are currently being iterated over (= self.dg.starting_indices.select1(self.from_index) - self.from_index)
+    to_index: usize,
+    max_from: usize,       // the largest index the iterator is going to reach
+    current_max_to: usize, // the vertex with the highest index out of all the outgoing edges of from
+}
+
+impl Iterator for WTDigraphEdgeIterator {
+    type Item = Edge;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        // iterates over all existing edges
+        if self.from_index > self.max_from {
+            return None;
+        }
+
+        if self.to_index > self.current_max_to {
+            self.from_index += 1;
+
+            if self.from_index > self.max_from {
+                return None;
+            }
+
+            self.from_index_wt = self.dg.get_starting_index(self.from_index);
+            self.to_index = self.from_index_wt;
+            self.current_max_to = self.dg.get_starting_index(self.from_index + 1) - 1;
+            // the current next highest from - 1
+        }
+
+        let from: usize = self.from_index;
+        let to: usize = self.dg.wt_adj.get(self.to_index).unwrap();
+
+        let result: Edge = Edge::new(from, to);
+
+        self.to_index += 1;
+        return Some(result);
+    }
+}
+
+pub struct Edge {
+    // experimental. We might change this back to a tuple (usize, usize)
+    // but if we are going to use this, it would make sense to declare this in lib.rs
+    // then it should use generics and contain references for labelled edges
+    from: usize,
+    to: usize,
+}
+
+impl Edge {
+    pub fn new(from: usize, to: usize) -> Self {
+        Edge { from, to }
     }
 }
 
