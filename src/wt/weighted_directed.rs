@@ -7,7 +7,7 @@ use crate::traits::{Directed, Graph, Unlabeled, Unweighted, WTDirected, WTWeight
 use crate::wt::directed::WTDigraph;
 use crate::Edit;
 
-/// A structure holding an immutable Wavelet-Tree-Representation of an indexed graph with directed edges, where each edge represents a weight, plus information on manual changes. 
+/// A structure holding an immutable Wavelet-Tree-Representation of an indexed graph with directed edges, where each edge represents a weight, plus information on manual changes.
 /// The greatest possible of number of edges or of vertices is usize vertices, vertex-indices are also usize-data-type. Weights can have any type.
 pub struct WeightedWTDigraph<W> {
     dg: WTDigraph,
