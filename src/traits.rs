@@ -70,6 +70,7 @@ pub trait Weighted<T, W> {
 pub trait WT<T> {
     //todo, uncommited changes for edges missing?
     fn v_count_updated(&self) -> usize;
+    fn e_count_updated(&self) -> usize;
 
     fn commit_edits(&mut self);
     // commits all edits, including labels, weights, edges, vertices; wt will be rebuild here
