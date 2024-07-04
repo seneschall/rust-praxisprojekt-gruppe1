@@ -111,6 +111,10 @@ impl<W> WT<usize> for WeightedWTUGraph<W> {
     fn v_count_updated(&self) -> usize {
         todo!()
     }
+    
+    fn e_count_updated(&self) -> usize {
+        todo!()
+    }
 }
 impl<W> WTUndirected<usize> for WeightedWTUGraph<W> {
     fn edges_updated(&self, vertex: usize) -> Vec<usize> {

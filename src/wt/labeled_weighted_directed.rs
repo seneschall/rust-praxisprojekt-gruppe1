@@ -230,6 +230,10 @@ where
     fn v_count_updated(&self) -> usize {
         self.ldg.v_count_updated()
     }
+    
+    fn e_count_updated(&self) -> usize {
+        todo!()
+    }
 }
 impl<L, W> WTWeighted<L, W> for LabeledWeightedWTDigraph<L, W>
 where

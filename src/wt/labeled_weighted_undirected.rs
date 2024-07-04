@@ -146,6 +146,10 @@ where
     fn v_count_updated(&self) -> usize {
         todo!()
     }
+    
+    fn e_count_updated(&self) -> usize {
+        todo!()
+    }
 }
 impl<L, W> WTWeighted<L, W> for LabeledWeightedWTUGraph<L, W>
 where

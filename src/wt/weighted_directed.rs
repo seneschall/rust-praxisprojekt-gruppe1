@@ -179,6 +179,10 @@ impl<W> WT<usize> for WeightedWTDigraph<W> {
     fn v_count_updated(&self) -> usize {
         self.dg.v_count_updated()
     }
+    
+    fn e_count_updated(&self) -> usize {
+        todo!()
+    }
 }
 impl<W> WTDirected<usize> for WeightedWTDigraph<W> {
     fn outgoing_edges_updated(&self, vertex: usize) -> Vec<usize> {

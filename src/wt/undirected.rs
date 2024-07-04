@@ -167,6 +167,10 @@ impl WT<usize> for WTUGraph {
     fn v_count_updated(&self) -> usize {
         todo!()
     }
+    
+    fn e_count_updated(&self) -> usize {
+        todo!()
+    }
 }
 
 impl WTUndirected<usize> for WTUGraph {

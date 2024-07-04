@@ -135,6 +135,10 @@ where
     fn v_count_updated(&self) -> usize {
         todo!()
     }
+    
+    fn e_count_updated(&self) -> usize {
+        todo!()
+    }
 }
 impl<L> WTUndirected<L> for LabeledWTUGraph<L>
 where

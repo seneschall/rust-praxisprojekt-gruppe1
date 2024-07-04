@@ -524,6 +524,10 @@ impl WT<usize> for WTDigraph {
         }
         return v_count_updated;
     }
+    
+    fn e_count_updated(&self) -> usize {
+        todo!()
+    }
 }
 
 impl WTDirected<usize> for WTDigraph {

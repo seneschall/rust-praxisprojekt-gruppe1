@@ -354,6 +354,10 @@ where
     fn v_count_updated(&self) -> usize {
         return self.dg.v_count_updated();
     }
+    
+    fn e_count_updated(&self) -> usize {
+        todo!()
+    }
 }
 impl<L> WTDirected<L> for LabeledWTDigraph<L>
 where
