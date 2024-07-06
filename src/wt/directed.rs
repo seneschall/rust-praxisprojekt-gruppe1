@@ -526,7 +526,7 @@ impl WT<usize> for WTDigraph {
     }
     
     fn e_count_updated(&self) -> usize {
-        todo!()
+        return self.e_count_updated;
     }
 }
 

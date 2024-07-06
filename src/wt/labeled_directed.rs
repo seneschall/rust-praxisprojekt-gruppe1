@@ -356,7 +356,7 @@ where
     }
     
     fn e_count_updated(&self) -> usize {
-        todo!()
+        return self.dg.e_count_updated();
     }
 }
 impl<L> WTDirected<L> for LabeledWTDigraph<L>

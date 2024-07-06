@@ -181,7 +181,7 @@ impl<W> WT<usize> for WeightedWTDigraph<W> {
     }
     
     fn e_count_updated(&self) -> usize {
-        todo!()
+        return self.dg.e_count_updated();
     }
 }
 impl<W> WTDirected<usize> for WeightedWTDigraph<W> {

@@ -232,7 +232,7 @@ where
     }
     
     fn e_count_updated(&self) -> usize {
-        todo!()
+        return self.ldg.e_count_updated();
     }
 }
 impl<L, W> WTWeighted<L, W> for LabeledWeightedWTDigraph<L, W>
