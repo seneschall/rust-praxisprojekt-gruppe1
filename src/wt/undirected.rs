@@ -106,7 +106,7 @@ impl Undirected<usize> for WTUGraph {
     /// should return a Result
     fn delete_edges_from(&mut self, vertex: usize) {
         // deletes all edges connected to vertex
-        for item in self.edges(vertex) {
+        for item in self.edges_updated(vertex) {
             self.delete_edge(vertex, item);
         }
     }
@@ -179,9 +179,18 @@ impl WTUndirected<usize> for WTUGraph {
     /// return all edges of the given vertex in a vector, which exist and weren't deleted, or were created since since last commit.
     /// should probably be changed to return an iterator instead
     fn edges_updated(&self, vertex: usize) -> Vec<usize> {
-        // todo! might be wrong
-        let mut edges: Vec<usize> = self.wtd.incoming_edges_updated(vertex);
-        edges.append(&mut self.wtd.outgoing_edges_updated(vertex));
-        return edges;
+        let mut edges: Vec<usize> = Vec::new();
+        edges = self.wtd.incoming_edges_updated(vertex); // all incoming edges of vertex
+        if self.edge_exists_updated(vertex, vertex) {
+            for item in self.wtd.outgoing_edges_updated(vertex) {
+                if item != vertex {
+                    edges.push(item);
+                }
+            }
+            return edges;
+        } else {
+            edges.append(&mut self.wtd.outgoing_edges_updated(vertex)); // + outgoing edges of vertex
+            return edges;
+        }
     }
 }

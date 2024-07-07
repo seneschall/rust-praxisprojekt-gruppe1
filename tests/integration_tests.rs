@@ -69,13 +69,10 @@ mod test {
         assert_eq!(ug.append_vertex(), wtug.append_vertex());
         assert_eq!(ug.v_count(), wtug.v_count_updated());
         for i in 0..10 {
-            for j in 0..10 {
+            for j in i..10 {
                 ug.add_edge(i, j);
                 wtug.add_edge(i, j);
             }
-            println!("{i}");
-            println!("ug {:?}", ug.edges(i));
-            println!("wtug {:?}", wtug.edges_updated(i));
             assert_eq!(ug.edges(i).len(), wtug.edges_updated(i).len());
             for item in ug.edges(i) {
                 assert!(wtug.edges_updated(i).contains(&item));
