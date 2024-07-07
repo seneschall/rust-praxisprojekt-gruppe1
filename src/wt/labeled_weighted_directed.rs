@@ -144,7 +144,9 @@ where
     }
 
     fn shrink(&mut self) -> HashMap<L, Option<L>> {
-        todo!()
+        // todo see ldg
+        self.ldg.shrink();
+        return HashMap::new();
     }
 }
 impl<L, W> Weighted<L, W> for LabeledWeightedWTDigraph<L, W>
