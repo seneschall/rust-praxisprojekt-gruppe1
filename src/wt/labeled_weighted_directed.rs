@@ -205,9 +205,21 @@ where
 impl<L, W> WT<L> for LabeledWeightedWTDigraph<L, W>
 where
     L: Hash + Clone + Eq,
+    W: Clone,
 {
     fn commit_edits(&mut self) {
-        todo!()
+        for ((from,to), weight) in &self.weights_uncommitted{
+            match weight{
+                Edit::Add(add_weight) => {
+                    self.weights.insert((*from,*to), add_weight.clone());
+                }
+                Edit::Delete(_delete_weight) => {
+                    self.weights.remove(&(*from,*to));
+                }
+            }
+        }
+        self.ldg.commit_edits();
+
     }
 
     // fn get_uncommitted_edits(&self) -> Option<std::collections::HashMap<usize, L>> {
