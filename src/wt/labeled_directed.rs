@@ -249,7 +249,17 @@ where
     }
 
     fn shrink(&mut self) -> HashMap<L, Option<L>> {
-        todo!()
+        // todo
+        // updates index_label
+        let old_and_new_indices = self.dg.shrink();
+        let mut new_index_labels : Vec<L> = Vec::new();
+        for i in 0..old_and_new_indices.len(){
+            if old_and_new_indices[i].is_some(){
+                new_index_labels.insert(i,self.index_label[i].clone());
+            }
+        }
+        self.index_label = new_index_labels;
+        return HashMap::new();
     }
 }
 impl<L> Unweighted<L> for LabeledWTDigraph<L>
