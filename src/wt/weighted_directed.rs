@@ -158,9 +158,26 @@ where
     }
 }
 
-impl<W> WT<usize> for WeightedWTDigraph<W> {
+impl<W> WT<usize> for WeightedWTDigraph<W> 
+where W : Clone,
+{
     fn commit_edits(&mut self) {
-        todo!()
+        for ((from,to), change) in self.weights_uncommitted.iter(){
+            match change{
+                Edit::Add(add_weight) => {
+                    if !self.weights.contains_key(&(*from,*to)){
+                        self.weights.insert((*from,*to),add_weight.clone());
+                    }
+                }
+                Edit::Delete(_) => {
+                    if self.weights.contains_key(&(*from,*to)){
+                        self.weights.remove(&(*from,*to));
+                    }
+                }
+            }
+        }
+        self.weights_uncommitted = HashMap::new();
+        self.dg.commit_edits();
     }
 
     fn discard_edits(&mut self) {
