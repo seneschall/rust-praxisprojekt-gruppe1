@@ -17,7 +17,7 @@ pub struct LabeledWTDigraph<L>
 where
     L: Hash + Clone + Eq,
 {
-    dg: WTDigraph,
+    pub(crate) dg: WTDigraph,
     index_label: Vec<L>,
     index_label_uncommitted: HashMap<usize, Edit<L>>, // this only works with a HashMap
     label_index: HashMap<L, usize>, // changed from label_index: HashMap<L, Edit<usize>>,

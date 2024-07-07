@@ -1,8 +1,9 @@
 use vers_vecs::RsVec;
 
 use crate::graph::labeled_undirected::LabeledUGraph;
-use crate::traits::{Graph, Labeled, Undirected, Unweighted, WTLabeled, WTUndirected, WT};
+use crate::traits::{Directed, Graph, Labeled, Undirected, Unweighted, WTDirected, WTLabeled, WTUndirected, WT};
 use crate::wt::labeled_directed::LabeledWTDigraph;
+use std::collections::HashMap;
 use std::hash::Hash;
 
 /// An labeled wavelet-tree-graph with undirected edges. (L-wt-ugraph)
@@ -40,31 +41,63 @@ where
 {
     /// this function needs documentation
     fn add_vertex(&mut self, vertex: L) -> usize {
-        todo!()
+        return self.ldg.add_vertex(vertex);
     }
 
     fn e_count(&self) -> usize {
-        todo!()
+        return self.ldg.e_count();
     }
 
     fn v_count(&self) -> usize {
-        todo!()
+        return self.ldg.v_count();
     }
 
     fn delete_edge(&mut self, from: L, to: L) {
-        todo!()
+        // fixme
+        // does check twice if from and to is valid
+        let from_index = self.get_index_updated(&from);
+        let to_index = self.get_index_updated(&to);
+        if from_index.is_none() {
+            panic!("wtlug delete_edge : from_index is none")
+        }
+        if to_index.is_none() {
+            panic!("wtlug delete_edge : to_index is none")
+        }
+        let from_index = from_index.unwrap();
+        let to_index = to_index.unwrap();
+        if from_index <= to_index {
+            self.ldg.delete_edge(from, to);
+        } else {
+            self.ldg.delete_edge(to, from);
+        }
     }
 
     fn delete_vertex(&mut self, vertex: L) {
-        todo!()
+        self.ldg.delete_vertex(vertex)
     }
 
     fn vertex_exists(&self, vertex: L) -> bool {
-        todo!()
+        return self.ldg.vertex_exists(vertex);
     }
 
     fn edge_exists(&self, from: L, to: L) -> bool {
-        todo!()
+        // fixme
+        // does check twice if from and to is valid
+        let from_index = self.get_index(&from);
+        let to_index = self.get_index(&to);
+        if from_index.is_none() {
+            panic!("wtlug edge_exists : from_index is none")
+        }
+        if to_index.is_none() {
+            panic!("wtlug edge_exists : to_index is none")
+        }
+        let from_index = from_index.unwrap();
+        let to_index = to_index.unwrap();
+        if from_index <= to_index {
+            return self.ldg.edge_exists(from, to);
+        } else {
+            return self.ldg.edge_exists(to, from);
+        }
     }
 }
 impl<L> Undirected<L> for LabeledWTUGraph<L>
@@ -72,11 +105,32 @@ where
     L: Hash + Eq + Clone,
 {
     fn edges(&self, vertex: L) -> Vec<L> {
-        todo!()
+        let vertex_index = self.get_index(&vertex);
+        if vertex_index.is_none(){
+            panic!("wtlug edges : vertex_index is none");
+        }
+        let vertex_index = vertex_index.unwrap();
+        
+        // returns all edges connected to vertex
+        let mut edges: Vec<L>;
+        edges = self.ldg.incoming_edges(vertex.clone()); // all incoming edges of vertex
+        if self.edge_exists(vertex.clone(), vertex.clone()) {
+            for item in self.ldg.outgoing_edges(vertex.clone()) {
+                if item != vertex {
+                    edges.push(item);
+                }
+            }
+            return edges;
+        } else {
+            edges.append(&mut self.ldg.outgoing_edges(vertex)); // + outgoing edges of vertex
+            return edges;
+        }
     }
 
     fn delete_edges_from(&mut self, vertex: L) {
-        todo!()
+        for item in self.edges_updated(vertex.clone()){
+            self.delete_edge(vertex.clone(), item);
+        }
     }
 }
 impl<L> Labeled<L> for LabeledWTUGraph<L>
@@ -84,19 +138,19 @@ where
     L: Hash + Eq + Clone,
 {
     fn edit_label(&mut self, old_label: L, new_label: L) {
-        todo!()
+        self.ldg.edit_label(old_label, new_label);
     }
 
     fn get_label(&self, vertex: usize) -> Option<&L> {
-        todo!()
+        return self.ldg.get_label(vertex);
     }
 
     fn get_index(&self, label: &L) -> Option<usize> {
-        todo!()
+        return self.ldg.get_index(label);
     }
 
-    fn shrink(&mut self) -> std::collections::HashMap<L, Option<L>> {
-        todo!()
+    fn shrink(&mut self) -> HashMap<L, Option<L>> {
+        return self.ldg.shrink();
     }
 }
 impl<L> Unweighted<L> for LabeledWTUGraph<L>
@@ -105,7 +159,24 @@ where
 {
     /// this function needs documentation
     fn add_edge(&mut self, from: L, to: L) {
-        todo!()
+        // fixme
+        // does check twice if from and to is valid
+        let from_index = self.get_index(&from);
+        let to_index = self.get_index(&to);
+        if from_index.is_none() {
+            panic!("wtlug add_edge : from_index is none")
+        }
+        if to_index.is_none() {
+            panic!("wtlug add_edge : to_index is none")
+        }
+        let from_index = from_index.unwrap();
+        let to_index = to_index.unwrap();
+
+        if from_index <= to_index {
+            self.ldg.add_edge(from, to);
+        } else {
+            self.ldg.add_edge(to, from);
+        }
     }
 }
 impl<L> WT<L> for LabeledWTUGraph<L>
@@ -113,7 +184,7 @@ where
     L: Hash + Eq + Clone,
 {
     fn commit_edits(&mut self) {
-        todo!()
+        self.ldg.commit_edits();
     }
 
     // fn get_uncommitted_edits(&self) -> Option<std::collections::HashMap<usize, L>> {
@@ -121,31 +192,65 @@ where
     // }
 
     fn discard_edits(&mut self) {
-        todo!()
+        self.ldg.discard_edits();
     }
 
     fn vertex_exists_updated(&self, vertex: L) -> bool {
-        todo!()
+        return self.ldg.vertex_exists_updated(vertex);
     }
 
     fn edge_exists_updated(&self, from: L, to: L) -> bool {
-        todo!()
+        // fixme
+        // does check twice if from and to is valid
+        let from_index = self.get_index(&from);
+        let to_index = self.get_index(&to);
+        if from_index.is_none() {
+            panic!("wtlug edge_exists : from_index is none")
+        }
+        if to_index.is_none() {
+            panic!("wtlug edge_exists : to_index is none")
+        }
+        let from_index = from_index.unwrap();
+        let to_index = to_index.unwrap();
+        if from_index <= to_index {
+            return self.ldg.edge_exists_updated(from, to);
+        } else {
+            return self.ldg.edge_exists_updated(to, from);
+        }
     }
 
     fn v_count_updated(&self) -> usize {
-        todo!()
+        return self.ldg.v_count_updated();
     }
 
     fn e_count_updated(&self) -> usize {
-        todo!()
+        return self.ldg.e_count_updated();
     }
 }
 impl<L> WTUndirected<L> for LabeledWTUGraph<L>
 where
     L: Hash + Eq + Clone,
 {
-    fn edges_updated(&self, vertex: usize) -> Vec<L> {
-        todo!()
+    fn edges_updated(&self, vertex: L) -> Vec<L> {
+        let vertex_index = self.get_index(&vertex);
+        if vertex_index.is_none(){
+            panic!("wtlug edges : vertex_index is none");
+        }
+        let vertex_index = vertex_index.unwrap();
+
+        let mut edges: Vec<L>;
+        edges = self.ldg.incoming_edges_updated(vertex.clone()); // all incoming edges of vertex
+        if self.edge_exists_updated(vertex.clone(), vertex.clone()) {
+            for item in self.ldg.outgoing_edges_updated(vertex.clone()) {
+                if item != vertex {
+                    edges.push(item);
+                }
+            }
+            return edges;
+        } else {
+            edges.append(&mut self.ldg.outgoing_edges_updated(vertex)); // + outgoing edges of vertex
+            return edges;
+        }
     }
 }
 impl<L> WTLabeled<L> for LabeledWTUGraph<L>
@@ -153,10 +258,10 @@ where
     L: Hash + Eq + Clone,
 {
     fn get_label_updated(&self, index: usize) -> Option<&L> {
-        todo!()
+        return self.ldg.get_label_updated(index);
     }
 
     fn get_index_updated(&self, label: &L) -> Option<usize> {
-        todo!()
+        return self.ldg.get_index_updated(label);
     }
 }

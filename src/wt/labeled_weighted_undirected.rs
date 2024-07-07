@@ -162,7 +162,7 @@ impl<L, W> WTUndirected<L> for LabeledWeightedWTUGraph<L, W>
 where
     L: Hash + Clone + Eq,
 {
-    fn edges_updated(&self, vertex: usize) -> Vec<L> {
+    fn edges_updated(&self, vertex: L) -> Vec<L> {
         todo!()
     }
 }

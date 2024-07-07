@@ -85,7 +85,7 @@ pub trait WT<T> {
     // same as vertex_exists but with uncommitted edits
 }
 pub trait WTUndirected<T> {
-    fn edges_updated(&self, vertex: usize) -> Vec<T>;
+    fn edges_updated(&self, vertex: T) -> Vec<T>;
     // returns all edges from vertex, including uncommitted edits, might be expensive
 }
 pub trait WTDirected<T> {

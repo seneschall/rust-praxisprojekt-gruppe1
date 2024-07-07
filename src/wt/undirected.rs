@@ -78,7 +78,11 @@ impl Graph<usize> for WTUGraph {
 
     /// returns if there is an edge between `from` and `to`
     fn edge_exists(&self, from: usize, to: usize) -> bool {
-        return self.wtd.edge_exists(from, to);
+        if from <= to {
+            return self.wtd.edge_exists(from, to);
+        } else {
+            return self.wtd.edge_exists(to, from);
+        }
     }
 }
 impl Undirected<usize> for WTUGraph {
