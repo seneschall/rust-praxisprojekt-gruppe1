@@ -138,7 +138,7 @@ where
         self.ldg.get_index(label)
     }
 
-    fn shrink(&mut self) -> HashMap<L, Option<L>> {
+    fn shrink(&mut self){
         todo!()
     }
 }

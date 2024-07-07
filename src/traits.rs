@@ -51,7 +51,7 @@ pub trait Labeled<L> {
     //input:index, output Option<&L>; check in vec[vertex] for label
     fn get_index(&self, label: &L) -> Option<usize>; // returns the index of the vertex with the given label
                                                      //input:Label, output Option<&usize>; check in hashmaps value
-    fn shrink(&mut self) -> HashMap<L, Option<L>>; // removes all unconnected vertices from bitmap; only allowed, if has_uncommitted_edits == false; returns a Hashmap with old indices as keys and new indices as values
+    fn shrink(&mut self); // removes all unconnected vertices from bitmap; only allowed, if has_uncommitted_edits == false; returns a Hashmap with old indices as keys and new indices as values
                                                    // can only be used after commit_edits; all deleted vertices will be removed ( index will shift )
                                                    // returns hashmap with deleted indices
                                                    // bitmap changes

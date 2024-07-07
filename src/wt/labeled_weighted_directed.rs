@@ -2,7 +2,7 @@ use vers_vecs::RsVec;
 
 use crate::graph::labeled_weighted_directed::LabeledWeightedDigraph;
 use crate::traits::{
-    Directed, Graph, Labeled, Unweighted, WTDirected, WTLabeled, WTWeighted, Weighted, WT,
+    Directed, Graph, Labeled, Unweighted, WTDirected, WTLabeled, WTWeighted, Weighted, WT
 };
 use crate::wt::labeled_directed::LabeledWTDigraph;
 use crate::Edit;
@@ -67,10 +67,10 @@ where
         let from_index = self.get_index(&from);
         let to_index = self.get_index(&to);
         if from_index.is_none() {
-            panic!("lwdg add_edge : from is none");
+            panic!("lwdg delete_edge : from is none");
         }
         if to_index.is_none() {
-            panic!("lwdg add_edge : tois none");
+            panic!("lwdg delete_edge : tois none");
         }
         let from_index = from_index.unwrap();
         let to_index = to_index.unwrap();
@@ -143,10 +143,8 @@ where
         self.ldg.get_index(label)
     }
 
-    fn shrink(&mut self) -> HashMap<L, Option<L>> {
-        // todo see ldg
+    fn shrink(&mut self){
         self.ldg.shrink();
-        return HashMap::new();
     }
 }
 impl<L, W> Weighted<L, W> for LabeledWeightedWTDigraph<L, W>

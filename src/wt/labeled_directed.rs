@@ -248,7 +248,7 @@ where
         return self.label_index.get(&label).copied();
     }
 
-    fn shrink(&mut self) -> HashMap<L, Option<L>> {
+    fn shrink(&mut self){
         // todo
         // updates index_label
         let old_and_new_indices = self.dg.shrink();
@@ -259,7 +259,6 @@ where
             }
         }
         self.index_label = new_index_labels;
-        return HashMap::new();
     }
 }
 impl<L> Unweighted<L> for LabeledWTDigraph<L>

@@ -153,8 +153,8 @@ where
         return self.lwdg.get_index(label);
     }
 
-    fn shrink(&mut self) -> HashMap<L, Option<L>> {
-        return self.lwdg.shrink();
+    fn shrink(&mut self){
+        self.lwdg.shrink();
     }
 }
 impl<L, W> Weighted<L, W> for LabeledWeightedWTUGraph<L, W>
