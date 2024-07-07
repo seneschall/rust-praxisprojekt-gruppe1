@@ -7,7 +7,7 @@ use std::hash::Hash;
 mod test;
 
 /// A labeled, mutable graph with undirected edges, where each edge represents a weight.
-/// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type. 
+/// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type.
 /// Labels can have any type and are referenced. Weights can have any type.
 pub struct LabeledWeightedUGraph<L, W>
 where

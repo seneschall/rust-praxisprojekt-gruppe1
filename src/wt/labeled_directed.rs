@@ -252,10 +252,10 @@ where
         // todo
         // updates index_label
         let old_and_new_indices = self.dg.shrink();
-        let mut new_index_labels : Vec<L> = Vec::new();
-        for i in 0..old_and_new_indices.len(){
-            if old_and_new_indices[i].is_some(){
-                new_index_labels.insert(i,self.index_label[i].clone());
+        let mut new_index_labels: Vec<L> = Vec::new();
+        for i in 0..old_and_new_indices.len() {
+            if old_and_new_indices[i].is_some() {
+                new_index_labels.insert(i, self.index_label[i].clone());
             }
         }
         self.index_label = new_index_labels;
@@ -364,7 +364,7 @@ where
     fn v_count_updated(&self) -> usize {
         return self.dg.v_count_updated();
     }
-    
+
     fn e_count_updated(&self) -> usize {
         return self.dg.e_count_updated();
     }

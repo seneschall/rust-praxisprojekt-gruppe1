@@ -6,7 +6,7 @@ use crate::wt::labeled_directed::LabeledWTDigraph;
 use std::hash::Hash;
 
 /// An labeled wavelet-tree-graph with undirected edges. (L-wt-ugraph)
-/// The L-wt-ugraph holds a L-wt-digraph. All operations on the L-wt-digraph can be performed on the L-wt-ugraph. 
+/// The L-wt-ugraph holds a L-wt-digraph. All operations on the L-wt-digraph can be performed on the L-wt-ugraph.
 /// The only divergent implementations are regarding the "doubling" of edges due to no directions.
 /// Users can perfom fast operations on the original graph and slower operations on the recent state of the graph.
 /// Users can integrate the recent state of the graph into the QW-Tree by rebuilding it using the commit_edits-function.
@@ -103,7 +103,7 @@ impl<L> Unweighted<L> for LabeledWTUGraph<L>
 where
     L: Hash + Eq + Clone,
 {
-        /// this function needs documentation
+    /// this function needs documentation
     fn add_edge(&mut self, from: L, to: L) {
         todo!()
     }
@@ -135,7 +135,7 @@ where
     fn v_count_updated(&self) -> usize {
         todo!()
     }
-    
+
     fn e_count_updated(&self) -> usize {
         todo!()
     }

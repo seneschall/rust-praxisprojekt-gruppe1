@@ -8,8 +8,6 @@
 // use crate::wt::directed::WTDigraph;
 // use super::sequence_and_bitmap;
 
-
-
 // /// read in a directed wt-graph from file (wtd) from file
 // pub fn create_wt_digraph(filepath: &str) -> WTDigraph {
 //     let (v_count, e_count) = v_e_count(filepath);
@@ -20,7 +18,7 @@
 //     WTDigraph {
 //         wt_adj_len: v_count,
 //         e_count,
-//         wt_adj_len_updated: v_count,                         
+//         wt_adj_len_updated: v_count,
 //         e_count_updated: e_count,
 //         wt_adj,
 //         starting_indices,
@@ -32,11 +30,11 @@
 // }
 
 // // read in a directed labeled wt-graph (lwtd) from file
-// pub fn create_wt_digraph<L>(filepath: &str) { //-> LabeledWTDigraph<L> 
+// pub fn create_wt_digraph<L>(filepath: &str) { //-> LabeledWTDigraph<L>
 //     todo!()
 // }
 
-// /// read in an undirected wt-graph (wtu) from file  
+// /// read in an undirected wt-graph (wtu) from file
 // pub fn create_wt_ugraph(filepath: &str) -> WTUGraph {
 //     let wtd = create_wt_digraph(filepath);
 //     WTUGraph {
@@ -44,19 +42,10 @@
 //     }
 // }
 
-// /// read in an undirected labeled wt-graph (lwtu) from file 
-// pub fn create_wt_ugraph<L>(filepath: &str) { // -> LabeledWTUGraph<L> 
+// /// read in an undirected labeled wt-graph (lwtu) from file
+// pub fn create_wt_ugraph<L>(filepath: &str) { // -> LabeledWTUGraph<L>
 //     todo!()
 // }
-
-
-
-
-
-
-
-
-
 
 // /// read in an directed labeled graph with weighted edges (wlwtd) from file
 // pub fn create_wt_weighted_digraph<L,W>(filepath: &str) { // -> WeightedLabeledWTDigraph<L,W>
@@ -64,7 +53,6 @@
 // }
 
 // /// read in an undirected labeled wt-graph with weighted edges from file
-// pub fn create_wt_weighted_ugraph<L,W>(filepath: &str) { // -> LabeledWeightedWTUGraph<L,W> 
+// pub fn create_wt_weighted_ugraph<L,W>(filepath: &str) { // -> LabeledWeightedWTUGraph<L,W>
 //     todo!()
 // }
-

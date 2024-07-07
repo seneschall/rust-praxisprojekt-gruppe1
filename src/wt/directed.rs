@@ -33,7 +33,6 @@ pub struct WTDigraph {
 }
 
 impl WTDigraph {
-    
     /// this function instantiiates a wt-digraph from a given digraph   
     pub fn from_digraph(dg: Digraph) -> Self {
         let mut bv = BitVec::new();
@@ -97,7 +96,6 @@ impl WTDigraph {
 }
 
 impl Graph<usize> for WTDigraph {
-
     /// use at own risk!
     /// adds a new empty vertex to the graph,
     /// by adding an empty vector at the given index, or overwriting the entry with the same key if existant.  
@@ -154,8 +152,7 @@ impl Graph<usize> for WTDigraph {
         return self.wt_adj_len - self.deleted_vertices.len();
     }
 
-
-    /// deletes the edge from 'from' to 'to'. panics if edge doens't exist. 
+    /// deletes the edge from 'from' to 'to'. panics if edge doens't exist.
     /// iterates over 'from's enty in 'adj_uncommited' and deletes entries who match Add(to).
     /// if not present, enters a new entry with 'from's key and Delete(to) in 'adj_uncommited'.
     fn delete_edge(&mut self, from: usize, to: usize) {
@@ -199,7 +196,6 @@ impl Graph<usize> for WTDigraph {
         self.has_uncommitted_edits = true;
     }
 
-
     /// checks if the given vertex exists
     fn vertex_exists(&self, vertex: usize) -> bool {
         if self.deleted_vertices.contains_key(&vertex) {
@@ -227,7 +223,6 @@ impl Graph<usize> for WTDigraph {
     }
 }
 impl Directed<usize> for WTDigraph {
-
     /// return all outgoing edges of the given vertex in a vector
     /// should probably be changed to return an iterator instea
     fn outgoing_edges(&self, vertex: usize) -> Vec<usize> {
@@ -250,7 +245,7 @@ impl Directed<usize> for WTDigraph {
 
         return outgoing;
     }
-    
+
     /// return all outgoing edges of the given vertex in a vector
     /// should probably be changed to return an iterator instead
     fn incoming_edges(&self, vertex: usize) -> Vec<usize> {
@@ -308,7 +303,6 @@ impl Directed<usize> for WTDigraph {
 }
 
 impl Unlabeled<usize> for WTDigraph {
-    
     /// adds a new empty vertex at either the index following the last or at (the lowest available) previously freed index.
     /// preserves indexing and never overwrites vertices
     /// append_vertex() is not defined for labeled graphs
@@ -325,9 +319,9 @@ impl Unlabeled<usize> for WTDigraph {
         // self.has_uncommitted_edits = true;
         // return index; // changed to index-1; that's a bug! I've changed it back! -Simon
     }
-    
+
     /// it removes all vertices in deleted_vertices from the graph, resets deleted_vertices, thus shrinking
-    /// wt_adj_len, the updated v_count AND the v_count at last commit. does not commit changes other than vertex deletion. 
+    /// wt_adj_len, the updated v_count AND the v_count at last commit. does not commit changes other than vertex deletion.
     /// does commit vertex-deletion and rebuild QW-tree. (expensive!)
     /// return a list containing the deleted vertices?
     fn shrink(&mut self) -> Vec<Option<usize>> {
@@ -389,7 +383,6 @@ impl Unlabeled<usize> for WTDigraph {
     }
 }
 impl Unweighted<usize> for WTDigraph {
-    
     /// adds an edge between the vertices 'from' and 'to', by adding an edge from the smaller to the bigger indice in the dg.
     fn add_edge(&mut self, from: usize, to: usize) {
         // only adds to uncommitted edits
@@ -417,7 +410,6 @@ impl Unweighted<usize> for WTDigraph {
 }
 
 impl WT<usize> for WTDigraph {
-
     /// collect and apply all changes in adj_uncommited. rebuild QW-tree. expensive!
     /// set v_count to v_count_updated, e_count to e_count_updated, if present change labels, weights [...].
     /// some changes like deleted vertices are conserved
@@ -524,14 +516,13 @@ impl WT<usize> for WTDigraph {
         }
         return v_count_updated;
     }
-    
+
     fn e_count_updated(&self) -> usize {
         return self.e_count_updated;
     }
 }
 
 impl WTDirected<usize> for WTDigraph {
-
     /// return all outgoing edges of the given vertex in a vector, which exist and weren't deleted, or were created since since last commit.
     /// should probably be changed to return an iterator instead
     fn outgoing_edges_updated(&self, vertex: usize) -> Vec<usize> {
@@ -564,7 +555,7 @@ impl WTDirected<usize> for WTDigraph {
 
         return outgoing;
     }
-    
+
     /// return all incoming edges of the given vertex in a vector, which exist and weren't deleted, or were created since since last commit.
     /// should probably be changed to return an iterator instead
     fn incoming_edges_updated(&self, vertex: usize) -> Vec<usize> {

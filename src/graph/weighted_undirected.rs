@@ -1,12 +1,12 @@
 use std::collections::HashMap;
 
 use crate::graph::weighted_directed::WeightedDigraph;
-use crate::traits::{Graph, Unlabeled, Undirected, Weighted};
+use crate::traits::{Graph, Undirected, Unlabeled, Weighted};
 
 #[cfg(test)]
 mod test;
 /// An indexed, mutable graph with undirected edges, where each edge represents a weight.
-/// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type. 
+/// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type.
 /// Weights can have any type.
 pub struct WeightedUGraph<W> {
     pub(crate) wdg: WeightedDigraph<W>,
@@ -88,7 +88,6 @@ where
         } else {
             self.wdg.add_edge(to, from, weight);
         }
-        
     }
 
     fn edit_weight(&mut self, from: usize, to: usize, weight: W) {
@@ -97,7 +96,6 @@ where
         } else {
             self.wdg.edit_weight(to, from, weight);
         }
-
     }
 
     fn get_weight(&mut self, from: usize, to: usize) -> W {
@@ -106,6 +104,5 @@ where
         } else {
             return self.wdg.get_weight(to, from);
         }
-        
     }
 }

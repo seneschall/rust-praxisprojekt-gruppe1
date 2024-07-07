@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use vers_vecs::RsVec;
 
 use crate::graph::weighted_undirected::WeightedUGraph;
-use crate::traits::{Graph, Unlabeled, Undirected, WTUndirected, WTWeighted, Weighted, WT};
+use crate::traits::{Graph, Undirected, Unlabeled, WTUndirected, WTWeighted, Weighted, WT};
 use crate::wt::undirected::WTUGraph;
 
 use super::weighted_directed::WeightedWTDigraph;
@@ -111,7 +111,7 @@ impl<W> WT<usize> for WeightedWTUGraph<W> {
     fn v_count_updated(&self) -> usize {
         todo!()
     }
-    
+
     fn e_count_updated(&self) -> usize {
         todo!()
     }

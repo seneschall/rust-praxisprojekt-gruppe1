@@ -9,7 +9,7 @@ use crate::Edit;
 use std::collections::HashMap;
 use std::hash::Hash;
 
-/// A structure holding an immutable Wavelet-Tree-Representation of a graph with directed edges and labeled vertices, where each edge represents a weight, plus information on manual changes. 
+/// A structure holding an immutable Wavelet-Tree-Representation of a graph with directed edges and labeled vertices, where each edge represents a weight, plus information on manual changes.
 /// The greatest possible of number of edges or of vertices is usize. Labels and Weights can have any type, Labels are referenced.
 
 pub struct LabeledWeightedWTDigraph<L, W>
@@ -210,18 +210,17 @@ where
     W: Clone,
 {
     fn commit_edits(&mut self) {
-        for ((from,to), weight) in &self.weights_uncommitted{
-            match weight{
+        for ((from, to), weight) in &self.weights_uncommitted {
+            match weight {
                 Edit::Add(add_weight) => {
-                    self.weights.insert((*from,*to), add_weight.clone());
+                    self.weights.insert((*from, *to), add_weight.clone());
                 }
                 Edit::Delete(_delete_weight) => {
-                    self.weights.remove(&(*from,*to));
+                    self.weights.remove(&(*from, *to));
                 }
             }
         }
         self.ldg.commit_edits();
-
     }
 
     // fn get_uncommitted_edits(&self) -> Option<std::collections::HashMap<usize, L>> {
@@ -244,7 +243,7 @@ where
     fn v_count_updated(&self) -> usize {
         self.ldg.v_count_updated()
     }
-    
+
     fn e_count_updated(&self) -> usize {
         return self.ldg.e_count_updated();
     }

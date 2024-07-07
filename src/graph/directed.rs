@@ -9,13 +9,12 @@ mod test;
 /// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type.
 pub struct Digraph {
     pub(crate) deleted_vertices: HashMap<usize, bool>,
-    pub(crate) adj_len: usize,       // number of vertices, deleted_vertices + v_count() == adj.len()
-    pub(crate) e_count: usize,       // number of edges
+    pub(crate) adj_len: usize, // number of vertices, deleted_vertices + v_count() == adj.len()
+    pub(crate) e_count: usize, // number of edges
     pub(crate) adj: Vec<Vec<usize>>, // adjacency list of indices -- note from group: should we set this to pub(crate)?
 }
 
 impl Digraph {
-
     /// this function instantiiates a new empty digraph, that must be manually filled with vertices and edges
     pub fn new() -> Self {
         Digraph {
@@ -25,7 +24,7 @@ impl Digraph {
             adj: vec![vec![]; 0],
         }
     }
-    
+
     /// this function can read in from a vector, but doesn't check that it's valid input, panices instead
     pub fn from_adjacency_list(v_count: usize, e_count: usize, adj: Vec<Vec<usize>>) -> Self {
         // doesn't check valid input
@@ -42,7 +41,6 @@ impl Digraph {
     }
 }
 impl Graph<usize> for Digraph {
-
     /// use at own risk!
     /// adds a new empty vertex to the graph,
     /// by adding an empty vector at the given index, or overwriting the entry with the same key if existant.  
@@ -83,10 +81,8 @@ impl Graph<usize> for Digraph {
     fn v_count(&self) -> usize {
         self.adj_len - self.deleted_vertices.len()
     }
-    
 
-
-    /// deletes the given edge by deleting the entry by looking up 'from's vector in the adj-list, then search for the index of 'to' in it. 
+    /// deletes the given edge by deleting the entry by looking up 'from's vector in the adj-list, then search for the index of 'to' in it.
     /// stores that index in i_of_w, and then removes the entry at that index in 'from's vector.
     /// changes the indices of the edges in the vertex-vertices, but doesn't change the indices of the vertex-vectors, thus preserves indexing.
     /// panics if vertex 'from' or edge 'from'->'to' doens't exists. decreases e_count
@@ -112,7 +108,6 @@ impl Graph<usize> for Digraph {
         self.e_count -= 1;
     }
 
-
     /// deletes the vertex at the given index
     /// panics if the vertex doesn't exist - should eventually return a Result type
     /// if the vertex exists, we mark it in the deletec-vertices-Vector, then delete all it's incoming and all it's outgoing mentions.
@@ -137,7 +132,7 @@ impl Graph<usize> for Digraph {
         return false;
     }
 
-    /// returns if there is an edge between index `from` and index `to` 
+    /// returns if there is an edge between index `from` and index `to`
     fn edge_exists(&self, from: usize, to: usize) -> bool {
         if self.adj[from].contains(&to) {
             true
@@ -147,7 +142,6 @@ impl Graph<usize> for Digraph {
     }
 }
 impl Directed<usize> for Digraph {
-
     /// returns all outgoing edges of the given vertex in a vector, by returning its entry in the adj-list.
     /// should probably be changed to return an iterator instead
     // todo ! catch non-existing vertice as input
@@ -156,7 +150,7 @@ impl Directed<usize> for Digraph {
         self.adj[vertex].clone()
     }
 
-    /// computes the incoming edges of a vertex by looping over all vertices and checking in their adjacency-vector, 
+    /// computes the incoming edges of a vertex by looping over all vertices and checking in their adjacency-vector,
     /// if they have an edge pointing to the given index. returns a vector with the found edges.
     // todo ! catch non-existing vertice as input
     fn incoming_edges(&self, vertex: usize) -> Vec<usize> {
@@ -169,7 +163,6 @@ impl Directed<usize> for Digraph {
         incoming_edges
     }
 
-    
     /// deletes all outgoing edges by computing them and then deleting them in a loop.
     fn delete_outgoing_edges(&mut self, vertex: usize) {
         for to in self.outgoing_edges(vertex) {
@@ -185,7 +178,6 @@ impl Directed<usize> for Digraph {
     }
 }
 impl Unlabeled<usize> for Digraph {
-
     /// adds a new empty vertex at either the index following the last or at (the lowest available) previously freed index.
     /// preserves indexing and never overwrites vertices, increases v_count
     /// append_vertex() is not defined for labeled graphs
@@ -203,7 +195,6 @@ impl Unlabeled<usize> for Digraph {
     }
 }
 impl Unweighted<usize> for Digraph {
-
     /// adds an edge between the vertices `from` and `to`  
     /// panics if either doesn't exist
     /// increases e_count  

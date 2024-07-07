@@ -69,13 +69,10 @@ where
     fn edge_exists(&self, from: usize, to: usize) -> bool {
         if from <= to {
             self.dg.edge_exists(from, to)
-        }
-        else {
+        } else {
             self.dg.edge_exists(to, from)
         }
     }
-
-
 }
 
 impl<W> Directed<usize> for WeightedWTDigraph<W>
@@ -158,20 +155,21 @@ where
     }
 }
 
-impl<W> WT<usize> for WeightedWTDigraph<W> 
-where W : Clone,
+impl<W> WT<usize> for WeightedWTDigraph<W>
+where
+    W: Clone,
 {
     fn commit_edits(&mut self) {
-        for ((from,to), change) in self.weights_uncommitted.iter(){
-            match change{
+        for ((from, to), change) in self.weights_uncommitted.iter() {
+            match change {
                 Edit::Add(add_weight) => {
-                    if !self.weights.contains_key(&(*from,*to)){
-                        self.weights.insert((*from,*to),add_weight.clone());
+                    if !self.weights.contains_key(&(*from, *to)) {
+                        self.weights.insert((*from, *to), add_weight.clone());
                     }
                 }
                 Edit::Delete(_) => {
-                    if self.weights.contains_key(&(*from,*to)){
-                        self.weights.remove(&(*from,*to));
+                    if self.weights.contains_key(&(*from, *to)) {
+                        self.weights.remove(&(*from, *to));
                     }
                 }
             }
@@ -196,7 +194,7 @@ where W : Clone,
     fn v_count_updated(&self) -> usize {
         self.dg.v_count_updated()
     }
-    
+
     fn e_count_updated(&self) -> usize {
         return self.dg.e_count_updated();
     }

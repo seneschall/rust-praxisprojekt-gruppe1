@@ -1,5 +1,4 @@
-pub mod from_file; 
-
+pub mod from_file;
 
 use super::*;
 use graph::{

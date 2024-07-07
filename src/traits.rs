@@ -47,7 +47,7 @@ pub trait Labeled<L> {
     fn edit_label(&mut self, old_label: L, new_label: L); // true if last item in uncommitted edits for v is Edit::DeleteSelf; should return a Result
                                                           //changes old_Label to new_label
     fn get_label(&self, vertex: usize) -> Option<&L>;
-    
+
     //input:index, output Option<&L>; check in vec[vertex] for label
     fn get_index(&self, label: &L) -> Option<usize>; // returns the index of the vertex with the given label
                                                      //input:Label, output Option<&usize>; check in hashmaps value

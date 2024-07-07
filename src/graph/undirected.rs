@@ -1,5 +1,5 @@
 use crate::graph::directed::Digraph;
-use crate::traits::{Graph, Unlabeled, Undirected, Unweighted};
+use crate::traits::{Graph, Undirected, Unlabeled, Unweighted};
 use std::collections::HashMap;
 
 #[cfg(test)]
@@ -11,7 +11,6 @@ pub struct UGraph {
 }
 
 impl UGraph {
-
     /// this function instantiiates a new empty ugraph, that must be manually filled with vertices and edges
     pub fn new() -> Self {
         UGraph { dg: Digraph::new() }
@@ -26,7 +25,6 @@ impl UGraph {
 }
 
 impl Graph<usize> for UGraph {
-
     /// use at own risk!
     /// adds a new empty vertex to the graph,
     /// by adding an empty vector at the given index, or overwriting the entry with the same key if existant.  
@@ -76,11 +74,9 @@ impl Graph<usize> for UGraph {
             return self.dg.edge_exists(to, from);
         }
     }
-
 }
 
 impl Undirected<usize> for UGraph {
-
     /// returns all edges of the given vertex in a vector
     /// should probably be changed to return an iterator instead
     // todo ! catch non-existing vertice as input
@@ -110,7 +106,6 @@ impl Undirected<usize> for UGraph {
 }
 
 impl Unlabeled<usize> for UGraph {
-
     /// adds a new empty vertex at either the index following the last or at (the lowest available) previously freed index.
     /// preserves indexing and never overwrites vertices
     /// append_vertex() is not defined for labeled graphs
@@ -127,7 +122,6 @@ impl Unlabeled<usize> for UGraph {
 }
 
 impl Unweighted<usize> for UGraph {
-
     /// adds an edge between the vertices 'from' and 'to', by adding an edge from the smaller to the bigger indice in the dg.
     fn add_edge(&mut self, from: usize, to: usize) {
         if from <= to {

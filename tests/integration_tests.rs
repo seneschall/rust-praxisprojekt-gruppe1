@@ -5,10 +5,108 @@ use wt_graphs::*;
 #[cfg(test)]
 mod test {
 
-    use graph::{directed::Digraph, labeled_directed::LabeledDigraph};
-    use wt::{directed::WTDigraph, labeled_directed::LabeledWTDigraph};
+    use graph::{directed::Digraph, labeled_directed::LabeledDigraph, undirected::UGraph};
+    use wt::{directed::WTDigraph, labeled_directed::LabeledWTDigraph, undirected::WTUGraph};
 
     use super::*;
+
+    #[test]
+    fn undirected() {
+        let mut ug: UGraph = UGraph::new();
+        let mut wtug: WTUGraph = WTUGraph::from_ugraph(UGraph::new());
+
+        assert_eq!(ug.v_count(), wtug.v_count());
+        for i in 0..10 {
+            ug.add_vertex(i);
+            wtug.add_vertex(i);
+            assert_eq!(ug.v_count(), wtug.v_count_updated());
+        }
+        for i in 0..9 {
+            ug.add_edge(i, i + 1);
+            assert!(ug.edge_exists(i, i + 1));
+            wtug.add_edge(i, i + 1);
+            assert!(wtug.edge_exists_updated(i, i + 1));
+        }
+        for i in 0..10 {
+            assert_eq!(ug.edges(i), wtug.edges_updated(i));
+        }
+        wtug.commit_edits();
+        assert_eq!(ug.v_count(), wtug.v_count());
+        for i in 0..10 {
+            assert_eq!(ug.edges(i), wtug.edges(i), "edges");
+        }
+        assert_eq!(ug.e_count(), wtug.e_count());
+        for i in 0..9 {
+            ug.delete_edge(i, i + 1);
+            assert!(!ug.edge_exists(i, i + 1));
+            wtug.delete_edge(i, i + 1);
+            assert!(!wtug.edge_exists_updated(i, i + 1));
+        }
+        wtug.commit_edits();
+        assert_eq!(ug.e_count(), wtug.e_count());
+        assert_eq!(ug.v_count(), wtug.v_count());
+        for i in 0..10 {
+            ug.delete_vertex(i);
+            assert_eq!(ug.vertex_exists(i), false);
+            wtug.delete_vertex(i);
+            assert_eq!(wtug.vertex_exists_updated(i), false);
+        }
+        assert_eq!(ug.v_count(), wtug.v_count_updated(), "v_count failed");
+
+        for i in 0..10 {
+            ug.add_vertex(i);
+            wtug.add_vertex(i);
+            assert_eq!(ug.v_count(), wtug.v_count_updated(), "v_count failed");
+            assert_eq!(ug.edges(i), wtug.edges_updated(i));
+        }
+        ug.add_vertex(500);
+        wtug.add_vertex(500);
+        assert_eq!(ug.v_count(), wtug.v_count_updated());
+        ug.delete_vertex(500);
+        wtug.delete_vertex(500);
+        assert_eq!(ug.v_count(), 500);
+        assert_eq!(ug.v_count(), wtug.v_count_updated());
+        assert_eq!(ug.append_vertex(), wtug.append_vertex());
+        assert_eq!(ug.v_count(), wtug.v_count_updated());
+        for i in 0..10 {
+            for j in 0..10 {
+                ug.add_edge(i, j);
+                wtug.add_edge(i, j);
+            }
+            println!("{i}");
+            println!("ug {:?}", ug.edges(i));
+            println!("wtug {:?}", wtug.edges_updated(i));
+            assert_eq!(ug.edges(i).len(), wtug.edges_updated(i).len());
+            for item in ug.edges(i) {
+                assert!(wtug.edges_updated(i).contains(&item));
+            }
+            assert_eq!(ug.edges(i).len(), wtug.edges_updated(i).len());
+        }
+        assert_eq!(ug.v_count(), wtug.v_count_updated(), "bevor commit");
+        wtug.commit_edits();
+        assert_eq!(ug.v_count(), wtug.v_count());
+        assert_eq!(ug.v_count(), wtug.v_count_updated(), "after commit");
+        for i in 0..10 {
+            assert_eq!(ug.edges(i).len(), wtug.edges_updated(i).len());
+            assert_eq!(ug.edges(i).len(), wtug.edges(i).len());
+            for item in ug.edges(i) {
+                assert!(wtug.edges(i).contains(&item));
+                assert!(wtug.edges_updated(i).contains(&item));
+            }
+        }
+        for i in 0..10 {
+            assert_eq!(ug.edges(i).len(), wtug.edges_updated(i).len());
+            ug.delete_edges_from(i);
+            wtug.delete_edges_from(i);
+            assert_eq!(ug.edges(i).len(), wtug.edges_updated(i).len());
+        }
+        assert_eq!(ug.v_count(), wtug.v_count_updated());
+        for i in 0..500 {
+            ug.delete_vertex(i);
+            wtug.delete_vertex(i);
+            assert_eq!(ug.v_count(), wtug.v_count_updated());
+        }
+    }
     #[test]
     fn labeled_graph_digraph_and_labeled_wt_digraph() {
         let mut ldg: LabeledDigraph<String> = LabeledDigraph::new();
