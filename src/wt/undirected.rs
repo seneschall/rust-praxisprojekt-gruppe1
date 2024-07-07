@@ -83,7 +83,7 @@ impl Graph<usize> for WTUGraph {
     
     /// returns if there is an edge between `from` and `to`
     fn edge_exists(&self, from: usize, to: usize) -> bool {
-        todo!()
+        return self.wtd.edge_exists(from, to);
     }
 }
 impl Undirected<usize> for WTUGraph {
@@ -92,12 +92,11 @@ impl Undirected<usize> for WTUGraph {
     /// should probably be changed to return an iterator instead
     // todo ! catch non-existing vertice as input
     fn edges(&self, vertex: usize) -> Vec<usize> {
-
         // returns all edges connected to vertex
         let mut edges: Vec<usize> = Vec::new();
         edges = self.wtd.incoming_edges(vertex); // all incoming edges of vertex
         edges.append(&mut self.wtd.outgoing_edges(vertex)); // + outgoing edges of vertex
-        edges
+        return edges;
     }
 
     /// delete all edges of the given vertex
@@ -124,7 +123,7 @@ impl Unlabeled<usize> for WTUGraph {
     /// does commit vertex-deletion and rebuild QW-tree. (expensive!)
     /// return a list containing the deleted vertices?
     fn shrink(&mut self) -> Vec<Option<usize>> {
-        todo!()
+        return self.wtd.shrink();
     }
 }
 impl Unweighted<usize> for WTUGraph {
@@ -160,16 +159,20 @@ impl WT<usize> for WTUGraph {
 
     /// return true if the edge still exists and wasn't deleted, or if it was created since since last commit.
     fn edge_exists_updated(&self, from: usize, to: usize) -> bool {
-        todo!()
+        if from <= to {
+            return self.wtd.edge_exists_updated(from, to);
+        } else {
+            return self.wtd.edge_exists_updated(to, from);
+        }
     }
     
     /// return the recent number of vertices in the graph
     fn v_count_updated(&self) -> usize {
-        todo!()
+        return self.wtd.v_count_updated();
     }
     
     fn e_count_updated(&self) -> usize {
-        todo!()
+        return self.wtd.e_count_updated();
     }
 }
 
@@ -179,8 +182,8 @@ impl WTUndirected<usize> for WTUGraph {
     /// should probably be changed to return an iterator instead
     fn edges_updated(&self, vertex: usize) -> Vec<usize> {
         // todo! might be wrong
-        let mut up_edges: Vec<usize> = self.wtd.incoming_edges_updated(vertex);
-        up_edges.append(&mut self.wtd.outgoing_edges(vertex));
-        up_edges
+        let mut edges: Vec<usize> = self.wtd.incoming_edges_updated(vertex);
+        edges.append(&mut self.wtd.outgoing_edges_updated(vertex));
+        return edges;
     }
 }
