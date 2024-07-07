@@ -4,12 +4,11 @@ use vers_vecs::RsVec;
 
 use crate::graph::undirected::UGraph;
 use crate::traits::{Directed, WTDirected};
-use crate::traits::{Graph, Unlabeled, Undirected, Unweighted, WTUndirected, WT};
+use crate::traits::{Graph, Undirected, Unlabeled, Unweighted, WTUndirected, WT};
 use crate::wt::directed::WTDigraph; // needed because of WTDigraph
 
-
 /// An indexed wavelet-tree-ugraph with undirected edges. (wt-ugraph)
-/// The wt-ugraph holds a wt-digraph. All operations on the wt-digraph can be performed on the wt-ugraph. 
+/// The wt-ugraph holds a wt-digraph. All operations on the wt-digraph can be performed on the wt-ugraph.
 /// The only divergent implementations are ...
 /// Users can perfom fast operations on the original graph and slower operations on the recent state of the graph.
 /// Users can integrate the recent state of the graph into the QW-Tree by rebuilding it using the commit_edits-function.
@@ -20,7 +19,6 @@ pub struct WTUGraph {
 }
 
 impl WTUGraph {
-
     /// this function instantiiates a wt-ugraph from a given ugraph
     pub fn from_ugraph(ugraph: UGraph) -> Self {
         return WTUGraph {
@@ -37,9 +35,7 @@ impl WTUGraph {
     }
 }
 
-
 impl Graph<usize> for WTUGraph {
-
     /// use at own risk!
     /// adds a new empty vertex to the graph,
     /// by adding an empty vector at the given index, or overwriting the entry with the same key if existant.  
@@ -80,14 +76,12 @@ impl Graph<usize> for WTUGraph {
         self.wtd.vertex_exists(vertex)
     }
 
-    
     /// returns if there is an edge between `from` and `to`
     fn edge_exists(&self, from: usize, to: usize) -> bool {
         return self.wtd.edge_exists(from, to);
     }
 }
 impl Undirected<usize> for WTUGraph {
-
     /// returns all edges of the given vertex in a vector, by computing it's incoming and outgoing edges in wtd.
     /// should probably be changed to return an iterator instead
     // todo ! catch non-existing vertice as input
@@ -95,8 +89,17 @@ impl Undirected<usize> for WTUGraph {
         // returns all edges connected to vertex
         let mut edges: Vec<usize> = Vec::new();
         edges = self.wtd.incoming_edges(vertex); // all incoming edges of vertex
-        edges.append(&mut self.wtd.outgoing_edges(vertex)); // + outgoing edges of vertex
-        return edges;
+        if self.edge_exists(vertex, vertex) {
+            for item in self.wtd.outgoing_edges(vertex) {
+                if item != vertex {
+                    edges.push(item);
+                }
+            }
+            return edges;
+        } else {
+            edges.append(&mut self.wtd.outgoing_edges(vertex)); // + outgoing edges of vertex
+            return edges;
+        }
     }
 
     /// delete all edges of the given vertex
@@ -109,7 +112,6 @@ impl Undirected<usize> for WTUGraph {
     }
 }
 impl Unlabeled<usize> for WTUGraph {
-
     /// adds a new empty vertex at either the index following the last or at (the lowest available) previously freed index.
     /// preserves indexing and never overwrites vertices
     /// append_vertex() is not defined for labeled graphs
@@ -119,7 +121,7 @@ impl Unlabeled<usize> for WTUGraph {
     }
 
     /// it removes all vertices in deleted_vertices from the graph, resets deleted_vertices, thus shrinking
-    /// wt_adj_len, the updated v_count AND the v_count at last commit. does not commit changes other than vertex deletion. 
+    /// wt_adj_len, the updated v_count AND the v_count at last commit. does not commit changes other than vertex deletion.
     /// does commit vertex-deletion and rebuild QW-tree. (expensive!)
     /// return a list containing the deleted vertices?
     fn shrink(&mut self) -> Vec<Option<usize>> {
@@ -127,7 +129,6 @@ impl Unlabeled<usize> for WTUGraph {
     }
 }
 impl Unweighted<usize> for WTUGraph {
-
     /// adds an edge between the vertices 'from' and 'to', by adding an edge from the smaller to the bigger indice in the dg.
     fn add_edge(&mut self, from: usize, to: usize) {
         if from <= to {
@@ -138,8 +139,6 @@ impl Unweighted<usize> for WTUGraph {
     }
 }
 impl WT<usize> for WTUGraph {
-
-
     /// collect and apply all changes in adj_uncommited. rebuild QW-tree. expensive!
     /// set v_count to v_count_updated, e_count to e_count_updated, if present change labels, weights [...].
     /// some changes like deleted vertices are conserved
@@ -165,19 +164,18 @@ impl WT<usize> for WTUGraph {
             return self.wtd.edge_exists_updated(to, from);
         }
     }
-    
+
     /// return the recent number of vertices in the graph
     fn v_count_updated(&self) -> usize {
         return self.wtd.v_count_updated();
     }
-    
+
     fn e_count_updated(&self) -> usize {
         return self.wtd.e_count_updated();
     }
 }
 
 impl WTUndirected<usize> for WTUGraph {
-
     /// return all edges of the given vertex in a vector, which exist and weren't deleted, or were created since since last commit.
     /// should probably be changed to return an iterator instead
     fn edges_updated(&self, vertex: usize) -> Vec<usize> {
