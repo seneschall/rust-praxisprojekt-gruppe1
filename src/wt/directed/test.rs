@@ -257,3 +257,20 @@ fn updated_incoming_edges() {
         }
     }
 }
+
+#[test]
+fn iter_test() {
+    let mut dg = Digraph::new();
+    for i in 0..5 {
+        dg.add_vertex(i);
+        dg.add_vertex(i + 1);
+        dg.add_edge(i, i + 1);
+    }
+    let wtdg = WTDigraph::from_digraph(dg);
+    for v in wtdg.iter() {
+        for i in 0..wtdg.wt_adj_len {
+            println!("{:?}", v);
+            assert_eq!(v, wtdg.outgoing_edges(i));
+        }
+    }
+}

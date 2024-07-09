@@ -69,13 +69,10 @@ where
     fn edge_exists(&self, from: usize, to: usize) -> bool {
         if from <= to {
             self.dg.edge_exists(from, to)
-        }
-        else {
+        } else {
             self.dg.edge_exists(to, from)
         }
     }
-
-
 }
 
 impl<W> Directed<usize> for WeightedWTDigraph<W>
@@ -178,6 +175,10 @@ impl<W> WT<usize> for WeightedWTDigraph<W> {
 
     fn v_count_updated(&self) -> usize {
         self.dg.v_count_updated()
+    }
+
+    fn e_count_updated(&self) -> usize {
+        todo!()
     }
 }
 impl<W> WTDirected<usize> for WeightedWTDigraph<W> {

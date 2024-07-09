@@ -647,11 +647,11 @@ pub struct WTDigraphIterator<'a> {
     max: usize, // the largest index the iterator is going to reach
 }
 
-impl Iterator for WTDigraphIterator {
-    type Item: Vec<usize>;
+impl<'a> Iterator for WTDigraphIterator<'a> {
+    type Item = Vec<usize>;
 
     fn next(&mut self) -> Option<Self::Item> {
-        if self.index >= max {
+        if self.index >= self.max {
             return None;
         }
 
@@ -677,7 +677,7 @@ pub struct WTDigraphEdgeIterator<'a> {
     current_max_to: usize, // the vertex with the highest index out of all the outgoing edges of from
 }
 
-impl Iterator for WTDigraphEdgeIterator {
+impl<'a> Iterator for WTDigraphEdgeIterator<'a> {
     type Item = Edge;
 
     fn next(&mut self) -> Option<Self::Item> {

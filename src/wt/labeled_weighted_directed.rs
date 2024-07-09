@@ -9,7 +9,7 @@ use crate::Edit;
 use std::collections::HashMap;
 use std::hash::Hash;
 
-/// A structure holding an immutable Wavelet-Tree-Representation of a graph with directed edges and labeled vertices, where each edge represents a weight, plus information on manual changes. 
+/// A structure holding an immutable Wavelet-Tree-Representation of a graph with directed edges and labeled vertices, where each edge represents a weight, plus information on manual changes.
 /// The greatest possible of number of edges or of vertices is usize. Labels and Weights can have any type, Labels are referenced.
 
 pub struct LabeledWeightedWTDigraph<L, W>
@@ -229,6 +229,10 @@ where
 
     fn v_count_updated(&self) -> usize {
         self.ldg.v_count_updated()
+    }
+
+    fn e_count_updated(&self) -> usize {
+        todo!()
     }
 }
 impl<L, W> WTWeighted<L, W> for LabeledWeightedWTDigraph<L, W>
