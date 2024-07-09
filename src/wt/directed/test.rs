@@ -266,11 +266,45 @@ fn iter_test() {
         dg.add_vertex(i + 1);
         dg.add_edge(i, i + 1);
     }
+    println!("wtdg len = {}", dg.e_count());
     let wtdg = WTDigraph::from_digraph(dg);
+    let mut i = 0;
     for v in wtdg.iter() {
-        for i in 0..wtdg.wt_adj_len {
-            println!("{:?}", v);
-            assert_eq!(v, wtdg.outgoing_edges(i));
+        println!("wtdg.outgoing_edges({}) = {:?}", i, wtdg.outgoing_edges(i));
+        println!("{:?}", v);
+        assert_eq!(v, wtdg.outgoing_edges(i));
+        i += 1;
+    }
+}
+
+#[test]
+fn iter_edges_test() {
+    let mut dg = Digraph::new();
+    for i in 0..5 {
+        dg.add_vertex(i);
+        dg.add_vertex(i + 1);
+        // dg.add_edge(i, i + 1);
+    }
+    dg.add_edge(0, 1);
+    dg.add_edge(1, 2);
+    dg.add_edge(2, 3);
+
+    let wtdg = WTDigraph::from_digraph(dg);
+
+    let mut edges: Vec<Edge> = Vec::new();
+
+    for v in 0..6 {
+        let adj = wtdg.outgoing_edges(v);
+        for e in adj {
+            edges.push(Edge::new(v, e));
         }
+    }
+
+    println!("edges = {:?}", edges);
+
+    let mut i = 0;
+    for e in wtdg.iter_edges() {
+        assert_eq!(e, edges[i]);
+        i += 1;
     }
 }

@@ -709,6 +709,7 @@ impl<'a> Iterator for WTDigraphEdgeIterator<'a> {
     }
 }
 
+#[derive(Debug, PartialEq)]
 pub struct Edge {
     // experimental. We might change this back to a tuple (usize, usize)
     // but if we are going to use this, it would make sense to declare this in lib.rs
