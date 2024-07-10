@@ -1,5 +1,6 @@
 use crate::graph::labeled_directed::LabeledDigraph;
 use crate::traits::{Directed, Graph, Labeled, Undirected, Unweighted};
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::hash::Hash;
 
@@ -8,6 +9,7 @@ mod test;
 /// A labeled, mutable graph with undirected edges.
 /// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type.
 /// Labels can have any type and are referenced.
+#[derive(Serialize, Deserialize)]
 pub struct LabeledUGraph<L>
 where
     L: Hash + Eq,
@@ -138,7 +140,7 @@ where
         self.ldg.get_index(label)
     }
 
-    fn shrink(&mut self){
+    fn shrink(&mut self) {
         todo!()
     }
 }

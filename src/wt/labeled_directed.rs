@@ -1,11 +1,11 @@
-use vers_vecs::RsVec;
-
 use crate::graph::labeled_directed::LabeledDigraph;
 use crate::traits::{Directed, Graph, Labeled, Unlabeled, Unweighted, WTDirected, WTLabeled, WT};
 use crate::wt::directed::WTDigraph;
 use crate::Edit;
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::hash::Hash;
+use vers_vecs::RsVec;
 
 /// An labeled wavelet-tree-graph with directed edges. (L-wt-digraph)
 /// The L-wt-digraph holds a wt-digraph and data encoding the digraph's vertice-labels, at the last commit and in the recent, uncommited stage.
@@ -13,6 +13,7 @@ use std::hash::Hash;
 /// Users can integrate the recent state of the graph into the QW-Tree by rebuilding it using the commit_edits-function.
 /// See module wt::directed for the WT-digraph struct definition. See more documentation on function-level and in the crate introduction.
 /// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type. Labels can have any type and are referenced.
+#[derive(Serialize, Deserialize)]
 pub struct LabeledWTDigraph<L>
 where
     L: Hash + Clone + Eq,

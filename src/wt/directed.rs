@@ -3,6 +3,7 @@ use crate::traits::{Directed, Graph, Unlabeled, Unweighted, WTDirected, WT};
 use crate::Edit;
 use core::panic;
 use qwt::{AccessUnsigned, RankUnsigned, SelectUnsigned, QWT256};
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use vers_vecs::{BitVec, RsVec};
 // 1 MAJOR if WTGraph has no edges, subtract overflow in qwt crate
@@ -17,6 +18,7 @@ mod test;
 /// Users can integrate the recent state of the graph into the QW-Tree by rebuilding it using the commit_edits-function.
 /// See more documentation on function-level and in the crate introduction.
 /// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type.
+#[derive(Serialize, Deserialize)]
 pub struct WTDigraph {
     pub(crate) wt_adj_len: usize,                      // last index + 1
     e_count: usize,                                    // number of edges

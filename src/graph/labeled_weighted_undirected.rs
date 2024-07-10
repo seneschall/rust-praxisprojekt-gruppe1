@@ -1,5 +1,6 @@
 use crate::graph::labeled_weighted_directed::LabeledWeightedDigraph;
 use crate::traits::{Graph, Labeled, Undirected, Weighted};
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::hash::Hash;
 
@@ -9,6 +10,7 @@ mod test;
 /// A labeled, mutable graph with undirected edges, where each edge represents a weight.
 /// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type.
 /// Labels can have any type and are referenced. Weights can have any type.
+#[derive(Serialize, Deserialize)]
 pub struct LabeledWeightedUGraph<L, W>
 where
     L: Hash + Eq,
@@ -154,7 +156,7 @@ where
         self.lwdg.get_index(label)
     }
 
-    fn shrink(&mut self){
+    fn shrink(&mut self) {
         todo!()
     }
 }

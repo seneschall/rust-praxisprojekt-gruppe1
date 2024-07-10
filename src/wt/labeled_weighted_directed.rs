@@ -1,17 +1,18 @@
-use vers_vecs::RsVec;
-
 use crate::graph::labeled_weighted_directed::LabeledWeightedDigraph;
 use crate::traits::{
-    Directed, Graph, Labeled, Unweighted, WTDirected, WTLabeled, WTWeighted, Weighted, WT
+    Directed, Graph, Labeled, Unweighted, WTDirected, WTLabeled, WTWeighted, Weighted, WT,
 };
 use crate::wt::labeled_directed::LabeledWTDigraph;
 use crate::Edit;
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::hash::Hash;
+use vers_vecs::RsVec;
 
 /// A structure holding an immutable Wavelet-Tree-Representation of a graph with directed edges and labeled vertices, where each edge represents a weight, plus information on manual changes.
 /// The greatest possible of number of edges or of vertices is usize. Labels and Weights can have any type, Labels are referenced.
 
+#[derive(Serialize, Deserialize)]
 pub struct LabeledWeightedWTDigraph<L, W>
 where
     L: Hash + Clone + Eq,
@@ -143,7 +144,7 @@ where
         self.ldg.get_index(label)
     }
 
-    fn shrink(&mut self){
+    fn shrink(&mut self) {
         self.ldg.shrink();
     }
 }

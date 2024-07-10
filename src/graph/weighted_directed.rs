@@ -1,5 +1,6 @@
 use crate::graph::directed::Digraph;
 use crate::traits::{Directed, Graph, Unlabeled, Unweighted, Weighted};
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 #[cfg(test)]
@@ -8,6 +9,7 @@ mod test;
 /// An indexed, mutable graph with directed edges, where each edge represents a weight.
 /// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type.
 /// Weights can have any type.
+#[derive(Serialize, Deserialize)]
 pub struct WeightedDigraph<W> {
     pub(crate) dg: Digraph,
     pub(crate) weights: HashMap<(usize, usize), W>,

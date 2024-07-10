@@ -2,15 +2,18 @@ use vers_vecs::RsVec;
 
 use crate::graph::labeled_weighted_undirected::LabeledWeightedUGraph;
 use crate::traits::{
-    Directed, Graph, Labeled, Undirected, WTDirected, WTLabeled, WTUndirected, WTWeighted, Weighted, WT
+    Directed, Graph, Labeled, Undirected, WTDirected, WTLabeled, WTUndirected, WTWeighted,
+    Weighted, WT,
 };
 use crate::wt::labeled_weighted_directed::LabeledWeightedWTDigraph;
+use serde::{Deserialize, Serialize};
 
 use std::collections::HashMap;
 use std::hash::Hash;
 
 /// A structure holding an immutable Wavelet-Tree-Representation of a graph with directed edges and labeled vertices, where each edge represents a weight, plus information on manual changes.
 /// The greatest possible of number of edges or of vertices is usize. Labels and Weights can have any type, Labels are referenced.
+#[derive(Serialize, Deserialize)]
 pub struct LabeledWeightedWTUGraph<L, W>
 where
     L: Hash + Clone + Eq,
@@ -110,11 +113,11 @@ where
 {
     fn edges(&self, vertex: L) -> Vec<L> {
         let vertex_index = self.get_index(&vertex);
-        if vertex_index.is_none(){
+        if vertex_index.is_none() {
             panic!("wtlwug edges : vertex_index is none");
         }
         let vertex_index = vertex_index.unwrap();
-        
+
         // returns all edges connected to vertex
         let mut edges: Vec<L>;
         edges = self.lwdg.incoming_edges(vertex.clone()); // all incoming edges of vertex
@@ -132,7 +135,7 @@ where
     }
 
     fn delete_edges_from(&mut self, vertex: L) {
-        for item in self.edges_updated(vertex.clone()){
+        for item in self.edges_updated(vertex.clone()) {
             self.delete_edge(vertex.clone(), item);
         }
     }
@@ -153,7 +156,7 @@ where
         return self.lwdg.get_index(label);
     }
 
-    fn shrink(&mut self){
+    fn shrink(&mut self) {
         self.lwdg.shrink();
     }
 }
@@ -308,7 +311,7 @@ where
 {
     fn edges_updated(&self, vertex: L) -> Vec<L> {
         let vertex_index = self.get_index(&vertex);
-        if vertex_index.is_none(){
+        if vertex_index.is_none() {
             panic!("wtlwug edges_updated : vertex_index is none");
         }
         let vertex_index = vertex_index.unwrap();

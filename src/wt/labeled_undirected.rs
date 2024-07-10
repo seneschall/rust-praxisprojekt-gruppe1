@@ -1,8 +1,11 @@
 use vers_vecs::RsVec;
 
 use crate::graph::labeled_undirected::LabeledUGraph;
-use crate::traits::{Directed, Graph, Labeled, Undirected, Unweighted, WTDirected, WTLabeled, WTUndirected, WT};
+use crate::traits::{
+    Directed, Graph, Labeled, Undirected, Unweighted, WTDirected, WTLabeled, WTUndirected, WT,
+};
 use crate::wt::labeled_directed::LabeledWTDigraph;
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::hash::Hash;
 
@@ -13,6 +16,7 @@ use std::hash::Hash;
 /// Users can integrate the recent state of the graph into the QW-Tree by rebuilding it using the commit_edits-function.
 /// See module wt::labeled_directed for the L-wt-digraph struct definition. See more documentation on function-level and in the crate introduction.
 /// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type. Labels can have any type and are referenced.
+#[derive(Serialize, Deserialize)]
 pub struct LabeledWTUGraph<L>
 where
     L: Hash + Eq + Clone,
@@ -106,11 +110,11 @@ where
 {
     fn edges(&self, vertex: L) -> Vec<L> {
         let vertex_index = self.get_index(&vertex);
-        if vertex_index.is_none(){
+        if vertex_index.is_none() {
             panic!("wtlug edges : vertex_index is none");
         }
         let vertex_index = vertex_index.unwrap();
-        
+
         // returns all edges connected to vertex
         let mut edges: Vec<L>;
         edges = self.ldg.incoming_edges(vertex.clone()); // all incoming edges of vertex
@@ -128,7 +132,7 @@ where
     }
 
     fn delete_edges_from(&mut self, vertex: L) {
-        for item in self.edges_updated(vertex.clone()){
+        for item in self.edges_updated(vertex.clone()) {
             self.delete_edge(vertex.clone(), item);
         }
     }
@@ -149,7 +153,7 @@ where
         return self.ldg.get_index(label);
     }
 
-    fn shrink(&mut self){
+    fn shrink(&mut self) {
         self.ldg.shrink();
     }
 }
@@ -233,7 +237,7 @@ where
 {
     fn edges_updated(&self, vertex: L) -> Vec<L> {
         let vertex_index = self.get_index(&vertex);
-        if vertex_index.is_none(){
+        if vertex_index.is_none() {
             panic!("wtlug edges : vertex_index is none");
         }
         let vertex_index = vertex_index.unwrap();

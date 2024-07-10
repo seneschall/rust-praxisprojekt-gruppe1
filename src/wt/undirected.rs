@@ -5,7 +5,8 @@ use vers_vecs::RsVec;
 use crate::graph::undirected::UGraph;
 use crate::traits::{Directed, WTDirected};
 use crate::traits::{Graph, Undirected, Unlabeled, Unweighted, WTUndirected, WT};
-use crate::wt::directed::WTDigraph; // needed because of WTDigraph
+use crate::wt::directed::WTDigraph;
+use serde::{Deserialize, Serialize}; // needed because of WTDigraph
 
 /// An indexed wavelet-tree-ugraph with undirected edges. (wt-ugraph)
 /// The wt-ugraph holds a wt-digraph. All operations on the wt-digraph can be performed on the wt-ugraph.
@@ -14,6 +15,7 @@ use crate::wt::directed::WTDigraph; // needed because of WTDigraph
 /// Users can integrate the recent state of the graph into the QW-Tree by rebuilding it using the commit_edits-function.
 /// See module wt::directed for the wt-digraph struct definition. See more documentation on function-level and in the crate introduction.
 /// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type. Labels can have any type and are referenced.
+#[derive(Serialize, Deserialize)]
 pub struct WTUGraph {
     pub(crate) wtd: WTDigraph,
 }

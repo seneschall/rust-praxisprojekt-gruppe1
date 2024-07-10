@@ -1,11 +1,13 @@
 use crate::graph::directed::Digraph;
 use crate::traits::{Graph, Undirected, Unlabeled, Unweighted};
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 #[cfg(test)]
 mod test;
 /// An indexed, mutable graph with undirected edges. (ugraph, ug)
 /// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type.
+#[derive(Serialize, Deserialize)]
 pub struct UGraph {
     pub(crate) dg: Digraph,
 }

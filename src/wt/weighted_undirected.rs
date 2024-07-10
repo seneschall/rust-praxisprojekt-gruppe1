@@ -1,14 +1,18 @@
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 use vers_vecs::RsVec;
 
 use crate::graph::weighted_undirected::WeightedUGraph;
-use crate::traits::{Directed, Graph, Undirected, Unlabeled, WTDirected, WTUndirected, WTWeighted, Weighted, WT};
+use crate::traits::{
+    Directed, Graph, Undirected, Unlabeled, WTDirected, WTUndirected, WTWeighted, Weighted, WT,
+};
 use crate::wt::undirected::WTUGraph;
 
 use super::weighted_directed::WeightedWTDigraph;
 
-pub struct WeightedWTUGraph<W>{
+#[derive(Serialize, Deserialize)]
+pub struct WeightedWTUGraph<W> {
     wdg: WeightedWTDigraph<W>,
 }
 impl<W> WeightedWTUGraph<W> {
@@ -27,8 +31,9 @@ impl<W> WeightedWTUGraph<W> {
         };
     }
 }
-impl<W> Graph<usize> for WeightedWTUGraph<W> 
-where W : Clone,
+impl<W> Graph<usize> for WeightedWTUGraph<W>
+where
+    W: Clone,
 {
     fn add_vertex(&mut self, vertex: usize) -> usize {
         return self.wdg.add_vertex(vertex);
@@ -66,8 +71,9 @@ where W : Clone,
         }
     }
 }
-impl<W> Undirected<usize> for WeightedWTUGraph<W> 
-where W : Clone,
+impl<W> Undirected<usize> for WeightedWTUGraph<W>
+where
+    W: Clone,
 {
     fn edges(&self, vertex: usize) -> Vec<usize> {
         // returns all edges connected to vertex
@@ -102,8 +108,9 @@ impl<W> Unlabeled<usize> for WeightedWTUGraph<W> {
         return self.wdg.shrink();
     }
 }
-impl<W> Weighted<usize, W> for WeightedWTUGraph<W> 
-where W : Clone,
+impl<W> Weighted<usize, W> for WeightedWTUGraph<W>
+where
+    W: Clone,
 {
     fn add_edge(&mut self, from: usize, to: usize, weight: W) {
         if from <= to {
@@ -117,7 +124,7 @@ where W : Clone,
         if from <= to {
             self.wdg.edit_weight(from, to, weight);
         } else {
-            self.wdg.edit_weight(to,from , weight);
+            self.wdg.edit_weight(to, from, weight);
         }
     }
 
@@ -125,12 +132,13 @@ where W : Clone,
         if from <= to {
             return self.wdg.get_weight(from, to);
         } else {
-            return self.wdg.get_weight(to,from );
+            return self.wdg.get_weight(to, from);
         }
     }
 }
-impl<W> WT<usize> for WeightedWTUGraph<W> 
-where W: Clone,
+impl<W> WT<usize> for WeightedWTUGraph<W>
+where
+    W: Clone,
 {
     fn commit_edits(&mut self) {
         self.wdg.commit_edits();
@@ -152,7 +160,7 @@ where W: Clone,
         if from <= to {
             return self.wdg.edge_exists_updated(from, to);
         } else {
-            return self.wdg.edge_exists_updated(to,from);
+            return self.wdg.edge_exists_updated(to, from);
         }
     }
 
@@ -164,8 +172,9 @@ where W: Clone,
         return self.wdg.e_count_updated();
     }
 }
-impl<W> WTUndirected<usize> for WeightedWTUGraph<W> 
-where W: Clone,
+impl<W> WTUndirected<usize> for WeightedWTUGraph<W>
+where
+    W: Clone,
 {
     fn edges_updated(&self, vertex: usize) -> Vec<usize> {
         let mut edges: Vec<usize> = Vec::new();
@@ -183,14 +192,15 @@ where W: Clone,
         }
     }
 }
-impl<W> WTWeighted<usize, W> for WeightedWTUGraph<W> 
-where W: Clone,
+impl<W> WTWeighted<usize, W> for WeightedWTUGraph<W>
+where
+    W: Clone,
 {
     fn get_weight_updated(&mut self, from: usize, to: usize) -> W {
         if from <= to {
             return self.wdg.get_weight_updated(from, to);
         } else {
-            return self.wdg.get_weight_updated(to,from);
+            return self.wdg.get_weight_updated(to, from);
         }
     }
 }
