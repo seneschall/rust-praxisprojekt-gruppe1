@@ -59,7 +59,7 @@ where
     fn add_vertex(&mut self, vertex: L) -> usize {
         let vertex_index = self.get_index_updated(&vertex);
         if vertex_index.is_some() {
-            panic!("ldg add_vertex : vertex is not none");
+            panic!("ldg add_vertex : label already exists");
         }
         let index: usize = self.dg.append_vertex(); // this also updates v_count_updated
         self.label_index_uncommitted
@@ -248,7 +248,7 @@ where
         return self.label_index.get(&label).copied();
     }
 
-    fn shrink(&mut self){
+    fn shrink(&mut self) {
         // todo
         // updates index_label
         let old_and_new_indices = self.dg.shrink();
