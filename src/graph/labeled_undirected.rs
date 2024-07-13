@@ -58,10 +58,10 @@ where
         let from_index = self.get_index(&from);
         let to_index = self.get_index(&to);
         if from_index.is_none() {
-            panic!("lug delete_edge : from index is none");
+            panic!("lug delete_edge : from Vertex doesn't exist");
         }
         if to_index.is_none() {
-            panic!("lug delete_edge : to index is none");
+            panic!("lug delete_edge : to Vertex doesn't exist");
         }
         let from_index = from_index.unwrap();
         let to_index = to_index.unwrap();
@@ -91,7 +91,7 @@ where
     fn edges(&self, vertex: L) -> Vec<L> {
         let vertex_index = self.get_index(&vertex);
         if vertex_index.is_none() {
-            panic!("lug edges : vertex is none");
+            panic!("lug edges : Vertex doesn't exist");
         }
         let vertex_index = vertex_index.unwrap();
         let mut edges: Vec<L> = Vec::new();
@@ -109,7 +109,7 @@ where
     fn delete_edges_from(&mut self, vertex: L) {
         let vertex_index = self.get_index(&vertex);
         if vertex_index.is_none() {
-            panic!("lug delete_edges_from : vertex is none");
+            panic!("lug delete_edges_from : Vertex doesn't exist");
         }
         let vertex_index = vertex_index.unwrap();
         for from in 0..vertex_index {

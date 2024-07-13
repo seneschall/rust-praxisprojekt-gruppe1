@@ -119,7 +119,7 @@ impl Graph<usize> for Digraph {
             self.delete_incoming_edges(vertex);
             self.delete_outgoing_edges(vertex);
         } else {
-            panic!("delete_vertex : Can't delete Vertex : vertex >= self.v_count")
+            panic!("dg delete_vertex : Vertex doesn't exist")
         }
     }
 

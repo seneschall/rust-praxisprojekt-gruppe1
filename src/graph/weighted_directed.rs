@@ -91,7 +91,7 @@ impl<W> Graph<usize> for WeightedDigraph<W> {
             self.dg.delete_vertex(vertex);
             self.dg.adj_len -= 1;
         } else {
-            panic!("delete_vertex : Can't delete Vertex : vertex >= self.v_count")
+            panic!("wdg delete_vertex : Vertex doesn't exist")
         }
     }
 
