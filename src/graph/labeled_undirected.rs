@@ -9,7 +9,7 @@ mod test;
 /// A labeled, mutable graph with undirected edges.
 /// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type.
 /// Labels can have any type and are referenced.
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Display)]
 pub struct LabeledUGraph<L>
 where
     L: Hash + Eq,

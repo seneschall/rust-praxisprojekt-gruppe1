@@ -1,7 +1,6 @@
 use num::Num;
 use serde::{Deserialize, Serialize};
 
-
 use crate::graph::weighted_directed::WeightedDigraph;
 use crate::traits::{Graph, Undirected, Unlabeled, Weighted};
 
@@ -10,7 +9,7 @@ mod test;
 /// An indexed, mutable graph with undirected edges, where each edge represents a weight.
 /// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type.
 /// Weights can have any type.
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Display)]
 pub struct WeightedUGraph<W> {
     pub(crate) wdg: WeightedDigraph<W>,
 }

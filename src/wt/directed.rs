@@ -18,7 +18,7 @@ mod test;
 /// Users can integrate the recent state of the graph into the QW-Tree by rebuilding it using the commit_edits-function.
 /// See more documentation on function-level and in the crate introduction.
 /// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type.
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Display)]
 pub struct WTDigraph {
     pub(crate) wt_adj_len: usize,                      // last index + 1
     e_count: usize,                                    // number of edges
@@ -352,10 +352,9 @@ impl Unlabeled<usize> for WTDigraph {
 
             bv.append(true); // appends a 1 to mark the beginning of a new vertex; we only do this, if the vertex still exists
 
-            
             let adj: Vec<usize> = self.outgoing_edges_updated(v);
 
-            for i in 0..adj.len(){
+            for i in 0..adj.len() {
                 bv.append(false); // appends a 0 to bitmap for every element in adj
                 sequence.push(adj[i]); // moves all elements of adj into sequence
             }

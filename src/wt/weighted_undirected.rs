@@ -8,10 +8,9 @@ use crate::traits::{
     Directed, Graph, Undirected, Unlabeled, WTDirected, WTUndirected, WTWeighted, Weighted, WT,
 };
 
-
 use super::weighted_directed::WeightedWTDigraph;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Display)]
 pub struct WeightedWTUGraph<W> {
     wdg: WeightedWTDigraph<W>,
 }

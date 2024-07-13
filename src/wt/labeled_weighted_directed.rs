@@ -13,7 +13,7 @@ use vers_vecs::RsVec;
 /// A structure holding an immutable Wavelet-Tree-Representation of a graph with directed edges and labeled vertices, where each edge represents a weight, plus information on manual changes.
 /// The greatest possible of number of edges or of vertices is usize. Labels and Weights can have any type, Labels are referenced.
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Display)]
 pub struct LabeledWeightedWTDigraph<L, W>
 where
     L: Hash + Clone + Eq,
@@ -90,7 +90,8 @@ where
         if vertex_index.is_none() {
             panic!("lwdg delete_vertex : Vertex doesn't exist");
         }
-        if !self.vertex_exists(vertex.clone()) { // todo
+        if !self.vertex_exists(vertex.clone()) {
+            // todo
             panic!("lwdg delete_vertex : Vertex doesn't exist");
         }
         self.delete_incoming_edges(vertex.clone());
