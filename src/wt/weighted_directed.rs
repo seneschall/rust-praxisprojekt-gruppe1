@@ -151,9 +151,11 @@ where
             if self.weights.contains_key(&(from, to)) {
                 let weight = self.weights.get(&(from, to)).unwrap().clone();
                 return weight;
+            } else {
+                panic!("wdg get_weight : weight is missing")
             }
         }
-        panic!("wdg get_weight : edge does not exist or weight is missing");
+        panic!("wdg get_weight : edge does not exist");
     }
 }
 
@@ -216,10 +218,10 @@ where
 {
     fn get_weight_updated(&mut self, from: usize, to: usize) -> W {
         if !self.vertex_exists_updated(from) {
-            panic!("wdg get_weight_updated : vertex from does not exist");
+            panic!("wdg get_weight_updated : from Vertex doesn't exist");
         }
         if !self.vertex_exists_updated(to) {
-            panic!("wdg get_weight_updated : vertex to does not exist");
+            panic!("wdg get_weight_updated : to Vertex doesn't exist");
         }
         if !self.edge_exists_updated(from, to) {
             panic!("wdg get_weight_updated : edge from {from} to {to} does not exist");
@@ -232,7 +234,7 @@ where
                 }
                 Edit::Delete(_) => {
                     panic!(
-                        "wdg get_weight_updated : edge_exists_updated=true but weight is deleted"
+                        "wdg get_weight_updated : edge_exists_updated but weight is deleted"
                     );
                 }
             }

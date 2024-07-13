@@ -394,7 +394,7 @@ impl Unweighted<usize> for WTDigraph {
         }
 
         if self.edge_exists_updated(from, to) {
-            panic!("Edge already exists.");
+            panic!("Can't add Edge that already exists.");
         }
 
         match self.adj_uncommitted.get_mut(&from) {

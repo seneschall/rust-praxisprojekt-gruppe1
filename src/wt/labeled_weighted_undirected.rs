@@ -64,10 +64,10 @@ where
         let from_index = self.get_index_updated(&from);
         let to_index = self.get_index_updated(&to);
         if from_index.is_none() {
-            panic!("wtlwug delete_edge : from_index is none")
+            panic!("wtlwug delete_edge : from Vertex doesn't exist")
         }
         if to_index.is_none() {
-            panic!("wtlwug delete_edge : to_index is none")
+            panic!("wtlwug delete_edge : to Vertex doesn't exist")
         }
         let from_index = from_index.unwrap();
         let to_index = to_index.unwrap();
@@ -92,10 +92,10 @@ where
         let from_index = self.get_index(&from);
         let to_index = self.get_index(&to);
         if from_index.is_none() {
-            panic!("wtlwug edge_exists : from_index is none")
+            panic!("wtlwug edge_exists : from Vertex doesn't exist")
         }
         if to_index.is_none() {
-            panic!("wtlwug edge_exists : to_index is none")
+            panic!("wtlwug edge_exists : to Vertex doesn't exist")
         }
         let from_index = from_index.unwrap();
         let to_index = to_index.unwrap();
@@ -114,7 +114,7 @@ where
     fn edges(&self, vertex: L) -> Vec<L> {
         let vertex_index = self.get_index(&vertex);
         if vertex_index.is_none() {
-            panic!("wtlwug edges : vertex_index is none");
+            panic!("wtlwug edges : Vertex doesn't exist");
         }
         let vertex_index = vertex_index.unwrap();
 
@@ -171,10 +171,10 @@ where
         let from_index = self.get_index(&from);
         let to_index = self.get_index(&to);
         if from_index.is_none() {
-            panic!("wtlwug add_edge : from_index is none")
+            panic!("wtlwug add_edge : from Vertex doesn't exist")
         }
         if to_index.is_none() {
-            panic!("wtlwug add_edge : to_index is none")
+            panic!("wtlwug add_edge : to Vertex doesn't exist")
         }
         let from_index = from_index.unwrap();
         let to_index = to_index.unwrap();
@@ -192,10 +192,10 @@ where
         let from_index = self.get_index(&from);
         let to_index = self.get_index(&to);
         if from_index.is_none() {
-            panic!("wtlwug edit_weight : from_index is none")
+            panic!("wtlwug edit_weight : from Vertex doesn't exist")
         }
         if to_index.is_none() {
-            panic!("wtlwug edit_weight : to_index is none")
+            panic!("wtlwug edit_weight : to Vertex doesn't exist")
         }
         let from_index = from_index.unwrap();
         let to_index = to_index.unwrap();
@@ -213,10 +213,10 @@ where
         let from_index = self.get_index(&from);
         let to_index = self.get_index(&to);
         if from_index.is_none() {
-            panic!("wtlwug get_weight : from_index is none")
+            panic!("wtlwug get_weight : from Vertex doesn't exist")
         }
         if to_index.is_none() {
-            panic!("wtlwug get_weight : to_index is none")
+            panic!("wtlwug get_weight : to Vertex doesn't exist")
         }
         let from_index = from_index.unwrap();
         let to_index = to_index.unwrap();
@@ -255,10 +255,10 @@ where
         let from_index = self.get_index(&from);
         let to_index = self.get_index(&to);
         if from_index.is_none() {
-            panic!("wtlwug edge_exists_updated : from_index is none")
+            panic!("wtlwug edge_exists_updated : from Vertex doesn't exist")
         }
         if to_index.is_none() {
-            panic!("wtlwug edge_exists_updated : to_index is none")
+            panic!("wtlwug edge_exists_updated : to Vertex doesn't exist")
         }
         let from_index = from_index.unwrap();
         let to_index = to_index.unwrap();
@@ -289,10 +289,10 @@ where
         let from_index = self.get_index(&from);
         let to_index = self.get_index(&to);
         if from_index.is_none() {
-            panic!("wtlwug get_weight_updated : from_index is none")
+            panic!("wtlwug get_weight_updated : from Vertex doesn't exist")
         }
         if to_index.is_none() {
-            panic!("wtlwug get_weight_updated : to_index is none")
+            panic!("wtlwug get_weight_updated : to Vertex doesn't exist")
         }
         let from_index = from_index.unwrap();
         let to_index = to_index.unwrap();
@@ -312,7 +312,7 @@ where
     fn edges_updated(&self, vertex: L) -> Vec<L> {
         let vertex_index = self.get_index(&vertex);
         if vertex_index.is_none() {
-            panic!("wtlwug edges_updated : vertex_index is none");
+            panic!("wtlwug edges_updated : Vertex doesn't exist");
         }
         let vertex_index = vertex_index.unwrap();
 

@@ -68,10 +68,10 @@ where
         let from_index = self.get_index(&from);
         let to_index = self.get_index(&to);
         if from_index.is_none() {
-            panic!("lwdg delete_edge : from is none");
+            panic!("lwdg delete_edge : from Vertex doesn't exist");
         }
         if to_index.is_none() {
-            panic!("lwdg delete_edge : tois none");
+            panic!("lwdg delete_edge : to Vertex doesn't exist");
         }
         let from_index = from_index.unwrap();
         let to_index = to_index.unwrap();
@@ -85,10 +85,10 @@ where
     fn delete_vertex(&mut self, vertex: L) {
         let vertex_index = self.get_index(&vertex);
         if vertex_index.is_none() {
-            panic!("lwdg delete_vertex : vertex is none");
+            panic!("lwdg delete_vertex : Vertex doesn't exist");
         }
-        if !self.vertex_exists(vertex.clone()) {
-            panic!("lwdg delete_vertex : vertex does not exist");
+        if !self.vertex_exists(vertex.clone()) { // todo
+            panic!("lwdg delete_vertex : Vertex doesn't exist");
         }
         self.delete_incoming_edges(vertex.clone());
         self.delete_outgoing_edges(vertex.clone());
@@ -157,10 +157,10 @@ where
         let from_index = self.get_index(&from);
         let to_index = self.get_index(&to);
         if from_index.is_none() {
-            panic!("lwdg add_edge : from is none");
+            panic!("lwdg add_edge : from Vertex doesn't exist");
         }
         if to_index.is_none() {
-            panic!("lwdg add_edge : tois none");
+            panic!("lwdg add_edge : to Vertex doesn't exist");
         }
         let from_index = from_index.unwrap();
         let to_index = to_index.unwrap();
@@ -174,15 +174,15 @@ where
         let from_index = self.get_index(&from);
         let to_index = self.get_index(&to);
         if from_index.is_none() {
-            panic!("lwdg add_edge : from is none");
+            panic!("lwdg edit_weight : from Vertex doesn't exist");
         }
         if to_index.is_none() {
-            panic!("lwdg add_edge : tois none");
+            panic!("lwdg edit_weight : to Vertex doesn't exist");
         }
         let from_index = from_index.unwrap();
         let to_index = to_index.unwrap();
-        if !self.edge_exists(from, to) {
-            panic!("edge doesn't exist");
+        if !self.edge_exists_updated(from, to) {
+            panic!("lwdg edit_weight : Edge doesn't exist");
         }
         self.weights_uncommitted
             .insert((from_index, to_index), Edit::Add(weight));
@@ -192,10 +192,10 @@ where
         let from_index = self.get_index(&from);
         let to_index = self.get_index(&to);
         if from_index.is_none() {
-            panic!("lwdg add_edge : from is none");
+            panic!("lwdg get_weight : from Vertex doesn't exist");
         }
         if to_index.is_none() {
-            panic!("lwdg add_edge : to is none");
+            panic!("lwdg get_weight : to Vertex doesn't exist");
         }
         let from_index = from_index.unwrap();
         let to_index = to_index.unwrap();
@@ -256,10 +256,10 @@ where
         let from_index = self.get_index_updated(&from);
         let to_index = self.get_index_updated(&to);
         if from_index.is_none() {
-            panic!("ldg edge_exists : from_index is none")
+            panic!("ldg edge_exists : from Vertex doesn't exist")
         }
         if to_index.is_none() {
-            panic!("ldg edge_exists : to_index is none")
+            panic!("ldg edge_exists : to Vertex doesn't exist")
         }
         let from_index = from_index.unwrap();
         let to_index = to_index.unwrap();
