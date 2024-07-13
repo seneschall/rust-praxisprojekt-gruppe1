@@ -61,9 +61,22 @@ fn vertex_exists() {
     wtdg.add_vertex(10);
     assert!(wtdg.vertex_exists_updated(10));
 }
-// #[test]
+#[test]
 fn shrink() {
-    todo!()
+    let mut wtdg = WTDigraph::from_digraph(Digraph::new());
+    wtdg.add_vertex(5);
+    wtdg.commit_edits();
+    for i in 0..5{
+        wtdg.delete_vertex(i);
+    }
+    wtdg.shrink();
+    assert_eq!(wtdg.vertex_exists(0), true);
+    assert_eq!(wtdg.vertex_exists(1), false);
+    assert_eq!(wtdg.vertex_exists(2), false);
+    assert_eq!(wtdg.vertex_exists(3), false);
+    assert_eq!(wtdg.vertex_exists(4), false);
+    assert_eq!(wtdg.vertex_exists(5), false);
+
 }
 #[test]
 fn outgoing_edges() {
