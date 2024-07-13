@@ -4,6 +4,8 @@ use std::fmt::Debug;
 use std::fs;
 use std::str::FromStr;
 
+use num::Num;
+
 use crate::graph::{
     directed::Digraph, labeled_directed::LabeledDigraph, labeled_undirected::LabeledUGraph,
     labeled_weighted_directed::LabeledWeightedDigraph,
@@ -116,7 +118,7 @@ fn read_adj_unlabeled_unweighted_undirected(filename: &str) -> (usize, usize, Ve
 /// read in a weighted digraph from file
 pub fn create_weighted_digraph<W>(filepath: &str) -> WeightedDigraph<W>
 where
-    W: FromStr + Debug + Clone,
+    W: FromStr + Debug + Clone + Num,
 {
     let (v_count, e_count, adj, weights) = read_adj_unlabeled_weighted_directed::<W>(filepath);
     let mut i: usize = 0;
@@ -182,9 +184,7 @@ where
 /// read in a weighted ugraph from file (W-ugraph)
 pub fn create_weighted_ugraph<W>(filepath: &str) -> WeightedUGraph<W>
 where
-    W: Debug,
-    W: FromStr,
-    W: Copy,
+    W: Debug + FromStr + Copy + Num,
 {
     let (e_count, v_count, adj, weights) = read_adj_unlabeled_weighted_undirected::<W>(filepath);
     let mut i: usize = 0;
@@ -411,7 +411,7 @@ where
 /// read in a weighted labeled digraph from file (W-L-digraph)
 pub fn create_labeled_weighted_digraph<L, W>(filepath: &str) -> LabeledWeightedDigraph<L, W>
 where
-    W: FromStr + Debug + Hash + Clone + Eq,
+    W: FromStr + Debug + Hash + Clone + Eq + Num,
     L: Hash + Eq + Clone + Debug + FromStr,
 {
     let (v_count, e_count, adj, weights, labels, indices) =
@@ -516,7 +516,7 @@ where
 /// read in a weighted labeled ugraph from file (W-L-ugraph)
 pub fn create_weighted_labeled_ugraph<L, W>(filepath: &str) -> LabeledWeightedUGraph<L, W>
 where
-    W: FromStr + Debug + Hash + Eq + Clone,
+    W: FromStr + Debug + Hash + Eq + Clone + Num,
     L: Hash + Eq + Clone + Debug + FromStr,
 {
     let (v_count, e_count, adj, weights, labels, indices) =

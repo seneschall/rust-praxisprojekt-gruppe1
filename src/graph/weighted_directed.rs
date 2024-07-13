@@ -1,5 +1,6 @@
 use crate::graph::directed::Digraph;
 use crate::traits::{Directed, Graph, Unlabeled, Unweighted, Weighted};
+use num::*;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -17,7 +18,7 @@ pub struct WeightedDigraph<W> {
 
 impl<W> WeightedDigraph<W>
 where
-    W: Clone,
+    W: Clone + Num,
 {
     pub fn new() -> Self {
         WeightedDigraph {

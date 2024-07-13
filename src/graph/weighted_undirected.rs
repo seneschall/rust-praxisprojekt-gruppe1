@@ -1,3 +1,4 @@
+use num::Num;
 use serde::{Deserialize, Serialize};
 
 
@@ -15,7 +16,7 @@ pub struct WeightedUGraph<W> {
 }
 impl<W> WeightedUGraph<W>
 where
-    W: Clone,
+    W: Clone + Num,
 {
     pub fn new() -> Self {
         WeightedUGraph {

@@ -1,5 +1,6 @@
 use crate::graph::labeled_directed::LabeledDigraph;
 use crate::traits::{Directed, Graph, Labeled, Unweighted, Weighted};
+use num::Num;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::hash::Hash;
@@ -13,6 +14,7 @@ mod test;
 pub struct LabeledWeightedDigraph<L, W>
 where
     L: Hash + Eq,
+    W: Num,
 {
     pub(crate) ldg: LabeledDigraph<L>,
     pub(crate) weights: HashMap<(usize, usize), W>,
@@ -21,7 +23,7 @@ where
 impl<L, W> LabeledWeightedDigraph<L, W>
 where
     L: Hash + Eq + Clone,
-    W: Clone,
+    W: Clone + Num,
 {
     pub fn new() -> Self {
         LabeledWeightedDigraph {
@@ -59,6 +61,7 @@ where
 impl<L, W> Graph<L> for LabeledWeightedDigraph<L, W>
 where
     L: Eq + Hash + Clone,
+    W: Num,
 {
     fn add_vertex(&mut self, vertex: L) -> usize {
         self.ldg.add_vertex(vertex)
@@ -112,6 +115,7 @@ where
 impl<L, W> Directed<L> for LabeledWeightedDigraph<L, W>
 where
     L: Eq + Hash + Clone,
+    W: Num,
 {
     fn outgoing_edges(&self, vertex: L) -> Vec<L> {
         self.ldg.outgoing_edges(vertex)
@@ -149,6 +153,7 @@ where
 impl<L, W> Labeled<L> for LabeledWeightedDigraph<L, W>
 where
     L: Eq + Hash + Clone,
+    W: Num,
 {
     fn edit_label(&mut self, old_label: L, new_label: L) {
         self.ldg.edit_label(old_label, new_label);
@@ -169,7 +174,7 @@ where
 impl<L, W> Weighted<L, W> for LabeledWeightedDigraph<L, W>
 where
     L: Eq + Hash + Clone,
-    W: Clone,
+    W: Clone + Num,
 {
     fn add_edge(&mut self, from: L, to: L, weight: W) {
         let from_index = self.get_index(&from);

@@ -1,3 +1,4 @@
+use num::Num;
 use vers_vecs::RsVec;
 
 use crate::graph::labeled_weighted_undirected::LabeledWeightedUGraph;
@@ -17,12 +18,14 @@ use std::hash::Hash;
 pub struct LabeledWeightedWTUGraph<L, W>
 where
     L: Hash + Clone + Eq,
+    W: Num,
 {
     lwdg: LabeledWeightedWTDigraph<L, W>,
 }
 impl<L, W> LabeledWeightedWTUGraph<L, W>
 where
     L: Hash + Clone + Eq,
+    W: Num,
 {
     pub fn from_labeled_weighted_ugraph(lwug: LabeledWeightedUGraph<L, W>) -> Self {
         return LabeledWeightedWTUGraph {
@@ -44,7 +47,7 @@ where
 impl<L, W> Graph<L> for LabeledWeightedWTUGraph<L, W>
 where
     L: Hash + Clone + Eq,
-    W: Clone,
+    W: Clone + Num,
 {
     fn add_vertex(&mut self, vertex: L) -> usize {
         return self.lwdg.add_vertex(vertex);
@@ -109,7 +112,7 @@ where
 impl<L, W> Undirected<L> for LabeledWeightedWTUGraph<L, W>
 where
     L: Hash + Clone + Eq,
-    W: Clone,
+    W: Clone + Num,
 {
     fn edges(&self, vertex: L) -> Vec<L> {
         let vertex_index = self.get_index(&vertex);
@@ -142,6 +145,7 @@ where
 impl<L, W> Labeled<L> for LabeledWeightedWTUGraph<L, W>
 where
     L: Hash + Clone + Eq,
+    W: Num,
 {
     fn edit_label(&mut self, old_label: L, new_label: L) {
         self.lwdg.edit_label(old_label, new_label);
@@ -162,7 +166,7 @@ where
 impl<L, W> Weighted<L, W> for LabeledWeightedWTUGraph<L, W>
 where
     L: Hash + Clone + Eq,
-    W: Clone,
+    W: Clone + Num,
 {
     fn add_edge(&mut self, from: L, to: L, weight: W) {
         // fixme
@@ -230,7 +234,7 @@ where
 impl<L, W> WT<L> for LabeledWeightedWTUGraph<L, W>
 where
     L: Hash + Clone + Eq,
-    W: Clone,
+    W: Clone + Num,
 {
     fn commit_edits(&mut self) {
         self.lwdg.commit_edits();
@@ -280,7 +284,7 @@ where
 impl<L, W> WTWeighted<L, W> for LabeledWeightedWTUGraph<L, W>
 where
     L: Hash + Clone + Eq,
-    W: Clone,
+    W: Clone + Num,
 {
     fn get_weight_updated(&mut self, from: L, to: L) -> W {
         // fixme
@@ -306,7 +310,7 @@ where
 impl<L, W> WTUndirected<L> for LabeledWeightedWTUGraph<L, W>
 where
     L: Hash + Clone + Eq,
-    W: Clone,
+    W: Clone + Num,
 {
     fn edges_updated(&self, vertex: L) -> Vec<L> {
         let vertex_index = self.get_index(&vertex);
@@ -333,6 +337,7 @@ where
 impl<L, W> WTLabeled<L> for LabeledWeightedWTUGraph<L, W>
 where
     L: Clone + Hash + Eq,
+    W: Num,
 {
     fn get_label_updated(&self, index: usize) -> Option<&L> {
         return self.lwdg.get_label_updated(index);

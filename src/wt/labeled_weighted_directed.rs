@@ -4,6 +4,7 @@ use crate::traits::{
 };
 use crate::wt::labeled_directed::LabeledWTDigraph;
 use crate::Edit;
+use num::Num;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::hash::Hash;
@@ -16,6 +17,7 @@ use vers_vecs::RsVec;
 pub struct LabeledWeightedWTDigraph<L, W>
 where
     L: Hash + Clone + Eq,
+    W: Num,
 {
     ldg: LabeledWTDigraph<L>,
     weights_uncommitted: HashMap<(usize, usize), Edit<W>>,
@@ -24,6 +26,7 @@ where
 impl<L, W> LabeledWeightedWTDigraph<L, W>
 where
     L: Hash + Clone + Eq,
+    W: Num,
 {
     pub fn from_labeled_weighted_digraph(lwdg: LabeledWeightedDigraph<L, W>) -> Self {
         return LabeledWeightedWTDigraph {
@@ -50,7 +53,7 @@ where
 impl<L, W> Graph<L> for LabeledWeightedWTDigraph<L, W>
 where
     L: Hash + Clone + Eq,
-    W: Clone,
+    W: Clone + Num,
 {
     fn add_vertex(&mut self, vertex: L) -> usize {
         self.ldg.add_vertex(vertex)
@@ -106,7 +109,7 @@ where
 impl<L, W> Directed<L> for LabeledWeightedWTDigraph<L, W>
 where
     L: Hash + Clone + Eq,
-    W: Clone,
+    W: Clone + Num,
 {
     fn outgoing_edges(&self, vertex: L) -> Vec<L> {
         self.ldg.outgoing_edges(vertex)
@@ -131,6 +134,7 @@ where
 impl<L, W> Labeled<L> for LabeledWeightedWTDigraph<L, W>
 where
     L: Hash + Clone + Eq,
+    W: Num,
 {
     fn edit_label(&mut self, old_label: L, new_label: L) {
         self.ldg.edit_label(old_label, new_label);
@@ -151,7 +155,7 @@ where
 impl<L, W> Weighted<L, W> for LabeledWeightedWTDigraph<L, W>
 where
     L: Hash + Clone + Eq,
-    W: Clone,
+    W: Clone + Num,
 {
     fn add_edge(&mut self, from: L, to: L, weight: W) {
         let from_index = self.get_index(&from);
@@ -206,7 +210,7 @@ where
 impl<L, W> WT<L> for LabeledWeightedWTDigraph<L, W>
 where
     L: Hash + Clone + Eq,
-    W: Clone,
+    W: Clone + Num,
 {
     fn commit_edits(&mut self) {
         for ((from, to), weight) in &self.weights_uncommitted {
@@ -250,7 +254,7 @@ where
 impl<L, W> WTWeighted<L, W> for LabeledWeightedWTDigraph<L, W>
 where
     L: Hash + Clone + Eq,
-    W: Clone,
+    W: Clone + Num,
 {
     fn get_weight_updated(&mut self, from: L, to: L) -> W {
         let from_index = self.get_index_updated(&from);
@@ -297,6 +301,7 @@ where
 impl<L, W> WTDirected<L> for LabeledWeightedWTDigraph<L, W>
 where
     L: Hash + Clone + Eq,
+    W: Num,
 {
     fn outgoing_edges_updated(&self, vertex: L) -> Vec<L> {
         self.ldg.outgoing_edges_updated(vertex)
@@ -310,6 +315,7 @@ where
 impl<L, W> WTLabeled<L> for LabeledWeightedWTDigraph<L, W>
 where
     L: Hash + Eq + Clone,
+    W: Num,
 {
     fn get_label_updated(&self, index: usize) -> Option<&L> {
         self.ldg.get_label_updated(index)

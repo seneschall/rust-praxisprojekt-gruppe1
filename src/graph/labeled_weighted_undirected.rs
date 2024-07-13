@@ -1,5 +1,6 @@
 use crate::graph::labeled_weighted_directed::LabeledWeightedDigraph;
 use crate::traits::{Graph, Labeled, Undirected, Weighted};
+use num::Num;
 use serde::{Deserialize, Serialize};
 
 use std::hash::Hash;
@@ -14,6 +15,7 @@ mod test;
 pub struct LabeledWeightedUGraph<L, W>
 where
     L: Hash + Eq,
+    W: Num,
 {
     pub(crate) lwdg: LabeledWeightedDigraph<L, W>,
 }
@@ -21,7 +23,7 @@ where
 impl<L, W> LabeledWeightedUGraph<L, W>
 where
     L: Hash + Eq + Clone,
-    W: Clone,
+    W: Clone + Num,
 {
     pub fn new() -> Self {
         LabeledWeightedUGraph {
@@ -42,6 +44,7 @@ where
 impl<L, W> Graph<L> for LabeledWeightedUGraph<L, W>
 where
     L: Hash + Eq + Clone + std::fmt::Display,
+    W: Num,
 {
     fn add_vertex(&mut self, vertex: L) -> usize {
         self.lwdg.add_vertex(vertex)
@@ -105,6 +108,7 @@ where
 impl<L, W> Undirected<L> for LabeledWeightedUGraph<L, W>
 where
     L: Hash + Eq + Clone + std::fmt::Display,
+    W: Num,
 {
     fn edges(&self, vertex: L) -> Vec<L> {
         let vertex_index = self.get_index(&vertex);
@@ -143,6 +147,7 @@ where
 impl<L, W> Labeled<L> for LabeledWeightedUGraph<L, W>
 where
     L: Hash + Eq + Clone,
+    W: Num,
 {
     fn edit_label(&mut self, old_label: L, new_label: L) {
         self.lwdg.edit_label(old_label, new_label);
@@ -163,7 +168,7 @@ where
 impl<L, W> Weighted<L, W> for LabeledWeightedUGraph<L, W>
 where
     L: Hash + Eq + Clone,
-    W: Clone,
+    W: Clone + Num,
 {
     fn add_edge(&mut self, from: L, to: L, weight: W) {
         if self.get_index(&from) <= self.get_index(&to) {
