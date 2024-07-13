@@ -291,8 +291,7 @@ mod test {
     #[test]
     fn test_labeled_digraph() {
         let mut ldg: LabeledDigraph<&str> = LabeledDigraph::new();
-        let dg: Digraph = Digraph::new();
-        let index = ldg.add_vertex("2");
+        ldg.add_vertex("2");
         assert_eq!(ldg.v_count(), 1);
         ldg.add_edge("2", "2");
         for item in ldg.outgoing_edges("2") {
@@ -313,8 +312,8 @@ mod test {
         // assert_eq!(1,2);
     }
     #[test]
-    fn test_digraph_tinyDG() {
-        let mut digraph = setup_dg("tests/tinyDG.txt");
+    fn test_digraph_tinydg() {
+        let digraph = setup_dg("tests/tinyDG.txt");
         //check if v_count and e_count are correct
         assert_eq!(digraph.e_count(), 22);
         assert_eq!(digraph.v_count(), 13);
@@ -357,7 +356,7 @@ mod test {
     #[test]
     fn test_directed_add_vertex() {
         let mut digraph = setup_dg("tests/tinyDG.txt");
-        let mut digraph2 = setup_dg("tests/tinyDG.txt");
+        let digraph2 = setup_dg("tests/tinyDG.txt");
         digraph.add_vertex(0);
         assert_eq!(digraph.v_count(), digraph2.v_count());
         digraph.add_vertex(100);
@@ -365,14 +364,14 @@ mod test {
     }
     #[test]
     fn test_directed_delete_vertex() {
-        let mut digraph = setup_dg("tests/tinyDG.txt");
-        let mut digraph2 = setup_dg("tests/tinyDG.txt");
+        let digraph = setup_dg("tests/tinyDG.txt");
+        let digraph2 = setup_dg("tests/tinyDG.txt");
         for i in 0..digraph2.v_count() {
             assert_eq!(digraph.outgoing_edges(i), digraph2.outgoing_edges(i))
         }
         // digraph2.delete_vertex(0);
         for i in 0..digraph2.v_count() {
-            assert_eq!(digraph.outgoing_edges(0), digraph2.outgoing_edges(0));
+            assert_eq!(digraph.outgoing_edges(i), digraph2.outgoing_edges(i));
         }
     }
     // #[test]
