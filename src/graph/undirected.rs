@@ -1,7 +1,7 @@
 use crate::graph::directed::Digraph;
 use crate::traits::{Graph, Undirected, Unlabeled, Unweighted};
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+
 
 #[cfg(test)]
 mod test;

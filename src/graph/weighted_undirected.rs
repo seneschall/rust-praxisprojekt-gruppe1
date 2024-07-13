@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+
 
 use crate::graph::weighted_directed::WeightedDigraph;
 use crate::traits::{Graph, Undirected, Unlabeled, Weighted};
@@ -64,11 +64,25 @@ impl<W> Graph<usize> for WeightedUGraph<W> {
 }
 impl<W> Undirected<usize> for WeightedUGraph<W> {
     fn edges(&self, vertex: usize) -> Vec<usize> {
-        todo!() // erstmal unwichtig
+        let mut edges: Vec<usize> = Vec::new();
+        for i in 0..vertex {
+            if self.wdg.dg.adj[i].contains(&vertex) {
+                edges.push(i);
+            }
+        }
+        edges.append(&mut self.wdg.dg.adj[vertex].clone());
+        edges
     }
 
     fn delete_edges_from(&mut self, vertex: usize) {
-        todo!() // erstmal unwichtig
+        for from in 0..vertex {
+            if self.wdg.dg.adj[from].contains(&vertex) {
+                self.delete_edge(from, vertex);
+            }
+        }
+        for to in self.wdg.dg.adj[vertex].clone() {
+            self.delete_edge(vertex, to);
+        }
     }
 }
 impl<W> Unlabeled<usize> for WeightedUGraph<W> {

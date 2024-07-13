@@ -65,7 +65,7 @@ impl Graph<usize> for Digraph {
                 self.deleted_vertices.remove(&vertex);
             } else {
                 // case 3
-                for i in 0..vertex - self.adj_len + 1 {
+                for _i in 0..vertex - self.adj_len + 1 {
                     self.adj.push(vec![]);
                 }
                 self.adj_len += vertex - self.adj_len + 1;
