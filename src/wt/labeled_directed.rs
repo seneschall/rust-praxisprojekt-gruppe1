@@ -415,7 +415,7 @@ where
                 Edit::Add(label) => {
                     return Some(label);
                 }
-                Edit::Delete(label) => {
+                Edit::Delete(_label) => {
                     return None;
                 }
             }

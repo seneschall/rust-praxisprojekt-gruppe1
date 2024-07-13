@@ -6,7 +6,7 @@ use crate::traits::{
 };
 use crate::wt::labeled_directed::LabeledWTDigraph;
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+
 use std::hash::Hash;
 
 /// An labeled wavelet-tree-graph with undirected edges. (L-wt-ugraph)
@@ -113,7 +113,6 @@ where
         if vertex_index.is_none() {
             panic!("wtlug edges : Vertex doesn't exist");
         }
-        let vertex_index = vertex_index.unwrap();
 
         // returns all edges connected to vertex
         let mut edges: Vec<L>;
@@ -240,7 +239,6 @@ where
         if vertex_index.is_none() {
             panic!("wtlug edges : Vertex doesn't exist");
         }
-        let vertex_index = vertex_index.unwrap();
 
         let mut edges: Vec<L>;
         edges = self.ldg.incoming_edges_updated(vertex.clone()); // all incoming edges of vertex

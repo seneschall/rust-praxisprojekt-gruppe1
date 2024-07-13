@@ -116,7 +116,6 @@ where
         if vertex_index.is_none() {
             panic!("wtlwug edges : Vertex doesn't exist");
         }
-        let vertex_index = vertex_index.unwrap();
 
         // returns all edges connected to vertex
         let mut edges: Vec<L>;
@@ -314,7 +313,6 @@ where
         if vertex_index.is_none() {
             panic!("wtlwug edges_updated : Vertex doesn't exist");
         }
-        let vertex_index = vertex_index.unwrap();
 
         let mut edges: Vec<L>;
         edges = self.lwdg.incoming_edges_updated(vertex.clone()); // all incoming edges of vertex

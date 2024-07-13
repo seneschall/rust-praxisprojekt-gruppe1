@@ -7,7 +7,7 @@ use crate::graph::weighted_undirected::WeightedUGraph;
 use crate::traits::{
     Directed, Graph, Undirected, Unlabeled, WTDirected, WTUndirected, WTWeighted, Weighted, WT,
 };
-use crate::wt::undirected::WTUGraph;
+
 
 use super::weighted_directed::WeightedWTDigraph;
 
@@ -77,7 +77,7 @@ where
 {
     fn edges(&self, vertex: usize) -> Vec<usize> {
         // returns all edges connected to vertex
-        let mut edges: Vec<usize> = Vec::new();
+        let mut edges: Vec<usize>;
         edges = self.wdg.incoming_edges(vertex); // all incoming edges of vertex
         if self.edge_exists(vertex, vertex) {
             for item in self.wdg.outgoing_edges(vertex) {
@@ -177,7 +177,7 @@ where
     W: Clone,
 {
     fn edges_updated(&self, vertex: usize) -> Vec<usize> {
-        let mut edges: Vec<usize> = Vec::new();
+        let mut edges: Vec<usize>;
         edges = self.wdg.incoming_edges_updated(vertex); // all incoming edges of vertex
         if self.edge_exists_updated(vertex, vertex) {
             for item in self.wdg.outgoing_edges_updated(vertex) {

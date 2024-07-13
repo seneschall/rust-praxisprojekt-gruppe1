@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+
 
 use vers_vecs::RsVec;
 
@@ -93,7 +93,7 @@ impl Undirected<usize> for WTUGraph {
     // todo ! catch non-existing vertice as input
     fn edges(&self, vertex: usize) -> Vec<usize> {
         // returns all edges connected to vertex
-        let mut edges: Vec<usize> = Vec::new();
+        let mut edges: Vec<usize>;
         edges = self.wtd.incoming_edges(vertex); // all incoming edges of vertex
         if self.edge_exists(vertex, vertex) {
             for item in self.wtd.outgoing_edges(vertex) {
@@ -185,7 +185,7 @@ impl WTUndirected<usize> for WTUGraph {
     /// return all edges of the given vertex in a vector, which exist and weren't deleted, or were created since since last commit.
     /// should probably be changed to return an iterator instead
     fn edges_updated(&self, vertex: usize) -> Vec<usize> {
-        let mut edges: Vec<usize> = Vec::new();
+        let mut edges: Vec<usize>;
         edges = self.wtd.incoming_edges_updated(vertex); // all incoming edges of vertex
         if self.edge_exists_updated(vertex, vertex) {
             for item in self.wtd.outgoing_edges_updated(vertex) {
