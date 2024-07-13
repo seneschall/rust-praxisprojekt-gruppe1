@@ -87,7 +87,7 @@ fn outgoing_edges() {
             dg.add_edge(i, j);
         }
     }
-    let mut wtdg = WTDigraph::from_digraph(dg.clone());
+    let wtdg = WTDigraph::from_digraph(dg.clone());
     for i in 0..10 {
         // maybe order is different
         assert_eq!(
