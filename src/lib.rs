@@ -27,18 +27,13 @@
 
 //! With these functionalities, the wt_graphs library provides a comprehensive and efficient solution for working with both traditional and Wavelet-Tree graphs.
 
-/// This module contains the 8 offer wt-graph objects and fast operations (thanks to QWT-library).
+pub mod graph;
+pub mod prelude;
+pub mod traits;
 pub mod wt;
 
-/// This module contains the 8 offered graphs objects.
-pub mod graph;
-
-/// This trait will probably only exist in the development versions of this crate, since using it would mean\
-/// that the user would be obliged to manually import all traits the datastructure that he's working with should implement.
-pub mod traits;
-
 // Enum(s) used by all structures and thus publicly available
-#[derive(PartialEq, Debug,serde::Serialize,serde::Deserialize, Clone)]
+#[derive(PartialEq, Debug, serde::Serialize, serde::Deserialize, Clone)]
 pub enum Edit<T> {
     Add(T),
     Delete(T),
