@@ -38,7 +38,7 @@ pub mod graph;
 pub mod traits;
 
 // Enum(s) used by all structures and thus publicly available
-#[derive(PartialEq, Debug,serde::Serialize,serde::Deserialize)]
+#[derive(PartialEq, Debug,serde::Serialize,serde::Deserialize, Clone)]
 pub enum Edit<T> {
     Add(T),
     Delete(T),

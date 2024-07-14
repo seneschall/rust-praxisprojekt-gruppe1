@@ -4,11 +4,9 @@ use std::collections::HashMap;
 
 #[cfg(test)]
 mod test;
-
-#[derive(Debug, Clone)]
 /// An indexed, mutable graph with directed edges. (digraph, dg)
 /// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type.
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Digraph {
     pub(crate) deleted_vertices: HashMap<usize, bool>,
     pub(crate) adj_len: usize, // number of vertices, deleted_vertices + v_count() == adj.len()

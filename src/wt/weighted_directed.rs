@@ -10,7 +10,7 @@ use serde::{Deserialize, Serialize};
 
 /// A structure holding an immutable Wavelet-Tree-Representation of an indexed graph with directed edges, where each edge represents a weight, plus information on manual changes.
 /// The greatest possible of number of edges or of vertices is usize vertices, vertex-indices are also usize-data-type. Weights can have any type.
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct WeightedWTDigraph<W> {
     dg: WTDigraph,
     weights_uncommitted: HashMap<(usize, usize), Edit<W>>,

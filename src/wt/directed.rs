@@ -18,7 +18,7 @@ mod test;
 /// Users can integrate the recent state of the graph into the QW-Tree by rebuilding it using the commit_edits-function.
 /// See more documentation on function-level and in the crate introduction.
 /// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type.
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct WTDigraph {
     pub(crate) wt_adj_len: usize,                      // last index + 1
     e_count: usize,                                    // number of edges

@@ -11,7 +11,7 @@ use crate::traits::{
 
 use super::weighted_directed::WeightedWTDigraph;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct WeightedWTUGraph<W> {
     wdg: WeightedWTDigraph<W>,
 }

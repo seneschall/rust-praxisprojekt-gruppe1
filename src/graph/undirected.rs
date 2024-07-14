@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 mod test;
 /// An indexed, mutable graph with undirected edges. (ugraph, ug)
 /// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type.
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct UGraph {
     pub(crate) dg: Digraph,
 }
