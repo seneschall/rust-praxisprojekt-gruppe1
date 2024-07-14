@@ -94,12 +94,12 @@ fn main() {
   let new_indices: Vec<Option<usize>> = dg.shrink(); // removes 0 from graph and shifts all indices
   // new_indices = [
   //  None,
-  //  0,
-  //  1,
-  //  2,
-  //  3,
-  //  4,
-  //  5
+  //  Some(0),
+  //  Some(1),
+  //  Some(2),
+  //  Some(3),
+  //  Some(4),
+  //  Some(5)
   // ]
 
   let outgoing_zero: Vec<usize> = dg.outgoing_edges(0);
