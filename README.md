@@ -104,7 +104,7 @@ fn main() {
 
   let outgoing_zero: Vec<usize> = dg.outgoing_edges(0);
 
-  println("outgoing edges of 0: {:?}", outgoing_zero); // prints [3] because we created an edge 1->3
+  println!("outgoing edges of 0: {:?}", outgoing_zero); // prints [3] because we created an edge 1->3
   // and that was shifted one index to the left
 ```
 
