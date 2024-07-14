@@ -1,5 +1,5 @@
-//! Preludes import the necessary traits to work with different graph types.
-//! Import all preludes or pick the one for the graph type you want to work with.
+//! Preludes import the necessary traits and data structures to work with different graph types.
+//! Import all preludes or pick the one for the graph types you want to work with.
 //!
 //! # Example
 //!
@@ -23,8 +23,8 @@
 
 pub use indexed_digraph::*;
 pub use indexed_ugraph::*;
-pub use weighted_labeled_digraph::*;
-pub use weighted_labeled_ugraph::*;
+pub use labeled_digraph::*;
+pub use labeled_ugraph::*;
 
 pub mod indexed_digraph {
     pub use crate::graph::directed::Digraph;
