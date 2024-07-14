@@ -233,9 +233,7 @@ where
                     return weight.clone();
                 }
                 Edit::Delete(_) => {
-                    panic!(
-                        "wdg get_weight_updated : edge_exists_updated but weight is deleted"
-                    );
+                    panic!("wdg get_weight_updated : edge_exists_updated but weight is deleted");
                 }
             }
         } else {

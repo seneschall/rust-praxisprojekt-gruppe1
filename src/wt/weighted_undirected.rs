@@ -8,7 +8,6 @@ use crate::traits::{
     Directed, Graph, Undirected, Unlabeled, WTDirected, WTUndirected, WTWeighted, Weighted, WT,
 };
 
-
 use super::weighted_directed::WeightedWTDigraph;
 
 #[derive(Serialize, Deserialize, Clone, Debug)]

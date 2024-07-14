@@ -1,7 +1,6 @@
 use num::Num;
 use serde::{Deserialize, Serialize};
 
-
 use crate::graph::weighted_directed::WeightedDigraph;
 use crate::traits::{Graph, Undirected, Unlabeled, Weighted};
 

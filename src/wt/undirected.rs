@@ -1,5 +1,3 @@
-
-
 use vers_vecs::RsVec;
 
 use crate::graph::undirected::UGraph;

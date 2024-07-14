@@ -90,7 +90,8 @@ where
         if vertex_index.is_none() {
             panic!("lwdg delete_vertex : Vertex doesn't exist");
         }
-        if !self.vertex_exists(vertex.clone()) { // todo
+        if !self.vertex_exists(vertex.clone()) {
+            // todo
             panic!("lwdg delete_vertex : Vertex doesn't exist");
         }
         self.delete_incoming_edges(vertex.clone());

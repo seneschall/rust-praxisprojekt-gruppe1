@@ -2,7 +2,6 @@ use crate::graph::directed::Digraph;
 use crate::traits::{Graph, Undirected, Unlabeled, Unweighted};
 use serde::{Deserialize, Serialize};
 
-
 #[cfg(test)]
 mod test;
 /// An indexed, mutable graph with undirected edges. (ugraph, ug)
