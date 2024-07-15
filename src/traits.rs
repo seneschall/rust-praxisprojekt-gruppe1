@@ -120,9 +120,16 @@ pub trait Unlabeled<T> {
     /// ```rust
     /// // dg is a `WTDigraph` containing the vertices 0..=3 and some edges.
     /// // ...
+    /// use wt_graphs::prelude::Digraph;
+    /// use wt_graphs::wt::directed::WTDigraph;
+    /// use crate::wt_graphs::prelude::Graph;
+    /// use crate::wt_graphs::prelude::Unlabeled;
+    /// let mut dg = WTDigraph::from_digraph(Digraph::new());
+    /// dg.add_vertex(3);
     /// dg.delete_vertex(1);
     /// dg.delete_vertex(3);
-    /// let new_indices: Vec<Option<usize>> = dg.shrink();
+
+    /// assert_eq!(dg.shrink(), vec![Some(0), None, Some(1), None])
     /// // new_indices = [
     /// //  Some(0),
     /// //  None,
