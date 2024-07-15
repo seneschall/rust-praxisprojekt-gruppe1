@@ -114,11 +114,11 @@ where
         }
     }
 
-    fn get_weight(&mut self, from: usize, to: usize) -> W {
+    fn weight(&mut self, from: usize, to: usize) -> W {
         if from <= to {
-            return self.wdg.get_weight(from, to);
+            return self.wdg.weight(from, to);
         } else {
-            return self.wdg.get_weight(to, from);
+            return self.wdg.weight(to, from);
         }
     }
 }

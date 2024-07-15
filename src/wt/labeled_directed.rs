@@ -58,7 +58,7 @@ where
     L: Hash + Eq + Clone,
 {
     fn add_vertex(&mut self, vertex: L) -> usize {
-        let vertex_index = self.get_index_updated(&vertex);
+        let vertex_index = self.index_updated(&vertex);
         if vertex_index.is_some() {
             panic!("wtldg add_vertex : label already exists");
         }
@@ -81,8 +81,8 @@ where
     }
 
     fn delete_edge(&mut self, from: L, to: L) {
-        let from_index = self.get_index_updated(&from);
-        let to_index = self.get_index_updated(&to);
+        let from_index = self.index_updated(&from);
+        let to_index = self.index_updated(&to);
         if from_index.is_none() {
             panic!("wtldg edge_exists : from Vertex doesn't exist")
         }
@@ -95,7 +95,7 @@ where
     }
 
     fn delete_vertex(&mut self, vertex: L) {
-        let vertex_index = self.get_index_updated(&vertex);
+        let vertex_index = self.index_updated(&vertex);
         if vertex_index.is_none() {
             panic!("wtldg delete_vertex : Vertex doesn't exist");
         }
@@ -110,7 +110,7 @@ where
     }
 
     fn vertex_exists(&self, vertex: L) -> bool {
-        let vertex_index = self.get_index(&vertex);
+        let vertex_index = self.index(&vertex);
         if vertex_index.is_none() {
             return false;
             // panic!("ldg vertex_exists : vertex_index is none");
@@ -120,8 +120,8 @@ where
     }
 
     fn edge_exists(&self, from: L, to: L) -> bool {
-        let from_index = self.get_index_updated(&from);
-        let to_index = self.get_index_updated(&to);
+        let from_index = self.index_updated(&from);
+        let to_index = self.index_updated(&to);
         if from_index.is_none() {
             panic!("wtldg edge_exists : from Vertex doesn't exist")
         }
@@ -138,7 +138,7 @@ where
     L: Hash + Eq + Clone,
 {
     fn outgoing_edges(&self, vertex: L) -> Vec<L> {
-        let vertex_index = self.get_index(&vertex);
+        let vertex_index = self.index(&vertex);
         if vertex_index.is_none() {
             panic!("wtldg outgoing_edges : Vertex doesn't exist");
         }
@@ -146,13 +146,13 @@ where
         let outgoing_edges = self.dg.outgoing_edges(vertex_index);
         let mut outgoing_edges_labeled: Vec<L> = Vec::new();
         for item in outgoing_edges {
-            outgoing_edges_labeled.push(self.get_label(item).unwrap().to_owned());
+            outgoing_edges_labeled.push(self.label(item).unwrap().to_owned());
         }
         return outgoing_edges_labeled;
     }
 
     fn incoming_edges(&self, vertex: L) -> Vec<L> {
-        let vertex_index = self.get_index(&vertex);
+        let vertex_index = self.index(&vertex);
         if vertex_index.is_none() {
             panic!("wtldg incoming_edges : Vertex doesn't exist");
         }
@@ -160,13 +160,13 @@ where
         let incoming_edges = self.dg.incoming_edges(vertex_index);
         let mut incoming_edges_labeled: Vec<L> = Vec::new();
         for item in incoming_edges {
-            incoming_edges_labeled.push(self.get_label(item).unwrap().to_owned());
+            incoming_edges_labeled.push(self.label(item).unwrap().to_owned());
         }
         return incoming_edges_labeled;
     }
 
     fn delete_outgoing_edges(&mut self, vertex: L) {
-        let vertex_index = self.get_index(&vertex);
+        let vertex_index = self.index(&vertex);
         if vertex_index.is_none() {
             panic!("wtldg delete_outgoing_edges : Vertex doesn't exist");
         }
@@ -175,7 +175,7 @@ where
     }
 
     fn delete_incoming_edges(&mut self, vertex: L) {
-        let vertex_index = self.get_index(&vertex);
+        let vertex_index = self.index(&vertex);
         if vertex_index.is_none() {
             panic!("wtldg delete_incoming_edges : Vertex doesn't exist");
         }
@@ -188,8 +188,8 @@ where
     L: Hash + Eq + Clone,
 {
     fn edit_label(&mut self, old_label: L, new_label: L) {
-        let old_label_index: Option<usize> = self.get_index_updated(&old_label);
-        let new_label_index: Option<usize> = self.get_index_updated(&new_label);
+        let old_label_index: Option<usize> = self.index_updated(&old_label);
+        let new_label_index: Option<usize> = self.index_updated(&new_label);
         if old_label_index.is_none() {
             panic!("wtldg edit_label : the old_label Vertex doesn't exist");
         }
@@ -241,11 +241,11 @@ where
         panic!("wtldg edit_label : Missed something");
     }
 
-    fn get_label(&self, vertex: usize) -> Option<&L> {
+    fn label(&self, vertex: usize) -> Option<&L> {
         return self.index_label.get(vertex);
     }
 
-    fn get_index(&self, label: &L) -> Option<usize> {
+    fn index(&self, label: &L) -> Option<usize> {
         return self.label_index.get(&label).copied();
     }
 
@@ -267,8 +267,8 @@ where
     L: Hash + Eq + Clone,
 {
     fn add_edge(&mut self, from: L, to: L) {
-        let from_index = self.get_index_updated(&from);
-        let to_index = self.get_index_updated(&to);
+        let from_index = self.index_updated(&from);
+        let to_index = self.index_updated(&to);
         if from_index.is_none() {
             panic!("wtldg edge_exists_updated : from Vertex doesn't exist")
         }
@@ -338,7 +338,7 @@ where
     }
 
     fn vertex_exists_updated(&self, vertex: L) -> bool {
-        let vertex_index = self.get_index_updated(&vertex);
+        let vertex_index = self.index_updated(&vertex);
         if vertex_index.is_none() {
             return false;
             // panic!("ldg vertex_exists_updated : vertex_index is none");
@@ -348,8 +348,8 @@ where
     }
 
     fn edge_exists_updated(&self, from: L, to: L) -> bool {
-        let from_index = self.get_index_updated(&from);
-        let to_index = self.get_index_updated(&to);
+        let from_index = self.index_updated(&from);
+        let to_index = self.index_updated(&to);
         if from_index.is_none() {
             panic!("wtldg edge_exists_updated : from Vertex doesn't exist")
         }
@@ -374,7 +374,7 @@ where
     L: Hash + Eq + Clone,
 {
     fn outgoing_edges_updated(&self, vertex: L) -> Vec<L> {
-        let vertex_index = self.get_index_updated(&vertex);
+        let vertex_index = self.index_updated(&vertex);
         if vertex_index.is_none() {
             panic!("wtldg outgoing_edges_updated : Vertex doesn't exist");
         }
@@ -382,13 +382,13 @@ where
         let outgoing_edges_updated = self.dg.outgoing_edges_updated(vertex_index);
         let mut outgoing_edges_updated_labeled: Vec<L> = Vec::new();
         for item in outgoing_edges_updated {
-            outgoing_edges_updated_labeled.push(self.get_label_updated(item).unwrap().clone())
+            outgoing_edges_updated_labeled.push(self.label_updated(item).unwrap().clone())
         }
         return outgoing_edges_updated_labeled;
     }
 
     fn incoming_edges_updated(&self, vertex: L) -> Vec<L> {
-        let vertex_index = self.get_index_updated(&vertex);
+        let vertex_index = self.index_updated(&vertex);
         if vertex_index.is_none() {
             panic!("wtldg incoming_edges_updated : Vertex doesn't exist");
         }
@@ -396,7 +396,7 @@ where
         let incoming_edges_updated = self.dg.incoming_edges_updated(vertex_index);
         let mut incoming_edges_updated_labeled: Vec<L> = Vec::new();
         for item in incoming_edges_updated {
-            incoming_edges_updated_labeled.push(self.get_label_updated(item).unwrap().clone());
+            incoming_edges_updated_labeled.push(self.label_updated(item).unwrap().clone());
         }
         return incoming_edges_updated_labeled;
     }
@@ -406,7 +406,7 @@ impl<L> WTLabeled<L> for LabeledWTDigraph<L>
 where
     L: Hash + Eq + Clone,
 {
-    fn get_label_updated(&self, vertex: usize) -> Option<&L> {
+    fn label_updated(&self, vertex: usize) -> Option<&L> {
         // check if something was changed first
         let changes: Option<&Edit<L>> = self.index_label_uncommitted.get(&vertex);
         if changes.is_some() {
@@ -420,9 +420,9 @@ where
                 }
             }
         }
-        return self.get_label(vertex);
+        return self.label(vertex);
     }
-    fn get_index_updated(&self, label: &L) -> Option<usize> {
+    fn index_updated(&self, label: &L) -> Option<usize> {
         // check if something was changed first
         // why was this commented out?
 
@@ -439,6 +439,6 @@ where
                 }
             }
         }
-        return self.get_index(label);
+        return self.index(label);
     }
 }

@@ -64,8 +64,8 @@ where
     fn delete_edge(&mut self, from: L, to: L) {
         // fixme
         // does check twice if from and to is valid
-        let from_index = self.get_index_updated(&from);
-        let to_index = self.get_index_updated(&to);
+        let from_index = self.index_updated(&from);
+        let to_index = self.index_updated(&to);
         if from_index.is_none() {
             panic!("wtlwug delete_edge : from Vertex doesn't exist")
         }
@@ -92,8 +92,8 @@ where
     fn edge_exists(&self, from: L, to: L) -> bool {
         // fixme
         // does check twice if from and to is valid
-        let from_index = self.get_index(&from);
-        let to_index = self.get_index(&to);
+        let from_index = self.index(&from);
+        let to_index = self.index(&to);
         if from_index.is_none() {
             panic!("wtlwug edge_exists : from Vertex doesn't exist")
         }
@@ -115,7 +115,7 @@ where
     W: Clone + Num,
 {
     fn edges(&self, vertex: L) -> Vec<L> {
-        let vertex_index = self.get_index(&vertex);
+        let vertex_index = self.index(&vertex);
         if vertex_index.is_none() {
             panic!("wtlwug edges : Vertex doesn't exist");
         }
@@ -151,12 +151,12 @@ where
         self.lwdg.edit_label(old_label, new_label);
     }
 
-    fn get_label(&self, vertex: usize) -> Option<&L> {
-        return self.lwdg.get_label(vertex);
+    fn label(&self, vertex: usize) -> Option<&L> {
+        return self.lwdg.label(vertex);
     }
 
-    fn get_index(&self, label: &L) -> Option<usize> {
-        return self.lwdg.get_index(label);
+    fn index(&self, label: &L) -> Option<usize> {
+        return self.lwdg.index(label);
     }
 
     fn shrink(&mut self) {
@@ -171,8 +171,8 @@ where
     fn add_edge(&mut self, from: L, to: L, weight: W) {
         // fixme
         // does check twice if from and to is valid
-        let from_index = self.get_index(&from);
-        let to_index = self.get_index(&to);
+        let from_index = self.index(&from);
+        let to_index = self.index(&to);
         if from_index.is_none() {
             panic!("wtlwug add_edge : from Vertex doesn't exist")
         }
@@ -192,8 +192,8 @@ where
     fn edit_weight(&mut self, from: L, to: L, weight: W) {
         // fixme
         // does check twice if from and to is valid
-        let from_index = self.get_index(&from);
-        let to_index = self.get_index(&to);
+        let from_index = self.index(&from);
+        let to_index = self.index(&to);
         if from_index.is_none() {
             panic!("wtlwug edit_weight : from Vertex doesn't exist")
         }
@@ -210,11 +210,11 @@ where
         }
     }
 
-    fn get_weight(&mut self, from: L, to: L) -> W {
+    fn weight(&mut self, from: L, to: L) -> W {
         // fixme
         // does check twice if from and to is valid
-        let from_index = self.get_index(&from);
-        let to_index = self.get_index(&to);
+        let from_index = self.index(&from);
+        let to_index = self.index(&to);
         if from_index.is_none() {
             panic!("wtlwug get_weight : from Vertex doesn't exist")
         }
@@ -225,9 +225,9 @@ where
         let to_index = to_index.unwrap();
 
         if from_index <= to_index {
-            return self.lwdg.get_weight(from, to);
+            return self.lwdg.weight(from, to);
         } else {
-            return self.lwdg.get_weight(to, from);
+            return self.lwdg.weight(to, from);
         }
     }
 }
@@ -255,8 +255,8 @@ where
     fn edge_exists_updated(&self, from: L, to: L) -> bool {
         // fixme
         // does check twice if from and to is valid
-        let from_index = self.get_index(&from);
-        let to_index = self.get_index(&to);
+        let from_index = self.index(&from);
+        let to_index = self.index(&to);
         if from_index.is_none() {
             panic!("wtlwug edge_exists_updated : from Vertex doesn't exist")
         }
@@ -286,11 +286,11 @@ where
     L: Hash + Clone + Eq,
     W: Clone + Num,
 {
-    fn get_weight_updated(&mut self, from: L, to: L) -> W {
+    fn weight_updated(&mut self, from: L, to: L) -> W {
         // fixme
         // does check twice if from and to is valid
-        let from_index = self.get_index(&from);
-        let to_index = self.get_index(&to);
+        let from_index = self.index(&from);
+        let to_index = self.index(&to);
         if from_index.is_none() {
             panic!("wtlwug get_weight_updated : from Vertex doesn't exist")
         }
@@ -301,9 +301,9 @@ where
         let to_index = to_index.unwrap();
 
         if from_index <= to_index {
-            return self.lwdg.get_weight_updated(from, to);
+            return self.lwdg.weight_updated(from, to);
         } else {
-            return self.lwdg.get_weight_updated(to, from);
+            return self.lwdg.weight_updated(to, from);
         }
     }
 }
@@ -313,7 +313,7 @@ where
     W: Clone + Num,
 {
     fn edges_updated(&self, vertex: L) -> Vec<L> {
-        let vertex_index = self.get_index(&vertex);
+        let vertex_index = self.index(&vertex);
         if vertex_index.is_none() {
             panic!("wtlwug edges_updated : Vertex doesn't exist");
         }
@@ -339,11 +339,11 @@ where
     L: Clone + Hash + Eq,
     W: Num,
 {
-    fn get_label_updated(&self, index: usize) -> Option<&L> {
-        return self.lwdg.get_label_updated(index);
+    fn label_updated(&self, index: usize) -> Option<&L> {
+        return self.lwdg.label_updated(index);
     }
 
-    fn get_index_updated(&self, label: &L) -> Option<usize> {
-        return self.lwdg.get_index_updated(label);
+    fn index_updated(&self, label: &L) -> Option<usize> {
+        return self.lwdg.index_updated(label);
     }
 }

@@ -146,7 +146,7 @@ where
         self.weights.insert((from, to), weight);
     }
 
-    fn get_weight(&mut self, from: usize, to: usize) -> W {
+    fn weight(&mut self, from: usize, to: usize) -> W {
         self.weights.get(&(from, to)).unwrap().to_owned()
     }
 }

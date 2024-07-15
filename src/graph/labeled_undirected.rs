@@ -55,8 +55,8 @@ where
     }
 
     fn delete_edge(&mut self, from: L, to: L) {
-        let from_index = self.get_index(&from);
-        let to_index = self.get_index(&to);
+        let from_index = self.index(&from);
+        let to_index = self.index(&to);
         if from_index.is_none() {
             panic!("lug delete_edge : from Vertex doesn't exist");
         }
@@ -89,7 +89,7 @@ where
     L: Hash + Eq + Clone,
 {
     fn edges(&self, vertex: L) -> Vec<L> {
-        let vertex_index = self.get_index(&vertex);
+        let vertex_index = self.index(&vertex);
         if vertex_index.is_none() {
             panic!("lug edges : Vertex doesn't exist");
         }
@@ -97,28 +97,28 @@ where
         let mut edges: Vec<L> = Vec::new();
         for i in 0..vertex_index {
             if self.ldg.dg.adj[i].contains(&vertex_index) {
-                edges.push(self.get_label(i).unwrap().clone());
+                edges.push(self.label(i).unwrap().clone());
             }
         }
         for item in self.ldg.dg.adj[vertex_index].clone() {
-            edges.push(self.get_label(item).unwrap().clone());
+            edges.push(self.label(item).unwrap().clone());
         }
         edges
     }
 
     fn delete_edges_from(&mut self, vertex: L) {
-        let vertex_index = self.get_index(&vertex);
+        let vertex_index = self.index(&vertex);
         if vertex_index.is_none() {
             panic!("lug delete_edges_from : Vertex doesn't exist");
         }
         let vertex_index = vertex_index.unwrap();
         for from in 0..vertex_index {
             if self.ldg.dg.adj[from].contains(&vertex_index) {
-                self.delete_edge(self.get_label(from).unwrap().clone(), vertex.clone());
+                self.delete_edge(self.label(from).unwrap().clone(), vertex.clone());
             }
         }
         for to in self.ldg.dg.adj[vertex_index].clone() {
-            self.delete_edge(vertex.clone(), self.get_label(to).unwrap().clone());
+            self.delete_edge(vertex.clone(), self.label(to).unwrap().clone());
         }
     }
 }
@@ -130,14 +130,14 @@ where
         self.ldg.edit_label(old_label, new_label);
     }
 
-    fn get_label(&self, vertex: usize) -> Option<&L> {
+    fn label(&self, vertex: usize) -> Option<&L> {
         // gets label from index of vec label
-        self.ldg.get_label(vertex)
+        self.ldg.label(vertex)
     }
 
-    fn get_index(&self, label: &L) -> Option<usize> {
+    fn index(&self, label: &L) -> Option<usize> {
         //gets index from key in hashmap
-        self.ldg.get_index(label)
+        self.ldg.index(label)
     }
 
     fn shrink(&mut self) {
@@ -150,7 +150,7 @@ where
     L: Hash + Eq + Clone,
 {
     fn add_edge(&mut self, from: L, to: L) {
-        if self.get_index(&from) <= self.get_index(&to) {
+        if self.index(&from) <= self.index(&to) {
             self.ldg.add_edge(from, to);
         } else {
             self.ldg.add_edge(to, from);

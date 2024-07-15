@@ -78,8 +78,8 @@ where
     }
 
     fn delete_edge(&mut self, from: L, to: L) {
-        let from_index = self.get_index(&from);
-        let to_index = self.get_index(&to);
+        let from_index = self.index(&from);
+        let to_index = self.index(&to);
         if from_index.is_none() {
             panic!("ldg delete edge : from Vertex doesn't exist");
         }
@@ -91,7 +91,7 @@ where
     }
 
     fn delete_vertex(&mut self, vertex: L) {
-        let vertex_index = self.get_index(&vertex);
+        let vertex_index = self.index(&vertex);
         if vertex_index.is_none() {
             panic!("ldg delete_vertex : Vertex doesn't exist");
         }
@@ -101,7 +101,7 @@ where
     }
 
     fn vertex_exists(&self, vertex: L) -> bool {
-        let vertex_index = self.get_index(&vertex);
+        let vertex_index = self.index(&vertex);
         if vertex_index.is_none() {
             return false;
             // panic!("ldg vertex_exists : vertex index is none");
@@ -110,8 +110,8 @@ where
     }
 
     fn edge_exists(&self, from: L, to: L) -> bool {
-        let from_index = self.get_index(&from);
-        let to_index = self.get_index(&to);
+        let from_index = self.index(&from);
+        let to_index = self.index(&to);
         if from_index.is_none() {
             panic!("ldg edge_exists : from Vertex doesn't exist");
         }
@@ -127,7 +127,7 @@ where
     L: Eq + Hash + Clone,
 {
     fn outgoing_edges(&self, vertex: L) -> Vec<L> {
-        let vertex_index = self.get_index(&vertex);
+        let vertex_index = self.index(&vertex);
         if vertex_index.is_none() {
             panic!("ldg outgoing_edges : Vertex doesn't exist");
         }
@@ -136,13 +136,13 @@ where
         }
         let mut outgoing_edges: Vec<L> = Vec::new();
         for item in self.dg.outgoing_edges(vertex_index.unwrap()) {
-            outgoing_edges.push(self.get_label(item).unwrap().clone());
+            outgoing_edges.push(self.label(item).unwrap().clone());
         }
         outgoing_edges
     }
 
     fn incoming_edges(&self, vertex: L) -> Vec<L> {
-        let vertex_index = self.get_index(&vertex);
+        let vertex_index = self.index(&vertex);
         if vertex_index.is_none() {
             panic!("ldg incoming_edges : Vertex doesn't exist");
         }
@@ -151,13 +151,13 @@ where
         }
         let mut incoming_edges: Vec<L> = Vec::new();
         for item in self.dg.incoming_edges(vertex_index.unwrap()) {
-            incoming_edges.push(self.get_label(item).unwrap().clone());
+            incoming_edges.push(self.label(item).unwrap().clone());
         }
         incoming_edges
     }
 
     fn delete_outgoing_edges(&mut self, vertex: L) {
-        let vertex_index = self.get_index(&vertex);
+        let vertex_index = self.index(&vertex);
         if vertex_index.is_none() {
             panic!("ldg delete_incoming_edges : Vertex doesn't exist");
         }
@@ -165,7 +165,7 @@ where
     }
 
     fn delete_incoming_edges(&mut self, vertex: L) {
-        let vertex_index = self.get_index(&vertex);
+        let vertex_index = self.index(&vertex);
         if vertex_index.is_none() {
             panic!("ldg delete_incoming_edges : Vertex doesn't exist");
         }
@@ -177,12 +177,12 @@ where
     L: Eq + Hash + Clone,
 {
     fn edit_label(&mut self, old_label: L, new_label: L) {
-        let old_label_index = self.get_index(&old_label);
+        let old_label_index = self.index(&old_label);
         if old_label_index.is_none() {
             // if it's some, valid input
             panic!("ldg edit_label : old_label Vertex doesn't exist");
         }
-        if self.get_index(&new_label).is_some() {
+        if self.index(&new_label).is_some() {
             // if it's none, valid input
             panic!("ldg edit_label : new_label Vertex already in use"); // new label should be none
         }
@@ -193,7 +193,7 @@ where
         self.label_index.insert(new_label, old_label_index); // insert new label with old index
     }
 
-    fn get_label(&self, vertex: usize) -> Option<&L> {
+    fn label(&self, vertex: usize) -> Option<&L> {
         // gets label from index of vec label
         // todo fixme checkme
         // might return some, since vec is not updated properly right now
@@ -201,7 +201,7 @@ where
         return self.index_label.get(vertex);
     }
 
-    fn get_index(&self, label: &L) -> Option<usize> {
+    fn index(&self, label: &L) -> Option<usize> {
         //gets index from key in hashmap
         if self.label_index.contains_key(label) {
             return self.label_index.get(label).copied();
@@ -219,8 +219,8 @@ where
     L: Eq + Hash + Clone,
 {
     fn add_edge(&mut self, from: L, to: L) {
-        let from_index = self.get_index(&from);
-        let to_index = self.get_index(&to);
+        let from_index = self.index(&from);
+        let to_index = self.index(&to);
         if from_index.is_none() {
             panic!("ldg add_edge : from Vertex doesn't exist");
         }

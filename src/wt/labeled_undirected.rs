@@ -59,8 +59,8 @@ where
     fn delete_edge(&mut self, from: L, to: L) {
         // fixme
         // does check twice if from and to is valid
-        let from_index = self.get_index_updated(&from);
-        let to_index = self.get_index_updated(&to);
+        let from_index = self.index_updated(&from);
+        let to_index = self.index_updated(&to);
         if from_index.is_none() {
             panic!("wtlug delete_edge : from Vertex doesn't exist")
         }
@@ -87,8 +87,8 @@ where
     fn edge_exists(&self, from: L, to: L) -> bool {
         // fixme
         // does check twice if from and to is valid
-        let from_index = self.get_index(&from);
-        let to_index = self.get_index(&to);
+        let from_index = self.index(&from);
+        let to_index = self.index(&to);
         if from_index.is_none() {
             panic!("wtlug edge_exists : from Vertex doesn't exist")
         }
@@ -109,7 +109,7 @@ where
     L: Hash + Eq + Clone,
 {
     fn edges(&self, vertex: L) -> Vec<L> {
-        let vertex_index = self.get_index(&vertex);
+        let vertex_index = self.index(&vertex);
         if vertex_index.is_none() {
             panic!("wtlug edges : Vertex doesn't exist");
         }
@@ -144,12 +144,12 @@ where
         self.ldg.edit_label(old_label, new_label);
     }
 
-    fn get_label(&self, vertex: usize) -> Option<&L> {
-        return self.ldg.get_label(vertex);
+    fn label(&self, vertex: usize) -> Option<&L> {
+        return self.ldg.label(vertex);
     }
 
-    fn get_index(&self, label: &L) -> Option<usize> {
-        return self.ldg.get_index(label);
+    fn index(&self, label: &L) -> Option<usize> {
+        return self.ldg.index(label);
     }
 
     fn shrink(&mut self) {
@@ -164,8 +164,8 @@ where
     fn add_edge(&mut self, from: L, to: L) {
         // fixme
         // does check twice if from and to is valid
-        let from_index = self.get_index(&from);
-        let to_index = self.get_index(&to);
+        let from_index = self.index(&from);
+        let to_index = self.index(&to);
         if from_index.is_none() {
             panic!("wtlug add_edge : from Vertex doesn't exist")
         }
@@ -205,8 +205,8 @@ where
     fn edge_exists_updated(&self, from: L, to: L) -> bool {
         // fixme
         // does check twice if from and to is valid
-        let from_index = self.get_index(&from);
-        let to_index = self.get_index(&to);
+        let from_index = self.index(&from);
+        let to_index = self.index(&to);
         if from_index.is_none() {
             panic!("wtlug edge_exists : from Vertex doesn't exist")
         }
@@ -235,7 +235,7 @@ where
     L: Hash + Eq + Clone,
 {
     fn edges_updated(&self, vertex: L) -> Vec<L> {
-        let vertex_index = self.get_index(&vertex);
+        let vertex_index = self.index(&vertex);
         if vertex_index.is_none() {
             panic!("wtlug edges : Vertex doesn't exist");
         }
@@ -259,11 +259,11 @@ impl<L> WTLabeled<L> for LabeledWTUGraph<L>
 where
     L: Hash + Eq + Clone,
 {
-    fn get_label_updated(&self, index: usize) -> Option<&L> {
-        return self.ldg.get_label_updated(index);
+    fn label_updated(&self, index: usize) -> Option<&L> {
+        return self.ldg.label_updated(index);
     }
 
-    fn get_index_updated(&self, label: &L) -> Option<usize> {
-        return self.ldg.get_index_updated(label);
+    fn index_updated(&self, label: &L) -> Option<usize> {
+        return self.ldg.index_updated(label);
     }
 }

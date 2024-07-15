@@ -55,7 +55,7 @@ where
 
     fn delete_edge(&mut self, from: usize, to: usize) {
         self.dg.delete_edge(from, to);
-        let old_weight = self.get_weight_updated(from, to); // checkme
+        let old_weight = self.weight_updated(from, to); // checkme
         self.weights_uncommitted
             .insert((from, to), Edit::Delete(old_weight));
     }
@@ -146,7 +146,7 @@ where
         }
     }
 
-    fn get_weight(&mut self, from: usize, to: usize) -> W {
+    fn weight(&mut self, from: usize, to: usize) -> W {
         if self.edge_exists(from, to) {
             if self.weights.contains_key(&(from, to)) {
                 let weight = self.weights.get(&(from, to)).unwrap().clone();
@@ -216,7 +216,7 @@ impl<W> WTWeighted<usize, W> for WeightedWTDigraph<W>
 where
     W: Clone,
 {
-    fn get_weight_updated(&mut self, from: usize, to: usize) -> W {
+    fn weight_updated(&mut self, from: usize, to: usize) -> W {
         if !self.vertex_exists_updated(from) {
             panic!("wdg get_weight_updated : from Vertex doesn't exist");
         }
@@ -237,7 +237,7 @@ where
                 }
             }
         } else {
-            return self.get_weight(from, to);
+            return self.weight(from, to);
         }
     }
 }

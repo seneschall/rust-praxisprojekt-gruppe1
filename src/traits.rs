@@ -119,16 +119,16 @@ pub trait Unlabeled<T> {
     ///
     /// ```rust
     /// // dg is a `WTDigraph` containing the vertices 0..=3 and some edges.
-    /// ...
+    /// // ...
     /// dg.delete_vertex(1);
     /// dg.delete_vertex(3);
     /// let new_indices: Vec<Option<usize>> = dg.shrink();
     /// // new_indices = [
-    ///    Some(0),
-    ///    None,
-    ///    Some(1),
-    ///    None,
-    /// ]
+    /// //  Some(0),
+    /// //  None,
+    /// //  Some(1),
+    /// //  None,
+    /// // ]
     ///```
     fn shrink(&mut self) -> Vec<Option<usize>>;
 }
@@ -147,14 +147,14 @@ pub trait Labeled<L> {
     ///
     /// For wavelet tree based graphs, this operates only on the committed vertices (for a function that also
     /// operates on uncommitted vertices see `get_label_updated`).
-    fn get_label(&self, vertex: usize) -> Option<&L>;
+    fn label(&self, vertex: usize) -> Option<&L>;
 
     /// Returns the index of the vertex at label `vertex` or `None` if it doesn't exist.
     ///
     /// For wavelet tree based graphs, this operates only on the committed vertices (for a function that also
     /// operates on uncommitted vertices see `get_index_updated`).
-    fn get_index(&self, label: &L) -> Option<usize>; // returns the index of the vertex with the given label
-                                                     //input:Label, output Option<&usize>; check in hashmaps value
+    fn index(&self, label: &L) -> Option<usize>; // returns the index of the vertex with the given label
+                                                 //input:Label, output Option<&usize>; check in hashmaps value
 
     /// Removes all deleted vertices, shifts the following indices to fill the position (similiar to calling `remove` on a `Vec<T>`), and commits all changes.
     fn shrink(&mut self); // removes all unconnected vertices from bitmap; only allowed, if has_uncommitted_edits == false; returns a Hashmap with old indices as keys and new indices as values
@@ -196,7 +196,7 @@ pub trait Weighted<T, W> {
     ///
     /// For wavelet tree based graphs, this operates only on the committed vertices (for a function that also
     /// operates on uncommitted vertices see `get_weight_updated`).
-    fn get_weight(&mut self, from: T, to: T) -> W;
+    fn weight(&mut self, from: T, to: T) -> W;
 }
 
 pub trait WT<T> {
@@ -267,7 +267,7 @@ pub trait WTWeighted<T, W> {
     ///
     /// For wavelet tree based graphs the function operates on the uncommitted changes (i.e. it considers vertices as
     /// existing even if they haven't been committed after creation).
-    fn get_weight_updated(&mut self, from: T, to: T) -> W;
+    fn weight_updated(&mut self, from: T, to: T) -> W;
 }
 
 pub trait WTLabeled<L> {
@@ -275,13 +275,13 @@ pub trait WTLabeled<L> {
     ///
     /// For wavelet tree based graphs the function operates on the uncommitted changes (i.e. it considers vertices as
     /// existing even if they haven't been committed after creation).
-    fn get_label_updated(&self, index: usize) -> Option<&L>;
+    fn label_updated(&self, index: usize) -> Option<&L>;
 
     /// Returns the index of the vertex at label `vertex` or `None` if it doesn't exist.
     ///
     /// For wavelet tree based graphs the function operates on the uncommitted changes (i.e. it considers vertices as
     /// existing even if they haven't been committed after creation).
-    fn get_index_updated(&self, label: &L) -> Option<usize>;
+    fn index_updated(&self, label: &L) -> Option<usize>;
 }
 
 // additional graph functionality

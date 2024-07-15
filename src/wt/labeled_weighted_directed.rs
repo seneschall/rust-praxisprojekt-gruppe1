@@ -68,8 +68,8 @@ where
     }
 
     fn delete_edge(&mut self, from: L, to: L) {
-        let from_index = self.get_index(&from);
-        let to_index = self.get_index(&to);
+        let from_index = self.index(&from);
+        let to_index = self.index(&to);
         if from_index.is_none() {
             panic!("lwdg delete_edge : from Vertex doesn't exist");
         }
@@ -80,13 +80,13 @@ where
         let to_index = to_index.unwrap();
 
         self.ldg.delete_edge(from.clone(), to.clone());
-        let weight = self.get_weight(from, to); // checkme fixme seems ugly this way
+        let weight = self.weight(from, to); // checkme fixme seems ugly this way
         self.weights_uncommitted
             .insert((from_index, to_index), Edit::Delete(weight));
     }
 
     fn delete_vertex(&mut self, vertex: L) {
-        let vertex_index = self.get_index(&vertex);
+        let vertex_index = self.index(&vertex);
         if vertex_index.is_none() {
             panic!("lwdg delete_vertex : Vertex doesn't exist");
         }
@@ -141,12 +141,12 @@ where
         self.ldg.edit_label(old_label, new_label);
     }
 
-    fn get_label(&self, vertex: usize) -> Option<&L> {
-        self.ldg.get_label(vertex)
+    fn label(&self, vertex: usize) -> Option<&L> {
+        self.ldg.label(vertex)
     }
 
-    fn get_index(&self, label: &L) -> Option<usize> {
-        self.ldg.get_index(label)
+    fn index(&self, label: &L) -> Option<usize> {
+        self.ldg.index(label)
     }
 
     fn shrink(&mut self) {
@@ -159,8 +159,8 @@ where
     W: Clone + Num,
 {
     fn add_edge(&mut self, from: L, to: L, weight: W) {
-        let from_index = self.get_index(&from);
-        let to_index = self.get_index(&to);
+        let from_index = self.index(&from);
+        let to_index = self.index(&to);
         if from_index.is_none() {
             panic!("lwdg add_edge : from Vertex doesn't exist");
         }
@@ -176,8 +176,8 @@ where
     }
 
     fn edit_weight(&mut self, from: L, to: L, weight: W) {
-        let from_index = self.get_index(&from);
-        let to_index = self.get_index(&to);
+        let from_index = self.index(&from);
+        let to_index = self.index(&to);
         if from_index.is_none() {
             panic!("lwdg edit_weight : from Vertex doesn't exist");
         }
@@ -193,9 +193,9 @@ where
             .insert((from_index, to_index), Edit::Add(weight));
     }
 
-    fn get_weight(&mut self, from: L, to: L) -> W {
-        let from_index = self.get_index(&from);
-        let to_index = self.get_index(&to);
+    fn weight(&mut self, from: L, to: L) -> W {
+        let from_index = self.index(&from);
+        let to_index = self.index(&to);
         if from_index.is_none() {
             panic!("lwdg get_weight : from Vertex doesn't exist");
         }
@@ -257,9 +257,9 @@ where
     L: Hash + Clone + Eq,
     W: Clone + Num,
 {
-    fn get_weight_updated(&mut self, from: L, to: L) -> W {
-        let from_index = self.get_index_updated(&from);
-        let to_index = self.get_index_updated(&to);
+    fn weight_updated(&mut self, from: L, to: L) -> W {
+        let from_index = self.index_updated(&from);
+        let to_index = self.index_updated(&to);
         if from_index.is_none() {
             panic!("ldg edge_exists : from Vertex doesn't exist")
         }
@@ -318,11 +318,11 @@ where
     L: Hash + Eq + Clone,
     W: Num,
 {
-    fn get_label_updated(&self, index: usize) -> Option<&L> {
-        self.ldg.get_label_updated(index)
+    fn label_updated(&self, index: usize) -> Option<&L> {
+        self.ldg.label_updated(index)
     }
 
-    fn get_index_updated(&self, label: &L) -> Option<usize> {
-        self.ldg.get_index_updated(label)
+    fn index_updated(&self, label: &L) -> Option<usize> {
+        self.ldg.index_updated(label)
     }
 }
