@@ -118,14 +118,17 @@ pub trait Unlabeled<T> {
     /// # Example
     ///
     /// ```rust
-    /// // dg is a `WTDigraph` containing the vertices 0..=3 and some edges.
-    /// // ...
+    ///
     /// use wt_graphs::prelude::indexed_digraph::*;
+    /// // Creates a new Digraph
     /// let mut dg = Digraph::new();
+    /// // Adds vertices up to index 3
     /// dg.add_vertex(3);
+    /// // Delete vertex at index 1
     /// dg.delete_vertex(1);
+    /// // Delete vertex at index 3
     /// dg.delete_vertex(3);
-    /// 
+    /// // Create a wavelet tree based Digraph from Digraph
     /// let mut wtdg = WTDigraph::from_digraph(dg);
     /// 
     /// assert_eq!(wtdg.shrink(), vec![Some(0), None, Some(1), None]);
