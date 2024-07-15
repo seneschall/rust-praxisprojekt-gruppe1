@@ -9,8 +9,8 @@ fn new() {
     assert_eq!(ldg.dg.adj_len, 0);
     assert_eq!(ldg.dg.e_count, 0);
     assert!(ldg.dg.deleted_vertices.is_empty());
-    assert!(ldg.hashmap_labels_vertex.is_empty());
-    assert!(ldg.vec_vertex_labels.is_empty());
+    assert!(ldg.label_index.is_empty());
+    assert!(ldg.index_label.is_empty());
 }
 #[test]
 fn from_adjacency_list() {
@@ -29,8 +29,8 @@ fn from_adjacency_list() {
     assert_eq!(ldg.e_count(), e_count);
     assert_eq!(ldg.dg.adj, adj);
     assert!(ldg.dg.deleted_vertices.is_empty());
-    assert_eq!(ldg.vec_vertex_labels, labels);
-    assert_eq!(ldg.hashmap_labels_vertex, testhashmap);
+    assert_eq!(ldg.index_label, labels);
+    assert_eq!(ldg.label_index, testhashmap);
 }
 #[test]
 fn add_vertex() {
@@ -38,10 +38,10 @@ fn add_vertex() {
     let mut ldg: LabeledDigraph<String> = LabeledDigraph::new();
     for i in 0..9 {
         assert_eq!(i, ldg.add_vertex(i.to_string()));
-        assert_eq!(ldg.vec_vertex_labels[i], i.to_string());
+        assert_eq!(ldg.index_label[i], i.to_string());
         assert_eq!(testhashmap.insert(i.to_string(), i), None);
     }
-    assert_eq!(ldg.hashmap_labels_vertex, testhashmap);
+    assert_eq!(ldg.label_index, testhashmap);
 }
 #[test]
 fn add_edge() {

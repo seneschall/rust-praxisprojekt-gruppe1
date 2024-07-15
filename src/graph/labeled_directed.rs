@@ -7,17 +7,17 @@ use std::hash::Hash;
 #[cfg(test)]
 mod test;
 
-/// A labeled, mutable graph with directed edges.
-/// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type.
-/// Labels can have any type and are referenced.
+// A labeled, mutable graph with directed edges.
+// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type.
+// Labels can have any type and are referenced.
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct LabeledDigraph<L>
 where
     L: Eq + Hash,
 {
     pub(crate) dg: Digraph,
-    pub(crate) vec_vertex_labels: Vec<L>,
-    pub(crate) hashmap_labels_vertex: HashMap<L, usize>,
+    pub(crate) index_label: Vec<L>,
+    pub(crate) label_index: HashMap<L, usize>,
 }
 impl<L> LabeledDigraph<L>
 where
@@ -26,8 +26,8 @@ where
     pub fn new() -> Self {
         LabeledDigraph {
             dg: Digraph::new(),
-            vec_vertex_labels: Vec::new(),
-            hashmap_labels_vertex: HashMap::new(),
+            index_label: Vec::new(),
+            label_index: HashMap::new(),
         }
     }
     pub fn from_adjacency_list(
@@ -50,8 +50,8 @@ where
         }
         LabeledDigraph {
             dg: Digraph::from_adjacency_list(v_count, e_count, adj),
-            vec_vertex_labels,
-            hashmap_labels_vertex,
+            index_label: vec_vertex_labels,
+            label_index: hashmap_labels_vertex,
         }
     }
 }
@@ -60,12 +60,12 @@ where
     L: Eq + Hash + Clone,
 {
     fn add_vertex(&mut self, vertex: L) -> usize {
-        if self.hashmap_labels_vertex.contains_key(&vertex) {
+        if self.label_index.contains_key(&vertex) {
             panic!("ldg add_vertex : Label already in use");
         }
         let index = self.dg.append_vertex();
-        self.vec_vertex_labels.push(vertex.clone());
-        self.hashmap_labels_vertex.insert(vertex, index);
+        self.index_label.push(vertex.clone());
+        self.label_index.insert(vertex, index);
         index
     }
 
@@ -97,7 +97,7 @@ where
         }
 
         self.dg.delete_vertex(vertex_index.unwrap().clone());
-        self.hashmap_labels_vertex.remove(&vertex).unwrap();
+        self.label_index.remove(&vertex).unwrap();
     }
 
     fn vertex_exists(&self, vertex: L) -> bool {
@@ -187,11 +187,10 @@ where
             panic!("ldg edit_label : new_label Vertex already in use"); // new label should be none
         }
         let old_label_index = old_label_index.unwrap(); // save unwrap, since old_label_index is some
-        self.vec_vertex_labels[old_label_index] = new_label.clone(); // update vec
+        self.index_label[old_label_index] = new_label.clone(); // update vec
 
-        self.hashmap_labels_vertex.remove(&old_label); // remove old entry in the hasmap
-        self.hashmap_labels_vertex
-            .insert(new_label, old_label_index); // insert new label with old index
+        self.label_index.remove(&old_label); // remove old entry in the hasmap
+        self.label_index.insert(new_label, old_label_index); // insert new label with old index
     }
 
     fn get_label(&self, vertex: usize) -> Option<&L> {
@@ -199,13 +198,13 @@ where
         // todo fixme checkme
         // might return some, since vec is not updated properly right now
         // double check if it is neccassary to update vec of labels, delete comment if sure
-        return self.vec_vertex_labels.get(vertex);
+        return self.index_label.get(vertex);
     }
 
     fn get_index(&self, label: &L) -> Option<usize> {
         //gets index from key in hashmap
-        if self.hashmap_labels_vertex.contains_key(label) {
-            return self.hashmap_labels_vertex.get(label).copied();
+        if self.label_index.contains_key(label) {
+            return self.label_index.get(label).copied();
         } else {
             return None;
         }

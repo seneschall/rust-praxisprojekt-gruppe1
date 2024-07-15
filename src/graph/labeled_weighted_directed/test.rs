@@ -34,8 +34,8 @@ fn setuplwdg() -> LabeledWeightedDigraph<String, f64> {
 fn new() {
     let lwdg: LabeledWeightedDigraph<String, f64> = LabeledWeightedDigraph::new();
     assert!(lwdg.weights.is_empty());
-    assert!(lwdg.ldg.hashmap_labels_vertex.is_empty());
-    assert!(lwdg.ldg.vec_vertex_labels.is_empty());
+    assert!(lwdg.ldg.label_index.is_empty());
+    assert!(lwdg.ldg.index_label.is_empty());
     assert!(lwdg.ldg.dg.adj.is_empty());
     assert!(lwdg.ldg.dg.deleted_vertices.is_empty());
     assert_eq!(lwdg.v_count(), 0);
@@ -100,8 +100,8 @@ fn from_adjacency_list() {
     assert_eq!(lwdg.v_count(), v_count);
     assert_eq!(lwdg.ldg.dg.adj, testadj);
     assert_eq!(lwdg.ldg.dg.deleted_vertices, HashMap::new());
-    assert_eq!(lwdg.ldg.vec_vertex_labels, labels);
-    assert_eq!(lwdg.ldg.hashmap_labels_vertex, test_labels_hashmap);
+    assert_eq!(lwdg.ldg.index_label, labels);
+    assert_eq!(lwdg.ldg.label_index, test_labels_hashmap);
     assert_eq!(lwdg.weights, testweights);
 }
 #[test]
@@ -121,13 +121,10 @@ fn add_vertex() {
     lwdg.add_vertex(5.to_string());
     assert_eq!(lwdg.v_count(), 6);
     assert_eq!(
-        lwdg.ldg
-            .hashmap_labels_vertex
-            .get_key_value(&5.to_string())
-            .unwrap(),
+        lwdg.ldg.label_index.get_key_value(&5.to_string()).unwrap(),
         (&5.to_string(), &5)
     );
-    assert_eq!(lwdg.ldg.vec_vertex_labels[5], 5.to_string());
+    assert_eq!(lwdg.ldg.index_label[5], 5.to_string());
     assert_eq!(
         lwdg.ldg.dg.adj,
         vec![
@@ -222,7 +219,7 @@ fn delete_vertex() {
     assert_eq!(lwdg.v_count(), v_count);
     assert_eq!(lwdg.ldg.dg.adj, adj);
     assert_eq!(lwdg.ldg.dg.deleted_vertices.contains_key(&0), true);
-    assert_eq!(lwdg.ldg.hashmap_labels_vertex, test_labels_hashmap);
+    assert_eq!(lwdg.ldg.label_index, test_labels_hashmap);
 }
 #[test]
 fn delete_edge() {

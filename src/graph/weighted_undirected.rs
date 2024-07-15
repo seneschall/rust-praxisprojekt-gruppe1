@@ -6,9 +6,9 @@ use crate::traits::{Graph, Undirected, Unlabeled, Weighted};
 
 #[cfg(test)]
 mod test;
-/// An indexed, mutable graph with undirected edges, where each edge represents a weight.
-/// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type.
-/// Weights can have any type.
+// An indexed, mutable graph with undirected edges, where each edge represents a weight.
+// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type.
+// Weights can have any type.
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct WeightedUGraph<W> {
     pub(crate) wdg: WeightedDigraph<W>,

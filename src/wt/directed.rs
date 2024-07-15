@@ -11,13 +11,13 @@ use vers_vecs::{BitVec, RsVec};
 #[cfg(test)]
 mod test;
 
-/// An indexed Wavelet-Tree-digraph with directed edges. (wt-digraph)
-/// The wt-digraph holds data encoding an indexed, mutable digraph, from which we can build a QW-Tree (from QWT-crate), which is the core of the QT-graph.
-/// The QW-Tree is immutable and enables us to perform traditional graph algorithms very fast.
-/// Users can perform changes on the digraph, which will be recorded in the graph. Users can perfom fast operations on the original graph and slower operations on the recent state of the graph.
-/// Users can integrate the recent state of the graph into the QW-Tree by rebuilding it using the commit_edits-function.
-/// See more documentation on function-level and in the crate introduction.
-/// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type.
+// An indexed Wavelet-Tree-digraph with directed edges. (wt-digraph)
+// The wt-digraph holds data encoding an indexed, mutable digraph, from which we can build a QW-Tree (from QWT-crate), which is the core of the QT-graph.
+// The QW-Tree is immutable and enables us to perform traditional graph algorithms very fast.
+// Users can perform changes on the digraph, which will be recorded in the graph. Users can perfom fast operations on the original graph and slower operations on the recent state of the graph.
+// Users can integrate the recent state of the graph into the QW-Tree by rebuilding it using the commit_edits-function.
+// See more documentation on function-level and in the crate introduction.
+// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type.
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct WTDigraph {
     pub(crate) wt_adj_len: usize,                      // last index + 1
@@ -35,7 +35,7 @@ pub struct WTDigraph {
 }
 
 impl WTDigraph {
-    /// this function instantiiates a wt-digraph from a given digraph   
+    // this function instantiiates a wt-digraph from a given digraph
     pub fn from_digraph(dg: Digraph) -> Self {
         let mut bv = BitVec::new();
         let mut e_count: usize = 0;
@@ -71,8 +71,8 @@ impl WTDigraph {
         };
     }
 
-    /// this function builds a wt-digraph from a Vector sequence of bits, where each 1 represents a vertex, and each 0 another vertex adjacent to the first one (they are connected though an edge)
-    /// and a usize-vector representing the id's (indices) of the adjacent vertices.
+    // this function builds a wt-digraph from a Vector sequence of bits, where each 1 represents a vertex, and each 0 another vertex adjacent to the first one (they are connected though an edge)
+    // and a usize-vector representing the id's (indices) of the adjacent vertices.
     pub fn from(sequence: Vec<usize>, starting_indices: RsVec) -> Self {
         let length = starting_indices.len();
 
@@ -98,11 +98,11 @@ impl WTDigraph {
 }
 
 impl Graph<usize> for WTDigraph {
-    /// use at own risk!
-    /// adds a new empty vertex to the graph,
-    /// by adding an empty vector at the given index, or overwriting the entry with the same key if existant.  
-    /// adds several new empty Vertices if the given index exceeds the current v_count.
-    /// returns the index of the new vertex
+    // use at own risk!
+    // adds a new empty vertex to the graph,
+    // by adding an empty vector at the given index, or overwriting the entry with the same key if existant.
+    // adds several new empty Vertices if the given index exceeds the current v_count.
+    // returns the index of the new vertex
     // todo ! why does this return a usize?
     fn add_vertex(&mut self, vertex: usize) -> usize {
         // use at own risk
@@ -144,19 +144,19 @@ impl Graph<usize> for WTDigraph {
         }
     }
 
-    /// return the number of edges in the graph at the last commit.
+    // return the number of edges in the graph at the last commit.
     fn e_count(&self) -> usize {
         return self.e_count;
     }
 
-    /// returns the number of vertices in the graph at last commit
+    // returns the number of vertices in the graph at last commit
     fn v_count(&self) -> usize {
         return self.wt_adj_len - self.deleted_vertices.len();
     }
 
-    /// deletes the edge from 'from' to 'to'. panics if edge doens't exist.
-    /// iterates over 'from's enty in 'adj_uncommited' and deletes entries who match Add(to).
-    /// if not present, enters a new entry with 'from's key and Delete(to) in 'adj_uncommited'.
+    // deletes the edge from 'from' to 'to'. panics if edge doens't exist.
+    // iterates over 'from's enty in 'adj_uncommited' and deletes entries who match Add(to).
+    // if not present, enters a new entry with 'from's key and Delete(to) in 'adj_uncommited'.
     fn delete_edge(&mut self, from: usize, to: usize) {
         if !self.edge_exists_updated(from, to) {
             panic!("Edge from {} to {} doesn't exist!", from, to);
@@ -185,9 +185,9 @@ impl Graph<usize> for WTDigraph {
         self.has_uncommitted_edits = true;
     }
 
-    /// deletes the vertex at the given index
-    /// panics if the vertex doesn't exist - should eventually return a Result type
-    /// if the vertex exists, we mark it in the 'deleted-vertices-uncommited'-Vector, and set 'has_uncommited_edits' to true.
+    // deletes the vertex at the given index
+    // panics if the vertex doesn't exist - should eventually return a Result type
+    // if the vertex exists, we mark it in the 'deleted-vertices-uncommited'-Vector, and set 'has_uncommited_edits' to true.
     fn delete_vertex(&mut self, vertex: usize) {
         if !(self.vertex_exists_updated(vertex)) {
             panic!("Vertex doesn't exist.");
@@ -198,7 +198,7 @@ impl Graph<usize> for WTDigraph {
         self.has_uncommitted_edits = true;
     }
 
-    /// checks if the given vertex exists
+    // checks if the given vertex exists
     fn vertex_exists(&self, vertex: usize) -> bool {
         if self.deleted_vertices.contains_key(&vertex) {
             return false;
@@ -211,7 +211,7 @@ impl Graph<usize> for WTDigraph {
         return false;
     }
 
-    /// returns if there is an edge from `from` to `to`
+    // returns if there is an edge from `from` to `to`
     fn edge_exists(&self, from: usize, to: usize) -> bool {
         if !(self.vertex_exists(from) && self.vertex_exists(to)) {
             return false;
@@ -225,8 +225,8 @@ impl Graph<usize> for WTDigraph {
     }
 }
 impl Directed<usize> for WTDigraph {
-    /// return all outgoing edges of the given vertex in a vector
-    /// should probably be changed to return an iterator instea
+    // return all outgoing edges of the given vertex in a vector
+    // should probably be changed to return an iterator instea
     fn outgoing_edges(&self, vertex: usize) -> Vec<usize> {
         if !self.vertex_exists(vertex) {
             panic!("outgoing_edges: Vertex {} doesn't exist.", vertex);
@@ -248,8 +248,8 @@ impl Directed<usize> for WTDigraph {
         return outgoing;
     }
 
-    /// return all outgoing edges of the given vertex in a vector
-    /// should probably be changed to return an iterator instead
+    // return all outgoing edges of the given vertex in a vector
+    // should probably be changed to return an iterator instead
     fn incoming_edges(&self, vertex: usize) -> Vec<usize> {
         // returns a list of vertices that have outgoing edges to `vertex`
         if !self.vertex_exists(vertex) {
@@ -271,10 +271,10 @@ impl Directed<usize> for WTDigraph {
         return incoming;
     }
 
-    /// deletes all outgoing edges of the given vertex
-    /// should return a Result
+    // deletes all outgoing edges of the given vertex
+    // should return a Result
     fn delete_outgoing_edges(&mut self, vertex: usize) {
-        if !self.vertex_exists(vertex) {
+        if !self.vertex_exists_updated(vertex) {
             panic!("delete_outgoing_edges: Vertex {} doesn't exist.", vertex);
         }
 
@@ -287,8 +287,8 @@ impl Directed<usize> for WTDigraph {
         self.has_uncommitted_edits = true;
     }
 
-    /// deletes all incoming edges of the given vertex
-    /// should return a Result
+    // deletes all incoming edges of the given vertex
+    // should return a Result
     fn delete_incoming_edges(&mut self, vertex: usize) {
         if !self.vertex_exists(vertex) {
             panic!("incoming_edges: Vertex {} doesn't exist.", vertex);
@@ -305,10 +305,10 @@ impl Directed<usize> for WTDigraph {
 }
 
 impl Unlabeled<usize> for WTDigraph {
-    /// adds a new empty vertex at either the index following the last or at (the lowest available) previously freed index.
-    /// preserves indexing and never overwrites vertices
-    /// append_vertex() is not defined for labeled graphs
-    /// returns the index of the new vertex
+    // adds a new empty vertex at either the index following the last or at (the lowest available) previously freed index.
+    // preserves indexing and never overwrites vertices
+    // append_vertex() is not defined for labeled graphs
+    // returns the index of the new vertex
     fn append_vertex(&mut self) -> usize {
         // appends a vertex at the end of uncommitted_adj and returns the index
         return self.add_vertex(self.wt_adj_len_updated);
@@ -322,10 +322,10 @@ impl Unlabeled<usize> for WTDigraph {
         // return index; // changed to index-1; that's a bug! I've changed it back! -Simon
     }
 
-    /// it removes all vertices in deleted_vertices from the graph, resets deleted_vertices, thus shrinking
-    /// wt_adj_len, the updated v_count AND the v_count at last commit. does not commit changes other than vertex deletion.
-    /// does commit vertex-deletion and rebuild QW-tree. (expensive!)
-    /// return a list containing the deleted vertices?
+    // it removes all vertices in deleted_vertices from the graph, resets deleted_vertices, thus shrinking
+    // wt_adj_len, the updated v_count AND the v_count at last commit. does not commit changes other than vertex deletion.
+    // does commit vertex-deletion and rebuild QW-tree. (expensive!)
+    // return a list containing the deleted vertices?
     fn shrink(&mut self) -> Vec<Option<usize>> {
         // somebody else should check this. -Simon
         let mut sequence: Vec<usize> = Vec::new();
@@ -384,7 +384,7 @@ impl Unlabeled<usize> for WTDigraph {
     }
 }
 impl Unweighted<usize> for WTDigraph {
-    /// adds an edge between the vertices 'from' and 'to', by adding an edge from the smaller to the bigger indice in the dg.
+    // adds an edge between the vertices 'from' and 'to', by adding an edge from the smaller to the bigger indice in the dg.
     fn add_edge(&mut self, from: usize, to: usize) {
         // only adds to uncommitted edits
         // todo; its possible to add the same edge multiple times
@@ -411,9 +411,9 @@ impl Unweighted<usize> for WTDigraph {
 }
 
 impl WT<usize> for WTDigraph {
-    /// collect and apply all changes in adj_uncommited. rebuild QW-tree. expensive!
-    /// set v_count to v_count_updated, e_count to e_count_updated, if present change labels, weights [...].
-    /// some changes like deleted vertices are conserved
+    // collect and apply all changes in adj_uncommited. rebuild QW-tree. expensive!
+    // set v_count to v_count_updated, e_count to e_count_updated, if present change labels, weights [...].
+    // some changes like deleted vertices are conserved
     fn commit_edits(&mut self) {
         // build new sequence and bitvec
 
@@ -453,7 +453,7 @@ impl WT<usize> for WTDigraph {
         self.discard_edits(); // reset all uncommitted changes
     }
 
-    /// this function needs documentation
+    // this function needs documentation
     fn discard_edits(&mut self) {
         // todo: make sure these are all fields with changes
         self.wt_adj_len_updated = self.wt_adj_len;
@@ -463,7 +463,7 @@ impl WT<usize> for WTDigraph {
         self.has_uncommitted_edits = false;
     }
 
-    /// return true if the vertex still exists and wasn't deleted, or if it was created since since last commit.
+    // return true if the vertex still exists and wasn't deleted, or if it was created since since last commit.
     fn vertex_exists_updated(&self, vertex: usize) -> bool {
         // first we check if the vertex was deleted or added since last commit
 
@@ -486,7 +486,7 @@ impl WT<usize> for WTDigraph {
         return (vertex < self.wt_adj_len_updated) && !self.deleted_vertices.contains_key(&vertex);
     }
 
-    /// return true if the edge still exists and wasn't deleted, or if it was created since since last commit.
+    // return true if the edge still exists and wasn't deleted, or if it was created since since last commit.
     fn edge_exists_updated(&self, from: usize, to: usize) -> bool {
         if !(self.vertex_exists_updated(from) && self.vertex_exists_updated(to)) {
             return false;
@@ -498,7 +498,7 @@ impl WT<usize> for WTDigraph {
         return false;
     }
 
-    /// return the recent number of vertices in the graph
+    // return the recent number of vertices in the graph
     fn v_count_updated(&self) -> usize {
         // wt_adj_len_updated = last index +1
         let mut v_count_updated = self.wt_adj_len_updated;
@@ -524,8 +524,8 @@ impl WT<usize> for WTDigraph {
 }
 
 impl WTDirected<usize> for WTDigraph {
-    /// return all outgoing edges of the given vertex in a vector, which exist and weren't deleted, or were created since since last commit.
-    /// should probably be changed to return an iterator instead
+    // return all outgoing edges of the given vertex in a vector, which exist and weren't deleted, or were created since since last commit.
+    // should probably be changed to return an iterator instead
     fn outgoing_edges_updated(&self, vertex: usize) -> Vec<usize> {
         if !self.vertex_exists_updated(vertex) {
             panic!("Vertex {vertex} doesn't exist!");
@@ -557,8 +557,8 @@ impl WTDirected<usize> for WTDigraph {
         return outgoing;
     }
 
-    /// return all incoming edges of the given vertex in a vector, which exist and weren't deleted, or were created since since last commit.
-    /// should probably be changed to return an iterator instead
+    // return all incoming edges of the given vertex in a vector, which exist and weren't deleted, or were created since since last commit.
+    // should probably be changed to return an iterator instead
     fn incoming_edges_updated(&self, vertex: usize) -> Vec<usize> {
         // this is a very expensive function!
         // It is strongly recommend to commit and call incoming_edges instead!

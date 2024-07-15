@@ -13,7 +13,7 @@ use crate::graph::{
     weighted_directed::WeightedDigraph, weighted_undirected::WeightedUGraph,
 };
 
-/// read in a digraph from file
+// read in a digraph from file
 pub fn create_digraph(filepath: &str) -> Digraph {
     let (v_count, e_count, adj) = read_adj_unlabeled_unweighted_directed(filepath);
     Digraph::from_adjacency_list(v_count, e_count, adj)
@@ -62,7 +62,7 @@ fn read_adj_unlabeled_unweighted_directed(filename: &str) -> (usize, usize, Vec<
     (v_count, e_count, adjacency_list)
 }
 
-/// read in an ugraph from file
+// read in an ugraph from file
 pub fn create_ugraph(filepath: &str) -> UGraph {
     let (v_count, e_count, adj) = read_adj_unlabeled_unweighted_undirected(filepath);
     UGraph::from_adjacency_list(v_count, e_count, adj)
@@ -115,7 +115,7 @@ fn read_adj_unlabeled_unweighted_undirected(filename: &str) -> (usize, usize, Ve
     (v_count, e_count, adjacency_list)
 }
 
-/// read in a weighted digraph from file
+// read in a weighted digraph from file
 pub fn create_weighted_digraph<W>(filepath: &str) -> WeightedDigraph<W>
 where
     W: FromStr + Debug + Clone + Num,
@@ -181,7 +181,7 @@ where
     (v_count, e_count, adjacency_list, weights)
 }
 
-/// read in a weighted ugraph from file (W-ugraph)
+// read in a weighted ugraph from file (W-ugraph)
 pub fn create_weighted_ugraph<W>(filepath: &str) -> WeightedUGraph<W>
 where
     W: Debug + FromStr + Copy + Num,
@@ -251,7 +251,7 @@ where
     (v_count, e_count, adjacency_list, weights)
 }
 
-/// read in an directed labeled graph from file
+// read in an directed labeled graph from file
 pub fn create_labeled_digraph<L>(filepath: &str) -> LabeledDigraph<L>
 where
     L: Eq + Clone + Hash + FromStr,
@@ -327,7 +327,7 @@ where
 }
 // assert_eq!(v_count, adjacency_list.len());
 
-/// read in a labeled ugraph from file (L-ugraph)
+// read in a labeled ugraph from file (L-ugraph)
 pub fn create_labeled_ugraph<L>(filepath: &str) -> LabeledUGraph<L>
 where
     L: Eq + Clone + Hash + FromStr + Ord,
@@ -408,7 +408,7 @@ where
 }
 //  assert_eq!(v_count, adjacency_list.len());
 
-/// read in a weighted labeled digraph from file (W-L-digraph)
+// read in a weighted labeled digraph from file (W-L-digraph)
 pub fn create_labeled_weighted_digraph<L, W>(filepath: &str) -> LabeledWeightedDigraph<L, W>
 where
     W: FromStr + Debug + Hash + Clone + Eq + Num,
@@ -513,7 +513,7 @@ where
     )
 }
 
-/// read in a weighted labeled ugraph from file (W-L-ugraph)
+// read in a weighted labeled ugraph from file (W-L-ugraph)
 pub fn create_weighted_labeled_ugraph<L, W>(filepath: &str) -> LabeledWeightedUGraph<L, W>
 where
     W: FromStr + Debug + Hash + Eq + Clone + Num,

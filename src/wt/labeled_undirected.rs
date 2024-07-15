@@ -9,13 +9,13 @@ use serde::{Deserialize, Serialize};
 
 use std::hash::Hash;
 
-/// An labeled wavelet-tree-graph with undirected edges. (L-wt-ugraph)
-/// The L-wt-ugraph holds a L-wt-digraph. All operations on the L-wt-digraph can be performed on the L-wt-ugraph.
-/// The only divergent implementations are regarding the "doubling" of edges due to no directions.
-/// Users can perfom fast operations on the original graph and slower operations on the recent state of the graph.
-/// Users can integrate the recent state of the graph into the QW-Tree by rebuilding it using the commit_edits-function.
-/// See module wt::labeled_directed for the L-wt-digraph struct definition. See more documentation on function-level and in the crate introduction.
-/// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type. Labels can have any type and are referenced.
+// An labeled wavelet-tree-graph with undirected edges. (L-wt-ugraph)
+// The L-wt-ugraph holds a L-wt-digraph. All operations on the L-wt-digraph can be performed on the L-wt-ugraph.
+// The only divergent implementations are regarding the "doubling" of edges due to no directions.
+// Users can perfom fast operations on the original graph and slower operations on the recent state of the graph.
+// Users can integrate the recent state of the graph into the QW-Tree by rebuilding it using the commit_edits-function.
+// See module wt::labeled_directed for the L-wt-digraph struct definition. See more documentation on function-level and in the crate introduction.
+// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type. Labels can have any type and are referenced.
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct LabeledWTUGraph<L>
 where
@@ -43,7 +43,7 @@ impl<L> Graph<L> for LabeledWTUGraph<L>
 where
     L: Hash + Eq + Clone,
 {
-    /// this function needs documentation
+    // this function needs documentation
     fn add_vertex(&mut self, vertex: L) -> usize {
         return self.ldg.add_vertex(vertex);
     }
@@ -160,7 +160,7 @@ impl<L> Unweighted<L> for LabeledWTUGraph<L>
 where
     L: Hash + Eq + Clone,
 {
-    /// this function needs documentation
+    // this function needs documentation
     fn add_edge(&mut self, from: L, to: L) {
         // fixme
         // does check twice if from and to is valid

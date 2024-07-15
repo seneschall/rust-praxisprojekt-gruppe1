@@ -8,9 +8,9 @@ use std::hash::Hash;
 #[cfg(test)]
 mod test;
 
-/// A labeled, mutable graph with undirected edges, where each edge represents a weight.
-/// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type.
-/// Labels can have any type and are referenced. Weights can have any type.
+// A labeled, mutable graph with undirected edges, where each edge represents a weight.
+// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type.
+// Labels can have any type and are referenced. Weights can have any type.
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct LabeledWeightedUGraph<L, W>
 where

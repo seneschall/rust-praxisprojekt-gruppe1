@@ -7,12 +7,12 @@ use std::collections::HashMap;
 use std::hash::Hash;
 use vers_vecs::RsVec;
 
-/// An labeled wavelet-tree-graph with directed edges. (L-wt-digraph)
-/// The L-wt-digraph holds a wt-digraph and data encoding the digraph's vertice-labels, at the last commit and in the recent, uncommited stage.
-/// Users can perfom fast operations on the original graph and slower operations on the recent state of the graph.
-/// Users can integrate the recent state of the graph into the QW-Tree by rebuilding it using the commit_edits-function.
-/// See module wt::directed for the WT-digraph struct definition. See more documentation on function-level and in the crate introduction.
-/// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type. Labels can have any type and are referenced.
+// An labeled wavelet-tree-graph with directed edges. (L-wt-digraph)
+// The L-wt-digraph holds a wt-digraph and data encoding the digraph's vertice-labels, at the last commit and in the recent, uncommited stage.
+// Users can perfom fast operations on the original graph and slower operations on the recent state of the graph.
+// Users can integrate the recent state of the graph into the QW-Tree by rebuilding it using the commit_edits-function.
+// See module wt::directed for the WT-digraph struct definition. See more documentation on function-level and in the crate introduction.
+// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type. Labels can have any type and are referenced.
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct LabeledWTDigraph<L>
 where
@@ -31,9 +31,9 @@ where
 {
     pub fn from_labeled_digraph(ldg: LabeledDigraph<L>) -> Self {
         return LabeledWTDigraph {
-            index_label: ldg.vec_vertex_labels,
+            index_label: ldg.index_label,
             index_label_uncommitted: HashMap::new(),
-            label_index: ldg.hashmap_labels_vertex,
+            label_index: ldg.label_index,
             label_index_uncommitted: HashMap::new(),
             dg: WTDigraph::from_digraph(ldg.dg),
         };

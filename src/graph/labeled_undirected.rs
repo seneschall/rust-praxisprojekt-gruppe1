@@ -6,9 +6,9 @@ use std::hash::Hash;
 
 #[cfg(test)]
 mod test;
-/// A labeled, mutable graph with undirected edges.
-/// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type.
-/// Labels can have any type and are referenced.
+// A labeled, mutable graph with undirected edges.
+// The greatest possible of number of edges or of vertices is usize, vertex-indices are also usize-data-type.
+// Labels can have any type and are referenced.
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct LabeledUGraph<L>
 where
