@@ -62,7 +62,7 @@ fn main() {
   dg.add_edge(1, 3);
   dg.add_edge(2, 4);
   dg.add_edge(5, 0);
-}
+
 
   let mut dg = WTDigraph::from_digraph(dg); // creating a wavelet tree based digraph from dg
 
@@ -106,6 +106,7 @@ fn main() {
 
   println!("outgoing edges of 0: {:?}", outgoing_zero); // prints [3] because we created an edge 1->3
   // and that was shifted one index to the left
+}
 ```
 
 ## Credit
