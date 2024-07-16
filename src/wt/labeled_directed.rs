@@ -170,7 +170,7 @@ where
     }
 
     fn delete_outgoing_edges(&mut self, vertex: L) {
-        let vertex_index = self.index(&vertex);
+        let vertex_index = self.index_updated(&vertex);
         if vertex_index.is_none() {
             panic!("wtldg delete_outgoing_edges : Vertex doesn't exist");
         }
@@ -179,7 +179,7 @@ where
     }
 
     fn delete_incoming_edges(&mut self, vertex: L) {
-        let vertex_index = self.index(&vertex);
+        let vertex_index = self.index_updated(&vertex);
         if vertex_index.is_none() {
             panic!("wtldg delete_incoming_edges : Vertex doesn't exist");
         }

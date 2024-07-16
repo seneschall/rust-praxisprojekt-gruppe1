@@ -94,7 +94,7 @@ where
 
     fn delete_outgoing_edges(&mut self, vertex: usize) {
         // checkme
-        if !self.vertex_exists(vertex) {
+        if !self.vertex_exists_updated(vertex) {
             panic!("delete_outgoing_edges: Vertex {} doesn't exist.", vertex);
         }
 
@@ -109,7 +109,7 @@ where
 
     fn delete_incoming_edges(&mut self, vertex: usize) {
         // checkme
-        if !self.vertex_exists(vertex) {
+        if !self.vertex_exists_updated(vertex) {
             panic!("incoming_edges: Vertex {} doesn't exist.", vertex);
         }
 
