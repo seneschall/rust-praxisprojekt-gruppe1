@@ -118,7 +118,7 @@ impl Unlabeled<usize> for UGraph {
     // it removes all vertices in deleted_vertices from the graph, thus altering the adj-list and changing indexing.
     // this lowers adj.len() and resets it to v_count. returns a list comparing the new and old indices.
     fn shrink(&mut self) -> Vec<Option<usize>> {
-        todo!()
+        return self.dg.shrink();
     }
 }
 

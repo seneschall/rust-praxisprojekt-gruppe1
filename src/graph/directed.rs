@@ -191,7 +191,17 @@ impl Unlabeled<usize> for Digraph {
     // it removes all vertices in deleted_vertices from the graph, thus altering the adj-list and changing indexing.
     // this lowers adj.len() and resets it to v_count. returns a list comparing the new and old indices.
     fn shrink(&mut self) -> Vec<Option<usize>> {
-        todo!()
+        let mut old_and_new_indices : Vec<Option<usize>> = Vec::new();
+        let mut current_index: usize = 0;
+        for i in 0..self.adj_len{
+            if self.vertex_exists(i){
+                old_and_new_indices.push(Some(current_index));
+            } else {
+                old_and_new_indices.push(None);
+            }
+            current_index += 1;
+        }
+        return old_and_new_indices;
     }
 }
 impl Unweighted<usize> for Digraph {

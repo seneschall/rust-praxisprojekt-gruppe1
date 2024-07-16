@@ -168,7 +168,7 @@ where
     }
 
     fn shrink(&mut self) {
-        todo!()
+        self.ldg.shrink();
     }
 }
 impl<L, W> Weighted<L, W> for LabeledWeightedDigraph<L, W>

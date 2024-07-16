@@ -162,7 +162,7 @@ where
     }
 
     fn shrink(&mut self) {
-        todo!()
+        self.lwdg.shrink();
     }
 }
 impl<L, W> Weighted<L, W> for LabeledWeightedUGraph<L, W>

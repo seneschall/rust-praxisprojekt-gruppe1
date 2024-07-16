@@ -130,7 +130,7 @@ impl<W> Unlabeled<usize> for WeightedDigraph<W> {
     }
 
     fn shrink(&mut self) -> Vec<Option<usize>> {
-        todo!()
+        return self.dg.shrink();
     }
 }
 impl<W> Weighted<usize, W> for WeightedDigraph<W>

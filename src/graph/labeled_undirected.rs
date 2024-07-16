@@ -141,7 +141,7 @@ where
     }
 
     fn shrink(&mut self) {
-        todo!()
+        self.ldg.shrink();
     }
 }
 

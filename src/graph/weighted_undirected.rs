@@ -91,7 +91,7 @@ impl<W> Unlabeled<usize> for WeightedUGraph<W> {
     }
 
     fn shrink(&mut self) -> Vec<Option<usize>> {
-        todo!()
+        return self.wdg.shrink();
     }
 }
 impl<W> Weighted<usize, W> for WeightedUGraph<W>

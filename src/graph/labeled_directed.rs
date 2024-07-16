@@ -211,7 +211,14 @@ where
     }
 
     fn shrink(&mut self) {
-        todo!()
+        let old_and_new_indices = self.dg.shrink();
+        let mut new_index_labels: Vec<L> = Vec::new();
+        for i in 0..old_and_new_indices.len() {
+            if old_and_new_indices[i].is_some() {
+                new_index_labels.insert(i, self.index_label[i].clone());
+            }
+        }
+        self.index_label = new_index_labels;
     }
 }
 impl<L> Unweighted<L> for LabeledDigraph<L>
