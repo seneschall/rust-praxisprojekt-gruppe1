@@ -173,6 +173,7 @@ fn delete_edge() {
         match my_v {
             0 =>    continue,
             _ =>    {
+                if my_v == 1 { continue };
                 let max_edges = my_v * (my_v-1);
                 my_e = (rand::random::<f64>() * max_edges as f64).floor() as usize;
             }
