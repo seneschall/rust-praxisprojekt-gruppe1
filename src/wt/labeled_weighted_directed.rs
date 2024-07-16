@@ -240,7 +240,7 @@ where
     }
 
     fn vertex_exists_updated(&self, vertex: L) -> bool {
-        self.ldg.vertex_exists(vertex)
+        self.ldg.vertex_exists_updated(vertex)
     }
 
     fn edge_exists_updated(&self, from: L, to: L) -> bool {
