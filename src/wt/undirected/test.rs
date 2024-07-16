@@ -9,8 +9,6 @@ fn add_vertex() {
     // calls add_vertex() and verifies the results.
 
     const USIZE_MAX : usize = 10; 
-
-    // initialize a random number generator
     let mut rng = thread_rng();
 
     // create 50 random WTUgraphs

@@ -7,6 +7,10 @@ use std::collections::HashMap;
 use std::hash::Hash;
 use vers_vecs::RsVec;
 
+
+#[cfg(test)]
+mod test;
+
 // An labeled wavelet-tree-graph with directed edges. (L-wt-digraph)
 // The L-wt-digraph holds a wt-digraph and data encoding the digraph's vertice-labels, at the last commit and in the recent, uncommited stage.
 // Users can perfom fast operations on the original graph and slower operations on the recent state of the graph.

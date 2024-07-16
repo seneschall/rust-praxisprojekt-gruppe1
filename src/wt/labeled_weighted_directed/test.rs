@@ -1,6 +1,6 @@
 use rand::prelude::SliceRandom;
 use rand::thread_rng;
-use crate::traits::{Graph,WT, Labeled};
+use crate::{prelude::WTLabeled, traits::{Graph, Labeled, WT}};
 
 #[test]
 fn add_vertex() {
@@ -9,10 +9,10 @@ fn add_vertex() {
     // runs add_vertex() and verifies the results.
 
     const USIZE_MAX : usize = 100; 
+    let mut rng = thread_rng();
     
     for i in 0..50 {
             println!("creating the {}'th LabeledWeightedWTDigraph",i+1);
-            let mut rng = thread_rng();
             let my_v = (rand::random::<f64>() * USIZE_MAX as f64).floor() as usize;
             let vec_range = (0..my_v).collect::<Vec<usize>>();
             let mut my_e : usize = 0;
@@ -39,14 +39,13 @@ fn add_vertex() {
                                 break;
                             }
                             start = *vec_range.choose(&mut rng).unwrap();
-                            println!("start is: {:?}", start); 
                             loop {
                                 end = *vec_range.choose(&mut rng).unwrap();
                                 if end != start { break; }
                             }
-                            if !my_adj[start].contains(&end) {
+                            if !my_adj[start].iter().any(|&(e, _)| e == end) && !my_adj[end].iter().any(|&(s, _)| s == start) {
                                 break;
-                            }                          
+                            }                       
                             println!("repeated third loop!");
                         }
                         let weight = rand::random::<u8>();
@@ -56,30 +55,33 @@ fn add_vertex() {
             }
             let my_labels = (0..my_v).map(|x| x.to_string() ).collect::<Vec<String>>();   
             println!("labels are: {:?}", my_labels);  
-            let my_lwd = crate::graph::labeled_weighted_directed::LabeledDigraph::from_adjacency_list(my_v,my_e,my_adj,my_labels);
-            let mut my_lwwd = crate::wt::labeled_weighted_directed::LabeledWeightedWTDigraph::from_weighted_digraph(my_lwd); 
+            let my_lwd = crate::graph::labeled_weighted_directed::LabeledWeightedDigraph::from_adjacency_list(my_v,my_e,my_adj,my_labels);
+            let mut my_lwwd = crate::wt::labeled_weighted_directed::LabeledWeightedWTDigraph::from_labeled_weighted_digraph(my_lwd); 
 
 
         // this is the new variable
-        let my_vertex = my_wwd.dg.wt_adj_len;
+        let my_vertex = my_lwwd.ldg.dg.wt_adj_len;
      
         // run
-        let my_return = my_wwd.add_vertex(my_vertex.clone());
+        let my_return = my_lwwd.add_vertex(my_vertex.to_string());
 
         // does the expected vertex exist in the graph?
-        assert_eq!(my_wwd.vertex_exists(my_return),false); // but returns false 
-        assert_eq!(my_wwd.vertex_exists_updated(my_return),true);
+        assert_eq!(my_vertex,my_return);
+        assert_eq!(&my_vertex.to_string(),my_lwwd.label_updated(my_return).unwrap());
+
+        assert_eq!(my_lwwd.vertex_exists(my_vertex.to_string()),false); 
+        assert_eq!(my_lwwd.vertex_exists_updated(my_vertex.to_string()),true);
         
         // does the return return equal the expected usize value?
-        assert_eq!(my_wwd.dg.wt_adj_len, my_return);
+        assert_eq!(my_lwwd.ldg.dg.wt_adj_len, my_return);
 
         // does the additional metadata equal the expected one?
-        assert_eq!(my_wwd.e_count(), my_wwd.e_count_updated());
-        assert_eq!(my_wwd.v_count()+1, my_wwd.v_count_updated());
-        assert_ne!(my_wwd.dg.wt_adj_len, my_wwd.dg.wt_adj_len_updated);
+        assert_eq!(my_lwwd.e_count(), my_lwwd.e_count_updated());
+        assert_eq!(my_lwwd.v_count()+1, my_lwwd.v_count_updated());
+        assert_ne!(my_lwwd.ldg.dg.wt_adj_len, my_lwwd.ldg.dg.wt_adj_len_updated);
     
         // - is the addition ready for commit?
-        assert_eq!(my_wwd.dg.has_uncommitted_edits, true);
+        assert_eq!(my_lwwd.ldg.dg.has_uncommitted_edits, true);
         // - make adj_uncommited pub(crate) and import Edit, then we could
         // assert_eq!(my_wd.dg.adj_uncommitted.get(my_label),[Add(my_label)]);
 

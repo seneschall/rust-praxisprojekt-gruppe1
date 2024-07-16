@@ -9,12 +9,12 @@ fn add_vertex() {
     // calls e_count() and v_count() an verifies the results.
 
     const USIZE_MAX : usize = 100; 
+    let mut rng = thread_rng();
 
     // create 50 random WeightedWTDigraphs
     for i in 0..50 {
 
         println!("creating the {}'th WeightedWTDigraph",i+1);
-        let mut rng = thread_rng();
         let my_v = (rand::random::<f64>() * USIZE_MAX as f64).floor() as usize;
         let vec_range = (0..my_v).collect::<Vec<usize>>();
         let mut my_e : usize = 0;

@@ -470,6 +470,7 @@ version = "0.1.0"
 dependencies = [
  "num",
  "qwt",
+ "rand",
  "serde",
  "vers-vecs",
 ]

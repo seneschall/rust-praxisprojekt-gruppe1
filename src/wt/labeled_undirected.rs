@@ -1,13 +1,14 @@
 use vers_vecs::RsVec;
-
 use crate::graph::labeled_undirected::LabeledUGraph;
 use crate::traits::{
     Directed, Graph, Labeled, Undirected, Unweighted, WTDirected, WTLabeled, WTUndirected, WT,
 };
 use crate::wt::labeled_directed::LabeledWTDigraph;
 use serde::{Deserialize, Serialize};
-
 use std::hash::Hash;
+
+#[cfg(test)]
+mod test;
 
 // An labeled wavelet-tree-graph with undirected edges. (L-wt-ugraph)
 // The L-wt-ugraph holds a L-wt-digraph. All operations on the L-wt-digraph can be performed on the L-wt-ugraph.

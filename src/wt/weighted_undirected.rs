@@ -1,14 +1,14 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-
 use vers_vecs::RsVec;
-
 use crate::graph::weighted_undirected::WeightedUGraph;
 use crate::traits::{
     Directed, Graph, Undirected, Unlabeled, WTDirected, WTUndirected, WTWeighted, Weighted, WT,
 };
-
 use super::weighted_directed::WeightedWTDigraph;
+
+#[cfg(test)]
+mod test;
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct WeightedWTUGraph<W> {

@@ -6,6 +6,10 @@ use crate::traits::{Graph, Undirected, Unlabeled, Unweighted, WTUndirected, WT};
 use crate::wt::directed::WTDigraph;
 use serde::{Deserialize, Serialize}; // needed because of WTDigraph
 
+
+#[cfg(test)]
+mod test;
+
 // An indexed wavelet-tree-ugraph with undirected edges. (wt-ugraph)
 // The wt-ugraph holds a wt-digraph. All operations on the wt-digraph can be performed on the wt-ugraph.
 // The only divergent implementations are ...

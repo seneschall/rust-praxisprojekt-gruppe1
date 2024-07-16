@@ -8,11 +8,7 @@ fn add_vertex() {
     // requires random LabeledWTUGraphs and a random mutable variable of type L for testing.
     // calls add_vertex() and verifies the results.
 
-    // the possible ranges for values is 0..usize::MAX , which I wanted to use for testing, but since computing such large graphs is too slow,
-    // I will use a "fake" max range
     const USIZE_MAX : usize = 100; 
-
-    // initialize a random number generator
     let mut rng = thread_rng();
 
     // create 50 random LabeledWTUGraphs
@@ -71,8 +67,8 @@ fn add_vertex() {
         let my_return = my_lwu.add_vertex(my_label.clone());
 
         // does the expected vertex exist in the graph?
-        assert_eq!(my_lwu.get_label_updated(my_return), Some(&my_label));
-        assert_eq!(my_return, my_lwu.get_index_updated(&my_label).unwrap());
+        assert_eq!(my_lwu.label_updated(my_return), Some(&my_label));
+        assert_eq!(my_return, my_lwu.index_updated(&my_label).unwrap());
 
         // does the return equal the expected usize value?
         assert_eq!(my_lwu.ldg.dg.wt_adj_len, my_return);
