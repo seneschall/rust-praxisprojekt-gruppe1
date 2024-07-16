@@ -290,7 +290,7 @@ impl Directed<usize> for WTDigraph {
     // deletes all incoming edges of the given vertex
     // should return a Result
     fn delete_incoming_edges(&mut self, vertex: usize) {
-        if !self.vertex_exists(vertex) {
+        if !self.vertex_exists_updated(vertex) {
             panic!("incoming_edges: Vertex {} doesn't exist.", vertex);
         }
 

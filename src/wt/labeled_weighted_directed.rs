@@ -124,13 +124,13 @@ where
     }
 
     fn delete_outgoing_edges(&mut self, vertex: L) {
-        for to in self.outgoing_edges(vertex.clone()) {
+        for to in self.outgoing_edges_updated(vertex.clone()) {
             self.delete_edge(vertex.clone(), to);
         }
     }
 
     fn delete_incoming_edges(&mut self, vertex: L) {
-        for from in self.incoming_edges(vertex.clone()) {
+        for from in self.incoming_edges_updated(vertex.clone()) {
             self.delete_edge(from, vertex.clone());
         }
     }

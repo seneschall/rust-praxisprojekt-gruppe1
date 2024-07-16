@@ -75,7 +75,6 @@ pub trait Directed<T> {
     /// existing even if they haven't been committed after creation). The deletion has to be committed.
     fn delete_outgoing_edges(&mut self, vertex: T); // deletes all outgoing edges of vertex; should return a Result
                                                     // deletes outgoing edges of vertex
-                                                    // todo: updated!
 
     /// Deletes all incoming edges of vertex `vertex`.
     ///
@@ -85,7 +84,6 @@ pub trait Directed<T> {
     /// existing even if they haven't been committed after creation). The deletion has to be committed.
     fn delete_incoming_edges(&mut self, vertex: T); // deletes all incoming edges of vertex; should return a Result
                                                     // deletes incoming edges of vertex
-                                                    // todo: updated!
 }
 pub trait Undirected<T> {
     /// For index based graphs: Returns a vector containing copies of all indices the vertex `vertex` has an edge to.
