@@ -119,7 +119,7 @@ fn mean(data: &[usize]) -> f32 {
     return mean.unwrap();
 }
 
-const V_COUNT: usize = 10_000;
+const V_COUNT: usize = 1_000;
 
 fn main() {
     // creation of graphs
